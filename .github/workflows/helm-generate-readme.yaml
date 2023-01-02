@@ -52,7 +52,7 @@ jobs:
         run: |
           cd luminartech/helm-charts-public
           # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | grep -o "charts/[^/]*" | sort | uniq || true)"
+          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | cut -d/ -f 1-2 | sort | uniq || true)"
           for chart in $charts_dirs_changed; do
             echo "Updating README.md for ${chart}"
             if [ -f "${chart}/values.yaml" ]; then

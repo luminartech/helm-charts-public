@@ -60,7 +60,7 @@ jobs:
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
           # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | grep -o "charts/[^/]*" | sort | uniq || true)"
+          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | cut -d/ -f 1-2 | sort | uniq || true)"
           for chart in $charts_dirs_changed; do
             cd ${chart}
             if [ -f Chart.yaml ]; then

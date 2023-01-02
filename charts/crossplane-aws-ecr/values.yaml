@@ -1,6 +1,5 @@
 ## @section AWS resources
 
-
 ## @param LifecyclePolicy resource parameters
 ##
 LifecyclePolicy: {}
