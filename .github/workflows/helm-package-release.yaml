@@ -5,38 +5,21 @@ on:
     branches:
       - main
     paths:
-      - 'charts/*/**.yaml'
-      - 'charts/*/**.tpl'
-      - 'charts/*/**.txt'
+      - 'charts/**/**.yaml'
+      - 'charts/**/**.tpl'
+      - 'charts/**/**.txt'
 permissions:
   contents: write
 jobs:
   package-and-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate token
-        id: generate_token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: ${{ secrets.SOFTWARE_APP_ID }}
-          private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
-          installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
-          token: ${{ steps.generate_token.outputs.token }}
           fetch-depth: 0
           persist-credentials: true
           path: luminartech/helm-charts-public
-      - name: Helm Repository Checkout
-        uses: actions/checkout@v3
-        with:
-          repository: luminartech/helm-repo-public
-          token: ${{ steps.generate_token.outputs.token }}
-          fetch-depth: 0
-          persist-credentials: true
-          ref: main
-          path: luminartech/helm-repo-public
       - name: Helm Installation
         uses: azure/setup-helm@v3
         with:
@@ -50,45 +33,35 @@ jobs:
           path: luminartech/helm-charts-public
           files: |
             charts/**
-            modules/**
       - name: Build helm packages and push tags
-        env:
-          TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
+          set -x
           workspace_dir=$(pwd)
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
           # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | cut -d/ -f 1-2 | sort | uniq || true)"
+          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^.\/charts\/iac\/.*/' | cut -d'/' -f 1-3 | uniq || true)"
+          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^.\/charts\/shared\/.*/' | cut -d'/' -f 1-3 | uniq || true)"
+          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^.\/charts\/modules\/apps\/.*/' | cut -d'/' -f 1-4 | uniq || true)"
+          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^.\/charts\/modules\/iac\/.*/' | cut -d'/' -f 1-4 | uniq || true)"
+          echo $charts_dirs_changed
           for chart in $charts_dirs_changed; do
             cd ${chart}
             if [ -f Chart.yaml ]; then
               echo "Generating helm package for ${chart}"
-              helm dependency update
-              rm -f *.tgz || true
-              helm package .
-              chart_name=$(awk -F '[/]' '{print $2}' <<< ${chart})
+              echo helm dependency update
+              echo rm -f *.tgz || true
+              echo helm package .
+              chart_name=$(awk -F '[/]' '{print $NF}' <<< ${chart})
               chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed 's/.tgz//'|awk -F '[-]' '{print $NF}')
               # this command should fail the job if tag already exists
-              git tag rel-${chart_name}-${chart_version}
-              git push -f origin rel-${chart_name}-${chart_version}
+              echo git tag rel-${chart_name}-${chart_version}
+              echo git push -f origin rel-${chart_name}-${chart_version}
               # Do not force update, we want this job to fail if same version package exists
-              mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/"
+              echo mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/"
             else
               echo "WARN: Chart.yaml missing for ${chart}"
             fi
             cd -
           done
-      - name: Push changes to helm repository
-        run: |
-          # Push all the changes
-          cd luminartech/helm-repo-public
-          if git status -s | grep -e '.*-.*\..*\.tgz'; then
-            git config user.name "CI Bot"
-            git config user.email "sre@luminartech.com"
-            git add *.tgz
-            git status
-            git commit -am "[ CI Bot ] Generated helm packages" --signoff
-            git push
-          fi
