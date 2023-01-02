@@ -56,6 +56,7 @@ jobs:
           TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           set -x
+          workspace_dir=$(pwd)
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
@@ -73,7 +74,7 @@ jobs:
             git tag rel-${chart_name}-${chart_version}
             git push -f origin rel-${chart_name}-${chart_version}
             # Do not force update, we want this job to fail if same version package exists
-            mv *.tgz "luminartech/helm-repo-public/"
+            mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/"
             cd -
           done
       - name: Push changes to helm repository
