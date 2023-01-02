@@ -17,9 +17,10 @@
 
 ### Prometheus Service Discovery resources
 
-| Name     | Description         | Value |
-| -------- | ------------------- | ----- |
-| `Object` | resource parameters | `{}`  |
+| Name             | Description         | Value |
+| ---------------- | ------------------- | ----- |
+| `ServiceMonitor` | resource parameters | `{}`  |
+| `PodMonitor`     | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
