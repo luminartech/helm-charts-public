@@ -8,3 +8,6 @@ templated-output*.yaml
 *.bak
 *.tmp
 *~
+Chart.lock
+charts/**/charts
+values-local.yaml

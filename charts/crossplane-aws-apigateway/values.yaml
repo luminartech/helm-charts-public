@@ -1,0 +1,81 @@
+## @section AWS resources
+
+## @param APIKey resource parameters
+##
+APIKey: {}
+
+## @param Authorizer resource parameters
+##
+Authorizer: {}
+
+## @param BasePathMapping resource parameters
+##
+BasePathMapping: {}
+
+## @param Deployment resource parameters
+##
+Deployment: {}
+
+## @param DocumentationPart resource parameters
+##
+DocumentationPart: {}
+
+## @param DocumentationVersion resource parameters
+##
+DocumentationVersion: {}
+
+## @param DomainName resource parameters
+##
+DomainName: {}
+
+## @param GatewayResponse resource parameters
+##
+GatewayResponse: {}
+
+## @param Integration resource parameters
+##
+Integration: {}
+
+## @param IntegrationResponse resource parameters
+##
+IntegrationResponse: {}
+
+## @param Method resource parameters
+##
+Method: {}
+
+## @param MethodResponse resource parameters
+##
+MethodResponse: {}
+
+## @param Model resource parameters
+##
+Model: {}
+
+## @param RequestValidator resource parameters
+##
+RequestValidator: {}
+
+## @param Resource resource parameters
+##
+Resource: {}
+
+## @param RestAPI resource parameters
+##
+RestAPI: {}
+
+## @param Stage resource parameters
+##
+Stage: {}
+
+## @param UsagePlan resource parameters
+##
+UsagePlan: {}
+
+## @param UsagePlanKey resource parameters
+##
+UsagePlanKey: {}
+
+## @param VPCLink resource parameters
+##
+VPCLink: {}
