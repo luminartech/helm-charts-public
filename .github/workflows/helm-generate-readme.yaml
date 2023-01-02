@@ -32,7 +32,7 @@ jobs:
           persist-credentials: true
           path: luminartech/helm-charts-public
           token: ${{ steps.generate_token.outputs.token }}
-      - name: Get changed files in the docs folder
+      - name: Get list of changed directories
         id: changed-files
         uses: tj-actions/changed-files@v35
         with:
@@ -47,7 +47,7 @@ jobs:
         run: |
           cd luminartech/helm-charts-public
           # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | grep -o "charts/[^/]*" | sort | uniq || true)"
+          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | grep -o "charts/[^/]*" | sort | uniq || true)"
           for chart in $charts_dirs_changed; do
             echo "Updating README.md for ${chart}"
             if [ -f "${chart}/values.yaml" ]; then

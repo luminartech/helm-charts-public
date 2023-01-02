@@ -41,7 +41,7 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.10.3
-      - name: Get changed files in the docs folder
+      - name: Get list of changed directories
         id: changed-files
         uses: tj-actions/changed-files@v35
         with:
@@ -60,7 +60,7 @@ jobs:
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
           # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | grep -o "charts/[^/]*" | sort | uniq || true)"
+          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | grep -o "charts/[^/]*" | sort | uniq || true)"
           for chart in $charts_dirs_changed; do
             cd ${chart}
             echo "Generating helm package for ${chart}"
