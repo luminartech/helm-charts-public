@@ -30,18 +30,18 @@ jobs:
           repository: ${{github.event.pull_request.head.repo.full_name}}
           path: ${{ github.repository }}
           token: ${{ steps.generate_token.outputs.token }}
+      - name: Get changed files in the docs folder
+        id: changed-files
+        uses: tj-actions/changed-files@v35
       - name: Execute readme-generator-for-helm
         env:
           TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           cd ${{ github.repository }}
-          # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
-          # and jitterbit/get-changed-files does not support pull_request_target
-          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.TOKEN }}' -X GET -G "$URL")
-          files_changed="$(echo $files_changed_data | jq -r '.[] | .filename')"
+          files_changed="$(echo ${{ steps.changed-files.outputs.all_changed_files }} | jq -r '.[] | .filename')"
           # Adding || true to avoid "Process exited with code 1" errors
           charts_dirs_changed="$(echo "$files_changed" | xargs dirname | grep -o "charts/[^/]*" | sort | uniq || true)"
+          charts_dirs_changed+="$(echo "$files_changed" | xargs dirname | grep -o "modules/[^/]*" | sort | uniq || true)"
           for chart in ${charts_dirs_changed}; do
             echo "Updating README.md for ${chart}"
             if [ -f "${chart}/values.yaml" ]; then
