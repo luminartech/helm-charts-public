@@ -1,5 +1,6 @@
 ## @section AWS resources
 
+
 ## @param HostedZone resource parameters
 ##
 HostedZone: {}

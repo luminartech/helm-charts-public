@@ -1,6 +1,5 @@
 ## @section Kubernetes object resources for crossplane kubernetes provider
 
-
 ## @param Object resource parameters
 ##
 Object: {}
