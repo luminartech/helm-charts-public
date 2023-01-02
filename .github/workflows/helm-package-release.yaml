@@ -55,7 +55,6 @@ jobs:
         env:
           TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          set -x
           workspace_dir=$(pwd)
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
@@ -79,7 +78,6 @@ jobs:
           done
       - name: Push changes to helm repository
         run: |
-          set -x
           # Push all the changes
           cd luminartech/helm-repo-public
           if git status -s | grep -e '.*-.*\..*\.tgz'; then
