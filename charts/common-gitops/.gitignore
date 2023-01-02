@@ -1,0 +1,4 @@
+# Ignore helm package files
+*.tgz
+charts/
+Chart.lock

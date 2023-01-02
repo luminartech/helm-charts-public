@@ -1,0 +1,27 @@
+# Reference chart: https://github.com/bitnami/charts/tree/master/bitnami/common
+annotations:
+  category: Infrastructure
+apiVersion: v2
+description: A Library Helm Chart with common gitops functions. This chart is not deployable by itself.
+home: https://helm-repo-public.luminarinfra.com
+keywords:
+  - common-gitops
+  - helper
+  - template
+  - function
+  - gitops
+  - crossplane
+  - infrastructure
+  - library
+maintainers:
+  - name: SRE
+    email: sre@luminartech.com
+  - name: Satish Gaikwad
+    email: satish.gaikwad@luminartech.com
+  - name: Hennadii Mykhailiuta
+    email: hennadii.mykhailiuta@luminartech.com
+name: common-gitops
+sources:
+  - https://github.com/luminartech/helm-charts-public/charts/common-gitops
+type: library
+version: "0.9.1"
