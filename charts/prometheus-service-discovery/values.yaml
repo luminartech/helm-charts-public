@@ -1,0 +1,9 @@
+## @section Prometheus Service Discovery resources
+
+## @param ServiceMonitor resource parameters
+##
+ServiceMonitor: {}
+
+## @param PodMonitor resource parameters
+##
+PodMonitor: {}

@@ -1,0 +1,115 @@
+{{- $kind := "PodMonitor" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: monitoring.coreos.com/v1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+  {{- with .attachMetadata }}
+  attachMetadata:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .jobLabel }}
+  jobLabel: {{ . }}
+  {{- end }}
+  {{- with .labelLimit }}
+  labelLimit: {{ . }}
+  {{- end }}
+  {{- with .labelNameLengthLimit }}
+  labelNameLengthLimit: {{ . }}
+  {{- end }}
+  {{- with .labelValueLengthLimit }}
+  labelValueLengthLimit: {{ . }}
+  {{- end }}
+  {{- with .namespaceSelector }}
+  namespaceSelector:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  podMetricsEndpoints:
+  {{- range $endpointName, $enpointDetails := .podMetricsEndpoints.items }}
+    {{- with $enpointDetails }}
+    - port: {{ $endpointName }}
+      {{- with .authorization }}
+      authorization:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .basicAuth }}
+      basicAuth:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .bearerTokenSecret }}
+      bearerTokenSecret:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .enableHttp2 }}
+      enableHttp2: {{ . }}
+      {{- end }}
+      {{- with .followRedirects }}
+      followRedirects: {{ . }}
+      {{- end }}
+      {{- with .honorLabels }}
+      honorLabels: {{ . }}
+      {{- end }}
+      {{- with .honorTimestamps }}
+      honorTimestamps: {{ . }}
+      {{- end }}
+      {{- with .interval }}
+      interval: {{ . }}
+      {{- end }}
+      {{- with .metricRelabelings }}
+      metricRelabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .oauth2 }}
+      oauth2:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .params }}
+      params:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .path }}
+      path: {{ . }}
+      {{- end }}
+      {{- with .proxyUrl }}
+      proxyUrl: {{ . }}
+      {{- end }}
+      {{- with .relabelings }}
+      relabelings:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .scheme }}
+      scheme: {{ . }}
+      {{- end }}
+      {{- with .scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
+      {{- with .targetPort }}
+      targetPort: {{ . }}  # Deprecated: Use 'port' from $endpointName instead.
+      {{- end }}
+      {{- with .tlsConfig }}
+      tlsConfig:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- end -}}
+  {{- end }}
+  {{- with .podTargetLabels }}
+  podTargetLabels:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with .sampleLimit }}
+  sampleLimit: {{ . }}
+  {{- end }}
+  selector:
+    {{- toYaml .selector | nindent 4 }}
+  {{- with .targetLimit }}
+  targetLimit: {{ . }}
+  {{- end }}
+  {{- end -}}
+{{- end -}}

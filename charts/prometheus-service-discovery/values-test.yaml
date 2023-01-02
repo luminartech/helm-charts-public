@@ -1,0 +1,95 @@
+---
+## ServiceMonitor resources test configurations
+ServiceMonitor:
+  items:
+    test-service-monitor:
+      # enabled: false
+      labels:
+        release: monitoring
+      serviceMonitorEndpoints:
+        items:
+          metrics:
+            interval: 60s
+            scrapeTimeout: 20s
+            scheme: http
+            relabelings:
+              - action: replace
+                regex: "to-replace-(.*)"
+                replacement: "new-prefix-$1"
+                sourceLabels:
+                  - test1
+                  - test2
+              - action: drop
+                regex: "to-drop-(.*)"
+                sourceLabels:
+                  - test3
+                  - test4
+            path: /metrics
+          artifactory-metric:
+            interval: 30s
+            scrapeTimeout: 15s
+            scheme: http
+            port: http-artifactory
+            basicAuth:
+              username:
+                key: prometheus-name
+                name: artifactory-api
+              password:
+                key: prometheus-password
+                name: artifactory-api
+            path: /artifactory/api/v1/metrics
+      labelLimit: 5
+      labelNameLengthLimit: 50
+      jobLabel: artifactory-open-metrics
+      namespaceSelector:
+        matchNames:
+          - cicd-infra-artifactory-test
+      selector:
+        matchLabels:
+          app: artifactory
+      podTargetLabels:
+        - podLabelA
+        - podLabelB
+      sampleLimit: 6
+
+## PodMonitor resources test configurations
+PodMonitor:
+  items:
+    test-pod-monitor:
+      # enabled: false
+      labels:
+        release: monitoring
+      labelLimit: 5
+      labelNameLengthLimit: 50
+      namespaceSelector:
+        matchNames:
+          - cicd-infra-crossplane
+      podTargetLabels:
+        - podLabelA
+        - podLabelB
+      sampleLimit: 6
+      podMetricsEndpoints:
+        items:
+          metrics:
+            interval: 30s
+            scrapeTimeout: 20s
+            scheme: http
+            relabelings:
+              - action: replace
+                regex: "to-replace-(.*)"
+                replacement: "new-prefix-$1"
+                sourceLabels:
+                  - test1
+                  - test2
+              - action: drop
+                regex: "to-drop-(.*)"
+                sourceLabels:
+                  - test1
+                  - test2
+            path: /metrics
+            # targetPort: 8080
+      selector:
+        matchLabels:
+          app: test-app-1
+          region: east
+      targetLimit: 50

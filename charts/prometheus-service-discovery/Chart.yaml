@@ -1,0 +1,24 @@
+annotations:
+  category: Infrastructure
+apiVersion: v2
+# App version follows kube-prometheus-stack provider version
+appVersion: "40.1.0"
+description: A Helm chart for ServiceMonitor resource
+name: prometheus-service-discovery
+# Below version must match the app version for the consistency.
+# Update minor bit if new tag is needed. e.g. 40.1.0+1
+version: "40.1.0"
+home: https://helm-repo-public.luminarinfra.com
+sources:
+  - https://github.com/luminartech/helm-charts-public/charts/prometheus-service-discovery
+maintainers:
+  - name: SRE
+    email: sre@luminartech.com
+  - name: Satish Gaikwad
+    email: satish.gaikwad@luminartech.com
+  - name: Hennadii Mykhailiuta
+    email: hennadii.mykhailiuta@luminartech.com
+dependencies:
+  - name: common-gitops
+    version: 1.0.0
+    repository: https://helm-repo-public.luminarinfra.com/
