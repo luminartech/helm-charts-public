@@ -1,0 +1,10 @@
+templated-output*.yaml
+.DS_Store
+.vscode
+*.tgz
+/.idea/*
+# Common backup files
+*.swp
+*.bak
+*.tmp
+*~

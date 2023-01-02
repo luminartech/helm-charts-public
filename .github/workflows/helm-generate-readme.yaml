@@ -1,0 +1,61 @@
+# Ref: https://github.com/bitnami/charts/blob/main/.github/workflows/generate-chart-readme.yml
+name: '[HELM] Update README'
+on:
+  pull_request_target:
+    branches:
+      - main
+    paths:
+      - 'charts/*/values.yaml'
+permissions:
+  contents: write
+  pull-requests: read
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+          installation_id: ${{ secrets.APP_INSTALLATION_ID }}
+      - name: Use token
+        env:
+          TOKEN: ${{ steps.generate_token.outputs.token }}
+        run: |
+          echo "The generated token is masked: ${TOKEN}"
+      - name: Install readme-generator-for-helm
+        run: npm install -g @bitnami/readme-generator-for-helm@2.4.3
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
+          path: ${{ github.repository }}
+          token: ${{ secrets.TOKEN }}
+      - name: Execute readme-generator-for-helm
+        run: |
+          cd ${{ github.repository }}
+          # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
+          # and jitterbit/get-changed-files does not support pull_request_target
+          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
+          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.TOKEN }}' -X GET -G "$URL")
+          files_changed="$(echo $files_changed_data | jq -r '.[] | .filename')"
+          # Adding || true to avoid "Process exited with code 1" errors
+          charts_dirs_changed="$(echo "$files_changed" | xargs dirname | grep -o "charts/[^/]*" | sort | uniq || true)"
+          for chart in ${charts_dirs_changed}; do
+            echo "Updating README.md for ${chart}"
+            if [ -f "${chart}/values.yaml" ]; then
+              readme-generator --values "${chart}/values.yaml" --readme "${chart}/README.md" --schema "/tmp/schema.json"
+            fi
+          done
+      - name: Push changes to PR branch
+        run: |
+          # Push all the changes
+          cd ${{ github.repository }}
+          if git status -s | grep charts; then
+            git config user.name "CI Bot"
+            git config user.email "sre@luminartech.com"
+            git add . && git commit -am "Update README.md with readme-generator-for-helm" --signoff && git push
+          fi

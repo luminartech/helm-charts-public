@@ -1,0 +1,15 @@
+name: '[QUALITY] pre-commit'
+
+on: pull_request
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.5.0
+      with:
+        fetch-depth: 0
+    - uses: actions/setup-python@v4.3.0
+    - uses: pre-commit/action@v2.0.3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
