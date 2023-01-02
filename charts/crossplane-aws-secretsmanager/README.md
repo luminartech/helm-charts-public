@@ -17,28 +17,9 @@
 
 ### AWS resources
 
-| Name                   | Description         | Value |
-| ---------------------- | ------------------- | ----- |
-| `APIKey`               | resource parameters | `{}`  |
-| `Authorizer`           | resource parameters | `{}`  |
-| `BasePathMapping`      | resource parameters | `{}`  |
-| `Deployment`           | resource parameters | `{}`  |
-| `DocumentationPart`    | resource parameters | `{}`  |
-| `DocumentationVersion` | resource parameters | `{}`  |
-| `DomainName`           | resource parameters | `{}`  |
-| `GatewayResponse`      | resource parameters | `{}`  |
-| `IntegrationResponse`  | resource parameters | `{}`  |
-| `Integration`          | resource parameters | `{}`  |
-| `MethodResponse`       | resource parameters | `{}`  |
-| `Method`               | resource parameters | `{}`  |
-| `Model`                | resource parameters | `{}`  |
-| `RequestValidator`     | resource parameters | `{}`  |
-| `Resource`             | resource parameters | `{}`  |
-| `RestAPI`              | resource parameters | `{}`  |
-| `Stage`                | resource parameters | `{}`  |
-| `UsagePlanKey`         | resource parameters | `{}`  |
-| `UsagePlan`            | resource parameters | `{}`  |
-| `VPCLink`              | resource parameters | `{}`  |
+| Name     | Description         | Value |
+| -------- | ------------------- | ----- |
+| `Secret` | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
