@@ -46,7 +46,7 @@ jobs:
         uses: tj-actions/changed-files@v35
         with:
           dir_names: "true"
-          dir_names_max_depth: '1'
+          dir_names_max_depth: '2'
           path: luminartech/helm-charts-public
           files: |
             charts/**
@@ -59,7 +59,9 @@ jobs:
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
-          for chart in ${{ steps.changed-files.outputs.all_changed_files }}; do
+          # Adding || true to avoid "Process exited with code 1" errors
+          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | grep -o "charts/[^/]*" | sort | uniq || true)"
+          for chart in $charts_dirs_changed; do
             cd ${chart}
             echo "Generating helm package for ${chart}"
             helm dependency update
