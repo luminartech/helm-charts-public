@@ -1,0 +1,15 @@
+name: '[HELM] Tag release'
+
+on:
+  push:
+    tags:
+      - rel-*
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: Create or update release tag
+    steps:
+      - uses: actions/checkout@v2
+      - name: Run release-tagger
+        uses: tj-actions/release-tagger@v2

@@ -28,21 +28,24 @@ jobs:
         with:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
-          path: ${{ github.repository }}
+          path: luminartech/helm-charts-public
           token: ${{ steps.generate_token.outputs.token }}
       - name: Get changed files in the docs folder
         id: changed-files
         uses: tj-actions/changed-files@v35
+        with:
+          dir_names: "true"
+          dir_names_max_depth: '1'
+          path: luminartech/helm-charts-public
+          files: |
+            charts/**
+            modules/**
       - name: Execute readme-generator-for-helm
         env:
           TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          cd ${{ github.repository }}
-          files_changed="$(echo ${{ steps.changed-files.outputs.all_changed_files }} | jq -r '.[] | .filename')"
-          # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed="$(echo "$files_changed" | xargs dirname | grep -o "charts/[^/]*" | sort | uniq || true)"
-          charts_dirs_changed+="$(echo "$files_changed" | xargs dirname | grep -o "modules/[^/]*" | sort | uniq || true)"
-          for chart in ${charts_dirs_changed}; do
+          cd luminartech/helm-charts-public
+          for chart in ${{ steps.changed-files.outputs.all_changed_files }}; do
             echo "Updating README.md for ${chart}"
             if [ -f "${chart}/values.yaml" ]; then
               readme-generator --values "${chart}/values.yaml" --readme "${chart}/README.md" --schema "/tmp/schema.json"
