@@ -28,6 +28,8 @@ jobs:
         with:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
+          fetch-depth: 0
+          persist-credentials: true
           path: luminartech/helm-charts-public
           token: ${{ steps.generate_token.outputs.token }}
       - name: Get changed files in the docs folder
@@ -54,7 +56,7 @@ jobs:
       - name: Push changes to PR branch
         run: |
           # Push all the changes
-          cd ${{ github.repository }}
+          cd luminartech/helm-charts-public
           if git status -s | grep charts; then
             git config user.name "CI Bot"
             git config user.email "sre@luminartech.com"
