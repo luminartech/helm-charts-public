@@ -1,0 +1,24 @@
+{{- $kind := "RolePolicyAttachment" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: iam.aws.crossplane.io/v1beta1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  forProvider:
+    {{- with .forProvider }}
+      {{- include "common-gitops.crossplane.reference" (dict "field" "policyArn" "context" . "root" $root) | nindent 4 }}
+      {{- include "common-gitops.crossplane.reference" (dict "field" "roleName" "context" . "root" $root) | nindent 4 }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  {{- end -}}
+{{- end -}}

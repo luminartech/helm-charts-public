@@ -1,9 +1,14 @@
 # Ref: https://github.com/bitnami/charts/blob/main/.github/workflows/generate-chart-readme.yml
 name: '[HELM] Update README'
 on:
-  pull_request_target:
+  pull_request:
     branches:
       - main
+    types:
+      - opened
+      - edited
+      - reopened
+      - ready_for_review
     paths:
       - 'charts/*/values.yaml'
       - 'modules/*/values.yaml'

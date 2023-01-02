@@ -1,0 +1,28 @@
+---
+## AWS EFS resources configurations
+
+AccessPoint:
+  items:
+    example:
+      forProvider:
+        fileSystemIDRef:
+          name: example
+        region: us-east-1
+
+FileSystem:
+  items:
+    example:
+      forProvider:
+        region: us-east-1
+
+MountTarget:
+  items:
+    example:
+      forProvider:
+        region: us-east-1
+        fileSystemIDRef:
+          name: example
+        subnetIDRef:
+          name: sample-subnet1
+        securityGroupsRefs:
+          - name: sample-cluster-sg

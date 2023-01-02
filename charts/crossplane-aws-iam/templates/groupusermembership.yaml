@@ -1,0 +1,37 @@
+# {{- $root := . }}{{- $resource := ($root.Values.GroupUserMembership) }}
+# {{- if $resource.enabled }}
+# {{- range $resource.items }}
+# ---
+# apiVersion: iam.aws.crossplane.io/v1beta1
+# kind: GroupUserMembership
+# metadata:
+#   {{- $fullName := (print (include "common-gitops.names.name" $root) "-" .name "-groupusermembership") }}
+#   name: {{ $fullName }}
+#   {{- include "common-gitops.aws.labels.full" (dict "root" $root "resource" $resource "item" .) | trim | nindent 2 }}
+# spec:
+#   {{- with .deletionPolicy }}
+#   deletionPolicy: {{ . }}
+#   {{- end }}
+#   forProvider:
+#     {{- if (.forProvider).groupNameRef }}
+#     groupNameRef:
+#       {{- include "common-gitops.tplvalues.render" (dict "value" .forProvider.groupNameRef "context" $root) | nindent 6 }}
+#     {{- else if (.forProvider).groupNameSelector }}
+#     groupNameSelector:
+#       {{- include "common-gitops.tplvalues.render" (dict "value" .forProvider.groupNameSelector "context" $root) | nindent 6 }}
+#     {{- else }}
+#     groupName: "{{ required "groupName is required" (.forProvider).groupName }}"
+#     {{- end }}
+#     {{- if (.forProvider).userNameRef }}
+#     userNameRef:
+#       {{- include "common-gitops.tplvalues.render" (dict "value" .forProvider.userNameRef "context" $root) | nindent 6 }}
+#     {{- else if (.forProvider).userNameSelector }}
+#     userNameSelector:
+#       {{- include "common-gitops.tplvalues.render" (dict "value" .forProvider.userNameSelector "context" $root) | nindent 6 }}
+#     {{- else }}
+#     userName: "{{ required "userName is required" (.forProvider).userName }}"
+#     {{- end }}
+#   {{- include "common-gitops.aws.publishConnectionDetailsTo" (dict "root" $root "resource" $resource "name" $fullName) | nindent 2 }}
+#   {{- include "common-gitops.aws.providerConfigRef" $root | nindent 2 }}
+# {{- end }}
+# {{- end }}

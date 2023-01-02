@@ -1,0 +1,9 @@
+## @section AWS resources
+
+## @param Bucket resource parameters
+##
+Bucket: {}
+
+## @param BucketPolicy resource parameters
+##
+BucketPolicy: {}

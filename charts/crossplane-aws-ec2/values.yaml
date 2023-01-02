@@ -1,0 +1,85 @@
+## @section AWS resources
+
+## @param Address resource parameters
+##
+Address: {}
+
+## @param Instance resource parameters
+##
+Instance: {}
+
+## @param InternetGateway resource parameters
+##
+InternetGateway: {}
+
+## @param LaunchTemplate resource parameters
+##
+LaunchTemplate: {}
+
+## @param LaunchTemplateVersion resource parameters
+##
+LaunchTemplateVersion: {}
+
+## @param NATGateway resource parameters
+##
+NATGateway: {}
+
+## @param Route resource parameters
+##
+Route: {}
+
+## @param RouteTable resource parameters
+##
+RouteTable: {}
+
+## @param SecurityGroup resource parameters
+##
+SecurityGroup: {}
+
+## @param Subnet resource parameters
+##
+Subnet: {}
+
+## @param TransitGatewayVPCAttachmentAccepter resource parameters
+##
+TransitGatewayVPCAttachmentAccepter: {}
+
+## @param TransitGateway resource parameters
+##
+TransitGateway: {}
+
+## @param TransitGatewayRoute resource parameters
+##
+TransitGatewayRoute: {}
+
+## @param TransitGatewayRouteTable resource parameters
+##
+TransitGatewayRouteTable: {}
+
+## @param TransitGatewayVPCAttachment resource parameters
+##
+TransitGatewayVPCAttachment: {}
+
+## @param Volume resource parameters
+##
+Volume: {}
+
+## @param VPC resource parameters
+##
+VPC: {}
+
+## @param VPCCIDRBlock resource parameters
+##
+VPCCIDRBlock: {}
+
+## @param VPCEndpoint resource parameters
+##
+VPCEndpoint: {}
+
+## @param VPCEndpointServiceConfiguration resource parameters
+##
+VPCEndpointServiceConfiguration: {}
+
+## @param VPCPeeringConnection resource parameters
+##
+VPCPeeringConnection: {}

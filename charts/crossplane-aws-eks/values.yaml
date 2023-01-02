@@ -1,0 +1,17 @@
+## @section AWS resources
+
+## @param Addon resource parameters
+##
+Addon: {}
+
+## @param Cluster resource parameters
+##
+Cluster: {}
+
+## @param IdentityProviderConfig resource parameters
+##
+IdentityProviderConfig: {}
+
+## @param NodeGroup resource parameters
+##
+NodeGroup: {}

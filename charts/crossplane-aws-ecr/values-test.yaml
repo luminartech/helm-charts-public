@@ -1,0 +1,71 @@
+---
+## AWS ECR resources configurations
+
+LifecyclePolicy:
+  labels:
+    ecr.aws.crossplane.io/selector-name: test
+  tags: {}
+  items:
+    test:
+      labels:
+        ecr.aws.crossplane.io/infra-resource: test
+      forProvider:
+        region: us-west-2
+        repositoryNameRef:
+          name: example
+        lifecyclePolicyText: |-
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Expire images older than 14 days",
+                "selection": {
+                  "tagStatus": "untagged",
+                  "countType": "sinceImagePushed",
+                  "countUnit": "days",
+                  "countNumber": 14
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }
+
+Repository:
+  labels:
+    ecr.aws.crossplane.io/selector-name: test
+  tags: {}
+  items:
+    test:
+      labels:
+        ecr.aws.crossplane.io/infra-resource: test
+      forProvider:
+        region: us-west-2
+        imageScanningConfiguration:
+          scanOnPush: true
+        imageTagMutability: IMMUTABLE
+
+RepositoryPolicy:
+  labels:
+    ecr.aws.crossplane.io/selector-name: test
+  tags: {}
+  items:
+    test:
+      labels:
+        ecr.aws.crossplane.io/infra-resource: test
+      forProvider:
+        region: us-west-2
+        repositoryNameRef:
+          name: example
+        policy:
+          statements:
+            - action:
+                - "ecr:DescribeRepositories"
+                - "ecr:DescribeImages"
+              effect: Allow
+              principal:
+                awsPrincipals:
+                  - iamUserArnRef:
+                      name: someuser
+          version: '2012-10-17'

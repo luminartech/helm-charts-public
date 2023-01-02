@@ -1,0 +1,59 @@
+---
+## AWS EKS resources configurations
+
+Addon:
+  items:
+    coredns:
+      forProvider:
+        addonName: coredns
+        addonVersion: "v1.8.4-eksbuild.1"
+        clusterName: "test"
+
+IdentityProviderConfig:
+  items:
+    test:
+      forProvider:
+        clusterNameRef:
+          name: sample-cluster
+        oidc:
+          clientId: spn:example-client-id
+          issuerUrl: https://sts.windows.net/example-tenant-id/
+          usernameClaim: "upn"
+          usernamePrefix: "aad:"
+          groupsClaim: "group"
+          groupsPrefix: "aad:"
+
+NodeGroup:
+  items:
+    "_":
+      forProvider:
+        region: us-west-2
+        clusterNameRef:
+          name: sample-cluster
+        subnetRefs:
+          - name: sample-subnet1
+        nodeRoleRef:
+          name: somenoderole
+        scalingConfig:
+          desiredSize: 1
+          maxSize: 1
+          minSize: 1
+
+Cluster:
+  items:
+    test:
+      forProvider:
+        roleArnRef:
+          name: somerole
+        resourcesVpcConfig:
+          endpointPrivateAccess: true
+          endpointPublicAccess: true
+          subnetIdRefs:
+            - name: sample-subnet1
+            - name: sample-subnet2
+          securityGroupIdRefs:
+            - name: sample-cluster-sg
+        version: "1.23"
+
+FargateProfile:
+  enabled: false
