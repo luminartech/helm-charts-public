@@ -33,7 +33,7 @@ jobs:
         with:
           version: v3.10.3
       - name: Helm Repository Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           repository: luminartech/helm-repo-public
           token: ${{ steps.generate_token.outputs.token }}
@@ -56,7 +56,7 @@ jobs:
           files_changed="$(echo $files_changed_data | jq -r '.[] | .filename')"
           # Adding || true to avoid "Process exited with code 1" errors
           charts_dirs_changed="$(echo "$files_changed" | xargs dirname | grep -o "charts/[^/]*" | sort | uniq || true)"
-          cd ${{ github.repository }}
+          cd luminartech/helm-charts-public
           for chart in ${charts_dirs_changed}; do
             cd ${chart}
             echo "Generating helm package for ${chart}"
@@ -68,8 +68,8 @@ jobs:
             # this command should fail the job if tag already exists
             git tag ${chart_name}-${chart_version}
             git push -f origin ${chart_name}-${chart_version}
-            # Do not force update, we want it to fail if same version package exists
-            mv *.tgz "${{ github.repository.owner }}/helm-repo-public/"
+            # Do not force update, we want this job to fail if same version package exists
+            mv *.tgz "luminartech/helm-repo-public/"
             cd -
           done
       - name: Push changes to helm repository
