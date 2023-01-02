@@ -1,5 +1,6 @@
 ## @section AWS resources
 
+
 ## @param AccessPoint resource parameters
 ##
 AccessPoint: {}
