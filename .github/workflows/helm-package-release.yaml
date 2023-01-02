@@ -63,17 +63,21 @@ jobs:
           charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | grep -o "charts/[^/]*" | sort | uniq || true)"
           for chart in $charts_dirs_changed; do
             cd ${chart}
-            echo "Generating helm package for ${chart}"
-            helm dependency update
-            rm -f *.tgz || true
-            helm package .
-            chart_name=$(awk -F '[/]' '{print $2}' <<< ${chart})
-            chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed 's/.tgz//'|awk -F '[-]' '{print $NF}')
-            # this command should fail the job if tag already exists
-            git tag rel-${chart_name}-${chart_version}
-            git push -f origin rel-${chart_name}-${chart_version}
-            # Do not force update, we want this job to fail if same version package exists
-            mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/"
+            if [ -f Chart.yaml ]; then
+              echo "Generating helm package for ${chart}"
+              helm dependency update
+              rm -f *.tgz || true
+              helm package .
+              chart_name=$(awk -F '[/]' '{print $2}' <<< ${chart})
+              chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed 's/.tgz//'|awk -F '[-]' '{print $NF}')
+              # this command should fail the job if tag already exists
+              git tag rel-${chart_name}-${chart_version}
+              git push -f origin rel-${chart_name}-${chart_version}
+              # Do not force update, we want this job to fail if same version package exists
+              mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/"
+            else
+              echo "WARN: Chart.yaml missing for ${chart}"
+            fi
             cd -
           done
       - name: Push changes to helm repository
