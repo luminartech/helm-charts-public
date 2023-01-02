@@ -1,0 +1,97 @@
+{{- $kind := "Bucket" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: s3.aws.crossplane.io/v1beta1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  forProvider:
+    {{- with .forProvider }}
+      {{- with .acl }}
+    acl: {{ . }}
+      {{- end }}
+      {{- with .grantFullControl }}
+    grantFullControl: {{ . }}
+      {{- end }}
+      {{- with .grantRead }}
+    grantRead: {{ . }}
+      {{- end }}
+      {{- with .grantReadAcp }}
+    grantReadAcp: {{ . }}
+      {{- end }}
+      {{- with .grantWrite }}
+    grantWrite: {{ . }}
+      {{- end }}
+      {{- with .grantWriteAcp }}
+    grantWriteAcp: {{ . }}
+      {{- end }}
+      {{- with .locationConstraint }}
+    locationConstraint: {{ . }}
+      {{- end }}
+      {{- with .versioningConfiguration }}
+    versioningConfiguration:
+      status: {{ .status }}
+      mfaDelete: {{ .mfaDelete }}
+      {{- end }}
+      {{- with .objectLockEnabledForBucket }}
+    objectLockEnabledForBucket: {{ . }}
+      {{- end }}
+      {{- with .objectOwnership }}
+    objectOwnership: {{ . }}
+      {{- end }}
+      {{- with .loggingConfiguration }}
+    loggingConfiguration:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .notificationConfiguration }}
+    notificationConfiguration:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .publicAccessBlockConfiguration }}
+    publicAccessBlockConfiguration:
+      blockPublicPolicy: {{ .blockPublicPolicy }}
+      blockPublicAcls: {{ .blockPublicAcls }}
+      ignorePublicAcls: {{ .ignorePublicAcls }}
+      restrictPublicBuckets: {{ .restrictPublicBuckets }}
+      {{- end }}
+      {{- with .accelerateConfiguration }}
+    accelerateConfiguration:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .serverSideEncryptionConfiguration }}
+    serverSideEncryptionConfiguration:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .tagging }}
+    tagging:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .corsConfiguration }}
+    corsConfiguration:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .lifecycleConfiguration }}
+    lifecycleConfiguration:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .replicationConfiguration }}
+    replicationConfiguration:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .websiteConfiguration }}
+    websiteConfiguration:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  {{- end }}
+{{- end }}

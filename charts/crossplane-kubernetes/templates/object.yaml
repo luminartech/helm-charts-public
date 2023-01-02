@@ -1,0 +1,27 @@
+{{- $kind := "Object" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: kubernetes.crossplane.io/v1alpha1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  forProvider:
+    manifest:
+      {{- include "common-gitops.tplvalues.render" (dict "value" .forProvider.manifest "context" $root) | nindent 6 }}
+    {{- with .managementPolicy }}
+  managementPolicy: "{{ . }}"
+    {{- end }}
+    {{- with .references }}
+  references:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  {{- end }}
+{{- end }}

@@ -1,0 +1,43 @@
+{{- $kind := "VPC" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: ec2.aws.crossplane.io/v1beta1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  forProvider:
+    {{- with .forProvider }}
+      {{- with .amazonProvidedIpv6CidrBlock }}
+    amazonProvidedIpv6CidrBlock: {{ . }}
+      {{- end }}
+    cidrBlock: {{ .cidrBlock | quote }}
+      {{- with .enableDnsHostNames }}
+    enableDnsHostNames: {{ . }}
+      {{- end }}
+      {{- with .enableDnsSupport }}
+    enableDnsSupport: {{ . }}
+      {{- end }}
+      {{- with .instanceTenancy }}
+    instanceTenancy: "{{ . }}"
+      {{- end }}
+      {{- with .ipv6CidrBlock }}
+    ipv6CidrBlock: "{{ . }}"
+      {{- end }}
+      {{- with .ipv6Pool }}
+    ipv6Pool: "{{ . }}"
+      {{- end }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
+    {{- include "common-gitops.tags.list" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
+    {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  {{- end -}}
+{{- end -}}

@@ -1,0 +1,46 @@
+{{- $kind := "ResourceRecordSet" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+# TODO: Implement full specification from the link below:
+# https://doc.crds.dev/github.com/crossplane/provider-aws/route53.aws.crossplane.io/ResourceRecordSet/v1alpha1@v0.31.0
+apiVersion: route53.aws.crossplane.io/v1alpha1
+kind: {{ $kind }}
+metadata:
+    {{- with .name }}
+  # Crossplane v0.31.0 currently expects metadata.name as a DNS record name
+  name: {{ . | quote }}
+    {{- end }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  forProvider:
+    {{- with .forProvider }}
+      {{- with .type }}
+    type: {{ . | quote }}
+      {{- end }}
+      {{- with .ttl }}
+    ttl: {{ . }}
+      {{- end }}
+      {{- with .resourceRecords }}
+    resourceRecords:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+      {{- end }}
+      {{- with .resourceRecordsLookup }}
+    resourceRecords:
+        {{- range $value := (lookup .apiVersion .kind "" .name).status.atProvider.delegationSet.nameServers }}
+          - value: {{ $value }}
+        {{- end }}
+      {{- end }}
+      {{- if any (hasKey . "zoneId") (hasKey . "zoneIdRef") (hasKey . "zoneIdSelector") }}
+        {{- include "common-gitops.crossplane.reference" (dict "field" "zoneId" "context" . "root" $root) | nindent 4 }}
+      {{- end }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  {{- end -}}
+{{- end -}}

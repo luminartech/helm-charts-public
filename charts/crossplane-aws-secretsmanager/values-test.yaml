@@ -1,0 +1,21 @@
+---
+## AWS Secretsmanager resources configurations
+
+Secret:
+  items:
+    test:
+      labels:
+        secretsmanager.aws.crossplane.io/infra-resource: test
+      forProvider:
+        region: us-west-2
+        description: "test"
+        # kmsKeyIDRef:
+        #   name: example-key-id
+        forceDeleteWithoutRecovery: true
+        # recoveryWindowInDays: 7
+        stringSecretRef:
+          key: password
+          name: example-secret-manager
+          namespace: infra-crossplane
+        tags:
+          secretTag: secretValue

@@ -1,0 +1,44 @@
+{{- $kind := "FileSystem" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: efs.aws.crossplane.io/v1alpha1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  forProvider:
+    {{- with .forProvider }}
+      {{- with .availabilityZoneName }}
+    availabilityZoneName: {{ . | quote }}
+      {{- end }}
+      {{- with .backup }}
+    backup: {{ . }}
+      {{- end }}
+      {{- with .encrypted }}
+    encrypted: {{ . }}
+      {{- end }}
+      {{- include "common-gitops.crossplane.reference" (dict "field" "kmsKeyID" "fieldRef" "kmsKeyIdRef" "fieldSelector" "kmsKeyIdSelector"
+                                            "context" . "root" $root "optional" true) | nindent 4 }}
+      {{- with .performanceMode }}
+    performanceMode: {{ . | quote }}
+      {{- end }}
+      {{- with .provisionedThroughputInMibps }}
+    provisionedThroughputInMibps: {{ . }}
+      {{- end }}
+      {{- with .throughputMode }}
+    throughputMode: {{ . | quote }}
+      {{- end }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
+    {{- include "common-gitops.tags.list" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
+    {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  {{- end -}}
+{{- end -}}

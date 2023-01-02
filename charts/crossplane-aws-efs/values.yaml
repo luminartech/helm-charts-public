@@ -1,0 +1,13 @@
+## @section AWS resources
+
+## @param AccessPoint resource parameters
+##
+AccessPoint: {}
+
+## @param FileSystem resource parameters
+##
+FileSystem: {}
+
+## @param MountTarget resource parameters
+##
+MountTarget: {}

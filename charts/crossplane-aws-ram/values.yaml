@@ -1,0 +1,5 @@
+## @section AWS resources
+
+## @param ResourceShare resource parameters
+##
+ResourceShare: {}

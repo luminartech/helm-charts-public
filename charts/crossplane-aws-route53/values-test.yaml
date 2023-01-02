@@ -1,0 +1,35 @@
+---
+## AWS Route 53 resources configurations
+
+HostedZone:
+  labels:
+    route53.aws.crossplane.io/selector-name: test
+  tags: {}
+  items:
+    test:
+      labels:
+        route53.aws.crossplane.io/infra-resource: test
+      forProvider:
+        name: "test.com"
+        config:
+          comment: "Test zone"
+
+ResourceRecordSet:
+  labels:
+    route53.aws.crossplane.io/selector-name: test
+  tags: {}
+  items:
+    test:
+      name: "subdomain"
+      labels:
+        route53.aws.crossplane.io/infra-resource: test
+      forProvider:
+        type: NS
+        ttl: 60
+        resourceRecords:
+        - value: "ns-856.awsdns-43.net."
+        - value: "ns-1441.awsdns-52.org."
+        - value: "ns-1988.awsdns-56.co.uk."
+        - value: "ns-244.awsdns-30.com."
+        zoneIdRef:
+          name: luminarinfra.com

@@ -1,0 +1,40 @@
+---
+## Kubernetes resources configurations
+## Note: Default values are used. This file should be used as a documentation/reference for your actual configuration
+
+##
+# Kubernetes - Object
+##
+Object:
+  items:
+    aws-auth-configmap:
+      labels:
+        crossplane.io/infra-resource: test
+      forProvider:
+        manifest:
+          apiVersion: v1
+          kind: ConfigMap
+          data:
+            mapAccounts: |
+              []
+            mapRoles: |
+              - "groups":
+                - "system:bootstrappers"
+                - "system:nodes"
+                "rolearn": "arn:aws:iam::627218074315:role/infra-managed-ondemand"
+                "username": "system:node:\{\{EC2PrivateDNSName\}\}"
+            mapUsers: |
+              - userarn: arn:aws:iam::627218074315:user/testuser
+                username: testuser
+                groups:
+                  - "system:masters"
+          metadata:
+            labels:
+              app.kubernetes.io/name: test
+              helm.sh/chart: test
+              app.kubernetes.io/instance: kubernetes
+              app.kubernetes.io/managed-by: crossplane
+            name: aws-auth
+            namespace: kube-system
+      managementPolicy: ""
+      references: []

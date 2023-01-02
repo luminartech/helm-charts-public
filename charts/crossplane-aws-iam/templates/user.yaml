@@ -1,0 +1,26 @@
+# {{- $root := . }}{{- $resource := ($root.Values.User) }}
+# {{- if $resource.enabled }}
+# {{- range $resource.items }}
+# ---
+# apiVersion: iam.aws.crossplane.io/v1beta1
+# kind: User
+# metadata:
+#   {{- $fullName := (print (include "common-gitops.names.name" $root) "-" .name "-user") }}
+#   name: {{ $fullName }}
+#   {{- include "common-gitops.aws.labels.full" (dict "root" $root "resource" $resource "item" .) | trim | nindent 2 }}
+# spec:
+#   {{- with .deletionPolicy }}
+#   deletionPolicy: {{ . }}
+#   {{- end }}
+#   forProvider:
+#     {{- with .forProvider.path }}
+#     path: "{{ . }}"
+#     {{- end }}
+#     {{- with .forProvider.permissionBoundary }}
+#     permissionsBoundary: "{{ . }}"
+#     {{- end }}
+#     {{- include "common-gitops.aws.tags.list" (dict "root" $root "resource" $resource "item" .) | trim | nindent 4 }}
+#   {{- include "common-gitops.aws.publishConnectionDetailsTo" (dict "root" $root "resource" $resource "name" $fullName) | nindent 2 }}
+#   {{- include "common-gitops.aws.providerConfigRef" $root | nindent 2 }}
+# {{- end }}
+# {{- end }}

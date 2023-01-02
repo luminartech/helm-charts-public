@@ -1,0 +1,25 @@
+## @section AWS resources
+
+## @param AccessKey resource parameters
+##
+AccessKey: {}
+
+## @param InstanceProfile resource parameters
+##
+InstanceProfile: {}
+
+## @param OpenIDConnectProvider resource parameters
+##
+OpenIDConnectProvider: {}
+
+## @param Policy resource parameters
+##
+Policy: {}
+
+## @param Role resource parameters
+##
+Role: {}
+
+## @param RolePolicyAttachment resource parameters
+##
+RolePolicyAttachment: {}

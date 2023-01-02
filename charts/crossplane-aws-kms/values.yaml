@@ -1,0 +1,9 @@
+## @section AWS resources
+
+## @param Alias resource parameters
+##
+Alias: {}
+
+## @param Key resource parameters
+##
+Key: {}

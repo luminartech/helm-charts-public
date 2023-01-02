@@ -1,0 +1,53 @@
+{{- $kind := "VPCEndpoint" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: ec2.aws.crossplane.io/v1alpha1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  forProvider:
+    {{- with .forProvider }}
+      {{- with .policyDocument }}
+    policyDocument:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .privateDNSEnabled }}
+    privateDNSEnabled: {{ . }}
+      {{- end }}
+      {{- include "common-gitops.crossplane.reference" (dict "field" "routeTableIds"
+                                            "fieldRef" "routeTableIdRefs"
+                                            "fieldSelector" "routeTableIdSelector"
+                                            "context" . "root" $root "optional" true) | nindent 4 }}
+      {{- include "common-gitops.crossplane.reference" (dict "field" "securityGroupIds"
+                                            "fieldRef" "securityGroupIdRefs"
+                                            "fieldSelector" "securityGroupIdSelector"
+                                            "context" . "root" $root "optional" true) | nindent 4 }}
+      {{- with (.serviceName | required "serviceName is required") }}
+    serviceName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+      {{- end }}
+      {{- include "common-gitops.crossplane.reference" (dict "field" "subnetIds"
+                                            "fieldRef" "subnetIdRefs"
+                                            "fieldSelector" "subnetIdSelector"
+                                            "context" . "root" $root "optional" true) | nindent 4 }}
+      {{- with .tagSpecifications }}
+    tagSpecifications:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+      {{- with .vpcEndpointType }}
+    vpcEndpointType: {{ . | quote }}
+      {{- end }}
+      {{- include "common-gitops.crossplane.reference" (dict "field" "vpcId" "context" . "root" $root "optional" true) | nindent 4 }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
+    {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  {{- end -}}
+{{- end -}}

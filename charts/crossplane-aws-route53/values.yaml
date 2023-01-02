@@ -1,0 +1,9 @@
+## @section AWS resources
+
+## @param HostedZone resource parameters
+##
+HostedZone: {}
+
+## @param ResourceRecordSet resource parameters
+##
+ResourceRecordSet: {}

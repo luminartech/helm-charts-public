@@ -1,0 +1,150 @@
+---
+# Note: Keep an alphabetical order, please
+
+##
+# IAM
+##
+# global:
+#   # 64 chars long to test trimming
+#   releaseNameOverride: shah5zieta8cu4ahve9ooy2eix5eeseis6jaecop3nahjae4keizohbeiyoo5sho
+AccessKey:
+  items:
+    test:
+      name: supertest
+      tags:
+        access-key-only: test
+      forProvider:
+        userNameRef:
+          name: someuser
+# Group:
+  # enabled: false
+  # items:
+  #   - name: test
+
+# GroupPolicyAttachment:
+  # enabled: false
+  # items:
+  #   - name: test
+  #     forProvider:
+  #       policyArnRef:
+  #         name: somepolicy
+  #       groupNameRef:
+  #         name: somegroup
+
+# GroupUserMembership:
+  # enabled: false
+  # items:
+  #   - name: test
+  #     forProvider:
+  #       groupNameRef:
+  #         name: somegroup
+  #       userNameRef:
+  #         name: someuser
+
+InstanceProfile:
+  tags:
+    instance-profile-only: test
+  items:
+    test:
+      deletionPolicy: Delete
+      forProvider:
+        roleRef:
+          name: crossplane-aws-iam-test-role
+
+OpenIDConnectProvider:
+  deletionPolicy: Delete
+  items:
+    test:
+      labels:
+        crossplane.io/infra-resource: test
+      forProvider:
+        clientIDList:
+          - sts.amazonaws.com
+        thumbprintList:
+          - "9e99a48a9960b14926bb7f3b02e22da2b0ab7280"
+        url: https://example.com
+
+Policy:
+  tags:
+    policy-only: test_value
+  items:
+    test:
+      labels:
+        crossplane.io/infra-resource: test
+      deletionPolicy: Delete
+      forProvider:
+        description: "IAM Policy generated using crossplane + helm chart"
+        document: |-
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Action": [
+                  "route53:ChangeResourceRecordSets",
+                  "route53:ListResourceRecordSets"
+                ],
+                "Resource": "arn:aws:route53:::hostedzone/*"
+              },
+              {
+                "Effect": "Allow",
+                "Action": "route53:ListHostedZonesByName",
+                "Resource": "*"
+              }
+            ]
+          }
+
+Role:
+  items:
+    test:
+      tags:
+        role-only: test
+      deletionPolicy: Delete
+      forProvider:
+        description: "IAM Role generated using crossplane + helm chart"
+        maxSessionDuration: 3600 # 1 to 12 hours
+        assumeRolePolicyDocument: |-
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": "ec2.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+
+RolePolicyAttachment:
+  items:
+    test:
+      deletionPolicy: Delete
+      labels:
+        rpa-only: test
+      forProvider:
+        policyArn: arn:aws:iam::XXXXXXXX:policy/crossplane-aws-iam-test-policy
+        roleNameRef:
+          name: crossplane-aws-iam-test-role
+
+# User:
+  # enabled: false
+  # items:
+  # - name: "test"
+  #   labels:
+  #     crossplane.io/infra-module: test
+  #   tags: {}
+  #   forProvider:
+  #     path: test
+  #     permissionsBoundary: test
+
+# UserPolicyAttachment:
+  # enabled: false
+  # items:
+  # - name: test
+  #   forProvider:
+  #     policyArnRef:
+  #       name: somepolicy
+  #     userNameRef:
+  #       name: someuser

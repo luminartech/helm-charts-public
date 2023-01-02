@@ -1,0 +1,24 @@
+# {{- $root := . }}{{- $resource := ($root.Values.Group) }}
+# {{- if $resource.enabled }}
+# {{- range $resource.items }}
+# ---
+# apiVersion: iam.aws.crossplane.io/v1beta1
+# kind: Group
+# metadata:
+#   {{- $fullName := (print (include "common-gitops.names.name" $root) "-" .name "-group") }}
+#   name: {{ $fullName }}
+#   {{- include "common-gitops.aws.labels.full" (dict "root" $root "resource" $resource "item" .) | trim | nindent 2 }}
+# spec:
+#   {{- with .deletionPolicy }}
+#   deletionPolicy: {{ . }}
+#   {{- end }}
+#   {{- with (.forProvider) }}
+#   forProvider:
+#     {{- with .path }}
+#     path: {{ . }}
+#     {{- end }}
+#   {{- end }}
+#   {{- include "common-gitops.aws.publishConnectionDetailsTo" (dict "root" $root "resource" $resource "name" $fullName) | nindent 2 }}
+#   {{- include "common-gitops.aws.providerConfigRef" $root | nindent 2 }}
+# {{- end }}
+# {{- end }}

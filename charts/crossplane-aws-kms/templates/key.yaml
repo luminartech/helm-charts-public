@@ -1,0 +1,58 @@
+{{- $kind := "Key" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: kms.aws.crossplane.io/v1alpha1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  forProvider:
+    {{- with .forProvider }}
+      {{- with .bypassPolicyLockoutSafetyCheck }}
+    bypassPolicyLockoutSafetyCheck: {{ . }}
+      {{- end }}
+      {{- with .customKeyStoreID }}
+    customKeyStoreID: {{ . }}
+      {{- end }}
+      {{- with .customerMasterKeySpec }}
+    customerMasterKeySpec: {{ . | quote }}
+      {{- end }}
+      {{- with .description }}
+    description: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+      {{- end }}
+      {{- with .enabled }}
+    enabled: {{ . }}
+      {{- end }}
+      {{- with .keySpec }}
+    keySpec: {{ . | quote }}
+      {{- end }}
+      {{- with .keyUsage }}
+    keyUsage: {{ . }}
+      {{- end }}
+      {{- with .multiRegion }}
+    multiRegion: {{ . }}
+      {{- end }}
+      {{- with .origin }}
+    origin: {{ . }}
+      {{- end }}
+      {{- with .pendingWindowInDays }}
+    pendingWindowInDays: {{ . }}
+      {{- end }}
+      {{- with .policy }}
+    policy: |-
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
+    {{- include "common-gitops.tags.prefixed_list" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
+    {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+  {{- end -}}
+{{- end -}}
