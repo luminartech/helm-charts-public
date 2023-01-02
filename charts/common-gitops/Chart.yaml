@@ -13,7 +13,6 @@ keywords:
   - crossplane
   - infrastructure
   - library
-  - iac
 maintainers:
   - name: SRE
     email: sre@luminartech.com
