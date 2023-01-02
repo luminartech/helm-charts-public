@@ -12,10 +12,17 @@ jobs:
   stale:
     runs-on: ubuntu-latest
     steps:
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.SOFTWARE_APP_ID }}
+          private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
+          installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
       # This step will add the stale comment and label for the first 15 days without activity. It won't close any task
       - uses: actions/stale@v6.0.1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ steps.generate_token.outputs.token }}
           stale-issue-message: 'This Issue has been automatically marked as "stale" because it has not had recent activity (for 15 days). It will be closed if no further activity occurs. Thanks for the feedback.'
           stale-pr-message: 'This Pull Request has been automatically marked as "stale" because it has not had recent activity (for 15 days). It will be closed if no further activity occurs. Thank you for your contribution.'
           days-before-stale: 15
@@ -26,7 +33,7 @@ jobs:
       # This step will add the 'solved' label and the last comment before closing the issue or PR. Note that it won't close any issue or PR, they will be closed by the clossing-issues workflow
       - uses: actions/stale@v6.0.1
         with:
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token: ${{ steps.generate_token.outputs.token }}
           stale-issue-message: 'Due to the lack of activity in the last 5 days since it was marked as "stale", we proceed to close this Issue. Do not hesitate to reopen it later if necessary.'
           stale-pr-message: 'Due to the lack of activity in the last 5 days since it was marked as "stale", we proceed to close this Pull Request. Do not hesitate to reopen it later if necessary.'
           any-of-labels: 'stale'
