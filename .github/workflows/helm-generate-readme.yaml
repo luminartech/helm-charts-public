@@ -21,11 +21,6 @@ jobs:
           app_id: ${{ secrets.SOFTWARE_APP_ID }}
           private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
           installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
-      - name: Use token
-        env:
-          TOKEN: ${{ steps.generate_token.outputs.token }}
-        run: |
-          echo "The generated token is masked: ${TOKEN}"
       - name: Install readme-generator-for-helm
         run: npm install -g @bitnami/readme-generator-for-helm@2.4.3
       - name: Checkout repo
@@ -34,8 +29,10 @@ jobs:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
           path: ${{ github.repository }}
-          token: ${{ secrets.TOKEN }}
+          token: ${{ steps.generate_token.outputs.token }}
       - name: Execute readme-generator-for-helm
+        env:
+          TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           cd ${{ github.repository }}
           # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
