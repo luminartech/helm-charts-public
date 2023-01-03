@@ -34,7 +34,7 @@ jobs:
       - id: get-asset
         name: Get modified assets
         run: |
-          [[ "${DEBUG}" == "1" ]] && set -x || true
+          [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
           # Adding || true to avoid "Process exited with code 1" errors
           assets=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*' | sed -nr "s|charts/shared/([^/]*).*|\1|p" | uniq | sort || true))
           assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*' | sed -nr "s|charts/iac/([^/]*).*|\1|p" | uniq | sort || true))
@@ -53,7 +53,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            [[ "${DEBUG}" == "1" ]] && set -x || true
+            [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
             if ("${{ steps.get-asset.outputs.result }}" != "ok" ) {
               core.warning("${{ steps.get-asset.outputs.message }}")
             } else {
