@@ -1,6 +1,7 @@
 # Ref: https://github.com/bitnami/charts/blob/main/.github/workflows/generate-chart-readme.yml
 name: '[HELM] Package and release'
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -46,13 +47,11 @@ jobs:
         uses: tj-actions/changed-files@v35
         with:
           dir_names: "true"
-          dir_names_max_depth: '2'
           path: luminartech/helm-charts-public
           files: |
             charts/**
       - name: Build helm packages and push tags
         run: |
-          set -x
           workspace_dir=$(pwd)
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
@@ -62,21 +61,20 @@ jobs:
           charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*/' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
           charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*/' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
           charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*/' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
-          echo $charts_dirs_changed
           for chart in "${charts_dirs_changed[@]}"; do
             cd ${chart}
             if [ -f Chart.yaml ]; then
               echo "Generating helm package for ${chart}"
-              echo helm dependency update
-              echo rm -f *.tgz || true
-              echo helm package .
+              helm dependency update
+              rm -f *.tgz || true
+              helm package .
               chart_name=$(awk -F '[/]' '{print $NF}' <<< ${chart})
               chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed 's/.tgz//'|awk -F '[-]' '{print $NF}')
               # this command should fail the job if tag already exists
-              echo git tag rel-${chart_name}-${chart_version}
-              echo git push -f origin rel-${chart_name}-${chart_version}
+              git tag rel-${chart_name}-${chart_version}
+              git push -f origin rel-${chart_name}-${chart_version}
               # Do not force update, we want this job to fail if same version package exists
-              echo mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/"
+              mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/"
             else
               echo "WARN: Chart.yaml missing for ${chart}"
             fi
