@@ -36,13 +36,13 @@ jobs:
         run: |
           set -x
           # Adding || true to avoid "Process exited with code 1" errors
-          assets=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*' | sed -nr "s|charts/shared/([^/]*).*|\1|p" | sort | uniq || true))
+          assets=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*' | sed -nr "s|charts/shared/([^/]*).*|\1|p" | uniq | sort || true))
           echo $assets
-          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*' | sed -nr "s|charts/iac/([^/]*).*|\1|p" | sort | uniq || true))
+          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*' | sed -nr "s|charts/iac/([^/]*).*|\1|p" | uniq | sort || true))
           echo $assets
-          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*' | sed -nr "s|charts/modules/apps/([^/]*).*|\1|p" | sort | uniq || true))
+          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*' | sed -nr "s|charts/modules/apps/([^/]*).*|\1|p" | uniq | sort || true))
           echo $assets
-          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*' | sed -nr "s|charts/modules/iac/([^/]*).*|\1|p" | sort | uniq || true))
+          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*' | sed -nr "s|charts/modules/iac/([^/]*).*|\1|p" | uniq | sort || true))
           echo $assets
           if [[ "${#assets[@]}" -ne "1" ]]; then
             echo "result=skip" >> $GITHUB_OUTPUT
