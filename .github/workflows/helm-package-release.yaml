@@ -75,7 +75,8 @@ jobs:
               git tag rel-${chart_name}-${chart_version}
               git push -f origin rel-${chart_name}-${chart_version}
               # Do not force update, we want this job to fail if same version package exists
-              mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/"
+              mkdir -p ${workspace_dir}/luminartech/helm-repo-public/${chart_name}
+              mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/${chart_name}"
             else
               echo "WARN: Chart.yaml missing for ${chart}"
             fi
@@ -89,7 +90,7 @@ jobs:
           if git status -s | grep -e '.*-.*\..*\.tgz'; then
             git config user.name "CI Bot"
             git config user.email "sre@luminartech.com"
-            git add *.tgz
+            git add **.tgz
             git status
             git commit -am "[ CI Bot ] Generated helm packages" --signoff
             git push
