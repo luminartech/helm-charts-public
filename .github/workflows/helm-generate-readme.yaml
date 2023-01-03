@@ -41,10 +41,10 @@ jobs:
           set -x
           cd luminartech/helm-charts-public
           # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^.\/charts\/iac\/.*/' | cut -d'/' -f 1-3 | uniq || true)"
-          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^.\/charts\/shared\/.*/' | cut -d'/' -f 1-3 | uniq || true)"
-          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^.\/charts\/modules\/apps\/.*/' | cut -d'/' -f 1-4 | uniq || true)"
-          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^.\/charts\/modules\/iac\/.*/' | cut -d'/' -f 1-4 | uniq || true)"
+          charts_dirs_changed="$(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | cut -d'/' -f 1-3 | uniq || true)"
+          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*/' | cut -d'/' -f 1-3 | uniq || true)"
+          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*/' | cut -d'/' -f 1-4 | uniq || true)"
+          charts_dirs_changed+="$(echo -e "\n${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*/' | cut -d'/' -f 1-4 | uniq || true)"
           echo $charts_dirs_changed
           for chart in $charts_dirs_changed; do
             echo "Updating README.md for ${chart}"
