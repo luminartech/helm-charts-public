@@ -44,14 +44,14 @@ jobs:
           echo $assets
           assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*' | sed -nr "s|charts/modules/iac/([^/]*).*|\1|p" | uniq | sort || true))
           echo $assets
-          if [[ "${#assets[@]}" -ne "1" ]]; then
-            echo "result=skip" >> $GITHUB_OUTPUT
-            echo "message=Label cannot be set, cannot infer a single label from: ${assets[@]}" >> $GITHUB_OUTPUT
-            echo "name=NONE" >> $GITHUB_OUTPUT
-          else
+          if [[ "${#assets[@]}" -ne "0" ]]; then
             echo "result=ok" >> $GITHUB_OUTPUT
             echo "message=Adding label '${assets}'" >> $GITHUB_OUTPUT
-            echo "name=${assets}" >> $GITHUB_OUTPUT
+            echo "name=$(echo ${assets}|tr ' ' ', ')" >> $GITHUB_OUTPUT
+          else
+            echo "result=skip" >> $GITHUB_OUTPUT
+            echo "message=No label matches" >> $GITHUB_OUTPUT
+            echo "name=NONE" >> $GITHUB_OUTPUT
           fi
       - name: Show messages
         uses: actions/github-script@v6
