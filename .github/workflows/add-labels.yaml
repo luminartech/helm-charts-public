@@ -34,16 +34,11 @@ jobs:
       - id: get-asset
         name: Get modified assets
         run: |
-          set -x
           # Adding || true to avoid "Process exited with code 1" errors
           assets=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*' | sed -nr "s|charts/shared/([^/]*).*|\1|p" | uniq | sort || true))
-          echo $assets
           assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*' | sed -nr "s|charts/iac/([^/]*).*|\1|p" | uniq | sort || true))
-          echo $assets
           assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*' | sed -nr "s|charts/modules/apps/([^/]*).*|\1|p" | uniq | sort || true))
-          echo $assets
           assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*' | sed -nr "s|charts/modules/iac/([^/]*).*|\1|p" | uniq | sort || true))
-          echo $assets
           if [[ "${#assets[@]}" -ne "0" ]]; then
             echo "result=ok" >> $GITHUB_OUTPUT
             echo "message=Adding label '${assets[@]}'" >> $GITHUB_OUTPUT

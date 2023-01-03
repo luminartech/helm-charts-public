@@ -49,10 +49,10 @@ jobs:
           set -x
           cd luminartech/helm-charts-public
           # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed=($(echo "${{ steps.changed-files.outputs.all_changed_files}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*/' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*/' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*/' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
+          charts_dirs_changed=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
+          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*/' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
+          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*/' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
+          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*/' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
           echo $charts_dirs_changed
           for chart in "${charts_dirs_changed[@]}"; do
             echo "Updating README.md for ${chart}"
