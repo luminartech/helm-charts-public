@@ -1,0 +1,28 @@
+---
+# global:
+  # chartNameOverride: "infra"
+  # releaseNameOverride: "infra"
+external-secrets:
+  enabled: true
+  replicaCount: 2
+  installCRDs: true
+  serviceMonitor:
+    enabled: false
+    additionalLabels:
+      release: monitoring
+  webhook:
+    metrics:
+      service:
+        enabled: false
+    serviceMonitor:
+      enabled: false
+      additionalLabels:
+        release: monitoring
+  certController:
+    serviceMonitor:
+      enabled: false
+      additionalLabels:
+        release: monitoring
+    metrics:
+      service:
+        enabled: false

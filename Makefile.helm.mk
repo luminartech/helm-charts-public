@@ -55,6 +55,13 @@ helm-chart-local-deploy: validate-helm-dir
 	${EXTRA_HELM_ARGS} \
 	${VALUES_FILE}
 
+.PHONY: helm-chart-generate-doc
+helm-chart-generate-doc: validate-helm-dir
+	${L}readme-generator \
+	--values ./values.yaml \
+	--readme=./README.md \
+	--schema "/tmp/schema.json"
+
 .PHONY: helm-chart-local-delete
 helm-chart-local-delete: validate-helm-dir
 	${L}${HELM_BINARY} uninstall ${RELEASE_NAME} \
