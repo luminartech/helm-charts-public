@@ -45,8 +45,6 @@ jobs:
           files: |
             charts/**
       - name: Execute readme-generator-for-helm
-        env:
-          TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           set -x
           cd luminartech/helm-charts-public
