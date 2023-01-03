@@ -49,11 +49,11 @@ external-secrets:
   ## @param external-secrets.replicaCount Default minimum replicas for app.
   ##
   replicaCount: 2
-  
+
   ## @param external-secrets.installCRDs Install CRDs with helm chart.
   ##
   installCRDs: true
-  
+
   ## Metrics service configuration
   ## @param external-secrets.metrics.service.enabled Toggle for metrics service.
   ## When metrics is enabled, it conflicts with serviceMonitor.
@@ -87,7 +87,7 @@ external-secrets:
       enabled: false
       additionalLabels:
         release: monitoring
-  
+
   ## certController service configurations
   ## @param external-secrets.certController.metrics.service.enabled Toggle for certController metrics service.
   ## When metrics is enabled, it conflicts with serviceMonitor.
@@ -118,7 +118,7 @@ crossplane-aws-iam:
   ## ref: https://github.com/luminartech/helm-charts-public/blob/main/charts/iac/crossplane-aws-iam/templates/policy.yaml
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
-  ## 
+  ##
   Policy:
     items:
       _:
@@ -159,7 +159,7 @@ crossplane-aws-iam:
   ## ref: https://github.com/luminartech/helm-charts-public/blob/main/charts/iac/crossplane-aws-iam/templates/role.yaml
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
-  ## 
+  ##
   Role:
     items:
       _:
@@ -218,7 +218,7 @@ crossplane-aws-iam:
   ## ref: https://github.com/luminartech/helm-charts-public/blob/main/charts/iac/crossplane-aws-iam/templates/rolepolicyattachment.yaml
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
-  ## 
+  ##
   RolePolicyAttachment:
     items:
       _:
