@@ -1,0 +1,32 @@
+annotations:
+  category: Application
+apiVersion: v2
+# App version follows the main source app version of upstream helm chart
+appVersion: "0.7.0"
+description: A Helm chart for external-secrets
+name: external-secrets
+# Below version must match the app version for the consistency.
+# Update minor bit if new tag is needed. e.g. 0.7.0-1
+version: "0.7.0"
+home: https://helm-repo-public.luminarinfra.com
+sources:
+  - https://github.com/luminartech/helm-charts-public/
+maintainers:
+  - name: SRE
+    email: sre@luminartech.com
+  - name: Satish Gaikwad
+    email: satish.gaikwad@luminartech.com
+  - name: Hennadii Mykhailiuta
+    email: hennadii.mykhailiuta@luminartech.com
+dependencies:
+  - name: external-secrets
+    version: "0.7.0"
+    repository: https://charts.external-secrets.io
+    condition: external-secrets.enabled
+  - name: crossplane-aws-iam
+    version: "0.31.0"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-iam.enabled
+  - name: common-gitops
+    version: "1.0.0"
+    repository: https://helm-repo-public.luminarinfra.com/

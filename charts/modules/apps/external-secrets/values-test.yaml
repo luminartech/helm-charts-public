@@ -1,0 +1,139 @@
+---
+global:
+  chartNameOverride: "iac-infra-eks"
+  releaseNameOverride: "iac-infra-eks"
+  awsAccountId: "0123456789" # Quotes are important, this must be a string
+  awsRegion: us-west-2
+  eksHash: "e.k.s.h.a.s.h"
+  crossplaneIAMRole: crossplane-provider-aws
+  crossplaneNamespace: "infra-crossplane"
+  vpcFullname: iac-infra-vpc
+  awsMgmtAccountId: "123456789012"
+  clusterType: "workload"
+  environment: "dev"
+  defaultCertIssuer: "infra-cluster-issuer-domain-com"
+  clusterExternalDomain: "domain.com"
+  team: "unknown"
+  providerConfigRef:
+    name: aws-provider
+  secretStoreNamespace: infra-argo-cd
+
+external-secrets:
+  enabled: true
+  installCRDs: true
+  serviceMonitor:
+    enabled: true
+    additionalLabels:
+      release: monitoring
+  webhook:
+    metrics:
+      service:
+        enabled: true
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: monitoring
+  certController:
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: monitoring
+
+AWSExternalSecret:
+  enabled: true
+  items:
+    _:
+      name: github-githuborg-githubrepo
+      namespace: ci-namespace
+      target:
+        template:
+          data:
+            additionalKey: "test"
+      source:
+        secretStoreRef:
+          name: iac-infra-eks-external-secrets
+        data:
+          githubAppID:
+            awsSecretName: prod/gitlab/runner
+            awsSecretKey: githubAppID
+          githubAppInstallationID:
+            awsSecretName: prod/gitlab/runner
+            awsSecretKey: githubAppInstallationID
+          githubAppPrivateKey:
+            awsSecretName: prod/gitlab/runner
+            awsSecretKey: githubAppPrivateKey
+            # encode secret using command: base64 -w 0 /path/to/pem-key-file
+            decodingStrategy: Base64
+          pat:
+            awsSecretName: prod/gitlab/runner
+            awsSecretKey: test
+
+VclusterExternalSecret:
+  enabled: true
+  items:
+    _:
+      annotations:
+        eksClusterName: '{{ include "common-gitops.names.release" . }}'
+        clusterType: '{{.Values.global.clusterType}}'
+        team: '{{.Values.global.team}}'
+      labels:
+        argocd.argoproj.io/secret-type: cluster
+
+EksClusterExternalSecret:
+  enabled: true
+  items:
+    _:
+      roleArn: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/iac-eks-access'
+      annotations:
+        awsRegion: '{{.Values.global.awsRegion}}'
+        awsAccountId: '{{.Values.global.awsAccountId}}'
+        awsMgmtAccountId: '{{.Values.global.awsMgmtAccountId}}'
+        eksClusterName: '{{ include "common-gitops.names.release" . }}'
+        clusterType: '{{.Values.global.clusterType}}'
+        environment: '{{.Values.global.environment}}'
+        vpcFullname: '{{.Values.global.vpcFullname}}'
+        crossplaneNamespace: '{{.Values.global.crossplaneNamespace}}'
+        defaultCertIssuer: '{{.Values.global.defaultCertIssuer}}'
+        clusterExternalDomain: '{{.Values.global.clusterExternalDomain}}'
+        team: '{{.Values.global.team}}'
+      labels:
+        argocd.argoproj.io/secret-type: cluster
+
+ExternalSecretRole:
+  enabled: true
+
+ExternalSecretRoleBinding:
+  enabled: true
+
+ClusterSecretStore:
+  enabled: true
+  items:
+    aws:
+      provider:
+        aws:
+          role: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/external-secrets'
+          auth:
+            jwt:
+              serviceAccountRef:
+                name: 'external-secrets'
+                namespace: 'infra-external-secrets'
+
+SecretStore:
+  enabled: true
+  items:
+    _:
+      provider:
+        kubernetes:
+          remoteNamespace: infra-argo-cd
+          server:
+            url: "https://kubernetes.default.svc"
+            caProvider:
+              type: ConfigMap
+              name: kube-root-ca.crt
+              key: ca.crt
+
+ExternalSecretsServiceAccount:
+  enabled: false
+
+crossplane-aws-iam:
+  enabled: false
