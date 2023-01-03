@@ -29,7 +29,6 @@ jobs:
         uses: tj-actions/changed-files@v35
         with:
           dir_names: "true"
-          path: luminartech/helm-charts-public
           files: |
             charts/**
       - id: get-asset
