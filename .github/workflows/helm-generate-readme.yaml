@@ -46,7 +46,7 @@ jobs:
             charts/**
       - name: Execute readme-generator-for-helm
         run: |
-          set -x
+          [[ "${DEBUG}" == "1" ]] && set -x || true
           cd luminartech/helm-charts-public
           # Adding || true to avoid "Process exited with code 1" errors
           charts_dirs_changed=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
@@ -62,6 +62,7 @@ jobs:
           done
       - name: Push changes to PR branch
         run: |
+          [[ "${DEBUG}" == "1" ]] && set -x || true
           # Push all the changes
           cd luminartech/helm-charts-public
           if git status -s | grep charts; then
