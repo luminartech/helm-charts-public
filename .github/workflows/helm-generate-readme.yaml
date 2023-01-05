@@ -36,23 +36,22 @@ jobs:
           persist-credentials: true
           path: luminartech/helm-charts-public
           token: ${{ steps.generate_token.outputs.token }}
-      - name: Get list of changed directories
-        id: changed-files
-        uses: tj-actions/changed-files@v35
-        with:
-          dir_names: "true"
-          path: luminartech/helm-charts-public
-          files: |
-            charts/**
       - name: Execute readme-generator-for-helm
+        env:
+          token: ${{ steps.generate_token.outputs.token }}
         run: |
-          [[ "${DEBUG}" == "1" ]] && set -x || true
+          [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
           cd luminartech/helm-charts-public
+          # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
+          # and jitterbit/get-changed-files does not support pull_request_target
+          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
+          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.token }}' -X GET -G "$URL")
+          files_changed="$(echo $files_changed_data | jq -r '.[] | .filename')"
           # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*/' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*/' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files}}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*/' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
+          charts_dirs_changed=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
+          charts_dirs_changed+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/shared\/.*/' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
+          charts_dirs_changed+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*/' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
+          charts_dirs_changed+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*/' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
           echo $charts_dirs_changed
           for chart in "${charts_dirs_changed[@]}"; do
             echo "Updating README.md for ${chart}"
@@ -62,7 +61,7 @@ jobs:
           done
       - name: Push changes to PR branch
         run: |
-          [[ "${DEBUG}" == "1" ]] && set -x || true
+          [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
           # Push all the changes
           cd luminartech/helm-charts-public
           if git status -s | grep charts; then

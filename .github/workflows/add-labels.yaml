@@ -4,19 +4,24 @@ on:
   pull_request_target:
     types:
       - opened
-      - edited
       - reopened
       - ready_for_review
 permissions:
   pull-requests: write
   issues: write
+  contents: read
 jobs:
   assign-label:
     name: Assign label
     runs-on: ubuntu-latest
     steps:
-      - name: Install readme-generator-for-helm
-        run: npm install -g @bitnami/readme-generator-for-helm@2.4.3
+      - name: Generate token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.SOFTWARE_APP_ID }}
+          private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
+          installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
@@ -24,22 +29,23 @@ jobs:
           repository: ${{github.event.pull_request.head.repo.full_name}}
           fetch-depth: 0
           persist-credentials: true
-      - name: Get list of changed directories
-        id: changed-files
-        uses: tj-actions/changed-files@v35
-        with:
-          dir_names: "true"
-          files: |
-            charts/**
+          token: ${{ steps.generate_token.outputs.token }}
       - id: get-asset
         name: Get modified assets
+        env:
+          token: ${{ steps.generate_token.outputs.token }}
         run: |
           [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
+          # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
+          # and jitterbit/get-changed-files does not support pull_request_target
+          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
+          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.token }}' -X GET -G "$URL")
+          files_changed="$(echo $files_changed_data | jq -r '.[] | .filename')"
           # Adding || true to avoid "Process exited with code 1" errors
-          assets=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*' | sed -nr "s|charts/shared/([^/]*).*|\1|p" | uniq | sort || true))
-          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*' | sed -nr "s|charts/iac/([^/]*).*|\1|p" | uniq | sort || true))
-          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*' | sed -nr "s|charts/modules/apps/([^/]*).*|\1|p" | uniq | sort || true))
-          assets+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*' | sed -nr "s|charts/modules/iac/([^/]*).*|\1|p" | uniq | sort || true))
+          assets=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/shared\/.*' | sed -nr "s|charts/shared/([^/]*).*|\1|p" | uniq | sort || true))
+          assets+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/iac\/.*' | sed -nr "s|charts/iac/([^/]*).*|\1|p" | uniq | sort || true))
+          assets+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*' | sed -nr "s|charts/modules/apps/([^/]*).*|\1|p" | uniq | sort || true))
+          assets+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*' | sed -nr "s|charts/modules/iac/([^/]*).*|\1|p" | uniq | sort || true))
           if [[ "${#assets[@]}" -ne "0" ]]; then
             echo "result=ok" >> $GITHUB_OUTPUT
             echo "message=Adding label '${assets[@]}'" >> $GITHUB_OUTPUT
