@@ -18,13 +18,6 @@ jobs:
   update-readme:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate token
-        id: generate_token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: ${{ secrets.SOFTWARE_APP_ID }}
-          private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
-          installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
       - name: Install readme-generator-for-helm
         run: npm install -g @bitnami/readme-generator-for-helm@2.4.3
       - name: Checkout repo
@@ -35,17 +28,14 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
           path: luminartech/helm-charts-public
-          token: ${{ steps.generate_token.outputs.token }}
       - name: Execute readme-generator-for-helm
-        env:
-          TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
           cd luminartech/helm-charts-public
           # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
           # and jitterbit/get-changed-files does not support pull_request_target
           URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.TOKEN }}' -X GET -G "$URL")
+          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' -X GET -G "$URL")
           files_changed="$(echo $files_changed_data | jq -r '.[] | .filename')"
           # Adding || true to avoid "Process exited with code 1" errors
           charts_dirs_changed=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))

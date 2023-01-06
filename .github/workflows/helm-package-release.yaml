@@ -42,9 +42,14 @@ jobs:
         uses: azure/setup-helm@v3
         with:
           version: v3.10.3
+      - name: Get list of changed directories
+        id: changed-files
+        uses: tj-actions/changed-files@v35
+        with:
+          path: luminartech/helm-charts-public
+          files: |
+            charts/**
       - name: Build helm packages and push tags
-        env:
-          token: ${{ steps.generate_token.outputs.token }}
         run: |
           [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
           workspace_dir=$(pwd)
@@ -52,15 +57,10 @@ jobs:
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
           # Adding || true to avoid "Process exited with code 1" errors
-          # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
-          # and jitterbit/get-changed-files does not support pull_request_target
-          URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.token }}' -X GET -G "$URL")
-          files_changed="$(echo $files_changed_data | jq -r '.[] | .filename')"
-          charts_dirs_changed=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
-          charts_dirs_changed+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/shared\/.*/' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
-          charts_dirs_changed+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*/' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
-          charts_dirs_changed+=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*/' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
+          charts_dirs_changed=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
+          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/shared\/.*/' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
+          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*/' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
+          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*/' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
           for chart in "${charts_dirs_changed[@]}"; do
             cd ${chart}
             if [ -f Chart.yaml ]; then
