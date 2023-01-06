@@ -2,7 +2,7 @@ apiVersion: "v2"
 appVersion: "latest"
 name: "external-service"
 type: "application"
-version: "1.0.1"
+version: "1.0.0"
 deprecated: false
 description: "Helm chart for creating ingress for external service/endpoint"
 home: https://helm-repo-public.luminarinfra.com
@@ -21,5 +21,5 @@ maintainers:
     email: "hennadii.mykhailiuta@luminartech.com"
 dependencies:
   - name: "common-gitops"
-    version: "1.0.1"
+    version: "1.0.0"
     repository: "https://helm-repo-public.luminarinfra.com/"
