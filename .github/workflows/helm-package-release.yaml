@@ -86,9 +86,11 @@ jobs:
           [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
           # Push all the changes
           cd luminartech/helm-repo-public
-          git config user.name "CI Bot"
-          git config user.email "sre@luminartech.com"
-          git add **/*.tgz || true
-          git status || true
-          git commit -am "[ CI Bot ] Generated helm packages" --signoff || true
-          git push || true
+          if git status --untracked-files=all | grep -e '.*-.*\..*\.tgz'; then
+            git config user.name "CI Bot"
+            git config user.email "sre@luminartech.com"
+            git add **/*.tgz
+            git status
+            git commit -am "[ CI Bot ] Generated helm packages" --signoff
+            git push
+          fi
