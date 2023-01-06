@@ -14,7 +14,7 @@ metadata:
     {{- with .spec }}
 spec:
       {{- with .ingressClassName }}
-  ingressClassName: {{ . }}
+  ingressClassName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
       {{- end -}}
       {{- with .rules }}
   rules:

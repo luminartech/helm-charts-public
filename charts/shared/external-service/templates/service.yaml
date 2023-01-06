@@ -13,7 +13,7 @@ metadata:
     {{- with .spec }}
 spec:
       {{- with .type }}
-  type: {{ . }}
+  type: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
       {{- end -}}
       {{- with .ports }}
   ports:
