@@ -40,7 +40,7 @@ jobs:
         env:
           TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
+          [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
           cd luminartech/helm-charts-public
           # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
           # and jitterbit/get-changed-files does not support pull_request_target
@@ -61,7 +61,7 @@ jobs:
           done
       - name: Push changes to PR branch
         run: |
-          [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
+          [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
           # Push all the changes
           cd luminartech/helm-charts-public
           if git status -s | grep charts; then

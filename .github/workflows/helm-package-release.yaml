@@ -46,7 +46,7 @@ jobs:
         env:
           token: ${{ steps.generate_token.outputs.token }}
         run: |
-          [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
+          [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
           workspace_dir=$(pwd)
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
@@ -83,7 +83,7 @@ jobs:
           done
       - name: Push changes to helm repository
         run: |
-          [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
+          [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
           # Push all the changes
           cd luminartech/helm-repo-public
           if git status -s | grep -e '.*-.*\..*\.tgz'; then

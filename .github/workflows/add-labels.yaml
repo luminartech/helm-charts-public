@@ -35,7 +35,7 @@ jobs:
         env:
           TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
-          [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
+          [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
           # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
           # and jitterbit/get-changed-files does not support pull_request_target
           URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
@@ -59,7 +59,7 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
+            [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
             if ("${{ steps.get-asset.outputs.result }}" != "ok" ) {
               core.warning("${{ steps.get-asset.outputs.message }}")
             } else {
