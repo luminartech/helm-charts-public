@@ -38,14 +38,14 @@ jobs:
           token: ${{ steps.generate_token.outputs.token }}
       - name: Execute readme-generator-for-helm
         env:
-          token: ${{ steps.generate_token.outputs.token }}
+          TOKEN: ${{ steps.generate_token.outputs.token }}
         run: |
           [[ "${SCRIPT_DEBUG}" == "1" ]] && set -x || true
           cd luminartech/helm-charts-public
           # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
           # and jitterbit/get-changed-files does not support pull_request_target
           URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"
-          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.token }}' -X GET -G "$URL")
+          files_changed_data=$(curl -s --header 'authorization: Bearer ${{ secrets.TOKEN }}' -X GET -G "$URL")
           files_changed="$(echo $files_changed_data | jq -r '.[] | .filename')"
           # Adding || true to avoid "Process exited with code 1" errors
           charts_dirs_changed=($(echo "${files_changed}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/iac\/.*/' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
