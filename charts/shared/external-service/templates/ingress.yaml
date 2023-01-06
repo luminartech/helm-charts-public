@@ -1,0 +1,29 @@
+{{/*  TODO: This ingress object does not cover all of the options from CRD at the moment. */ -}}
+{{- $kind := "Ingress" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: networking.k8s.io/v1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- with .spec }}
+spec:
+      {{- with .ingressClassName }}
+  ingressClassName: {{ . }}
+      {{- end -}}
+      {{- with .rules }}
+  rules:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+      {{- end -}}
+      {{- with .tls }}
+  tls:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end }}

@@ -1,0 +1,56 @@
+Endpoints:
+  items:
+    endpoint-name:
+      enabled: true
+      subsets:
+      - addresses:
+          - ip: 192.168.0.1
+        ports:
+          - port: 80
+            name: http
+            protocol: TCP
+
+Service:
+  items:
+    service-name:
+      enabled: true
+      spec:
+        ports:
+        - port: 80
+          name: http
+          protocol: TCP
+          targetPort: http
+        type: ClusterIP
+
+Ingress:
+  items:
+    ingress-name:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "http"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/server-snippet: |
+          proxy_ssl_verify off;
+          proxy_set_header X-Forwarded-Proto https;
+        kubernetes.io/ingress.allow-http: "false"
+        kubernetes.io/tls-acme: "true"
+        cert-manager.io/acme-challenge-type: dns01
+        cert-manager.io/acme-dns01-provider: route53
+        cert-manager.io/cluster-issuer: '{{ include "common-gitops.names.release" . }}.domain.com'
+      spec:
+        ingressClassName: nginx-ingress-external
+        rules:
+          - host: '{{ include "common-gitops.names.release" . }}.domain.com'
+            http:
+              paths:
+                - path: /
+                  pathType: Prefix
+                  backend:
+                    service:
+                      name: '{{ include "common-gitops.names.release" . }}-service-name'
+                      port:
+                        number: 80
+        tls:
+          - secretName: 'tls-{{ include "common-gitops.names.release" . }}.domain.com'
+            hosts:
+              - '{{ include "common-gitops.names.release" . }}.domain.com'
