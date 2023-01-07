@@ -45,3 +45,27 @@ Service: {}
 ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 Ingress: {}
+
+## @section Kubernetes Service Account.
+## @param ServiceAccount for pods
+## items: Dict of one or more endpoint resources.
+## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
+## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
+##
+ServiceAccount: {}
+
+## @section Kubernetes Role.
+## @param Role K8s Role with permissions
+## items: Dict of one or more endpoint resources.
+## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
+## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
+##
+Role: {}
+
+## @section Kubernetes RoleBinding object.
+## @param RoleBinding for binding service account and role with permissions
+## items: Dict of one or more endpoint resources.
+## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
+## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
+##
+RoleBinding: {}

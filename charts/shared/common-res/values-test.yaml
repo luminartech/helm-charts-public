@@ -54,3 +54,21 @@ Ingress:
           - secretName: 'tls-{{ include "common-gitops.names.release" . }}.domain.com'
             hosts:
               - '{{ include "common-gitops.names.release" . }}.domain.com'
+
+ServiceAccount:
+  enabled: true
+  items:
+    _:
+      enabled: true
+
+Role:
+  enabled: true
+  items:
+    _:
+      enabled: true
+
+RoleBinding:
+  enabled: true
+  items:
+    _:
+      enabled: true

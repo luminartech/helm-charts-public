@@ -1,14 +1,13 @@
 apiVersion: "v2"
 appVersion: "latest"
-name: "external-service"
+name: "common-res"
 type: "application"
-version: "1.0.2"
+version: "1.0.0"
 deprecated: false
-description: "Helm chart for creating ingress for external service/endpoint"
+description: "Helm chart with common resources"
 home: https://helm-repo-public.luminarinfra.com
 keywords:
-  - external-service
-  - ingress
+  - common-res
 kubeVersion: ">=1.20.0-0"
 sources:
   - https://github.com/luminartech/helm-charts-public

@@ -1,6 +1,6 @@
 <!--- app-name: Apache -->
 
-# External Service Module Chart
+# Common Resources Library Chart
 
 ## TL;DR
 
@@ -45,6 +45,27 @@
 | Name      | Description                  | Value |
 | --------- | ---------------------------- | ----- |
 | `Ingress` | List of kubernetes ingresses | `{}`  |
+
+
+### Kubernetes Service Account.
+
+| Name             | Description | Value |
+| ---------------- | ----------- | ----- |
+| `ServiceAccount` | for pods    | `{}`  |
+
+
+### Kubernetes Role.
+
+| Name   | Description               | Value |
+| ------ | ------------------------- | ----- |
+| `Role` | K8s Role with permissions | `{}`  |
+
+
+### Kubernetes RoleBinding object.
+
+| Name          | Description                                           | Value |
+| ------------- | ----------------------------------------------------- | ----- |
+| `RoleBinding` | for binding service account and role with permissions | `{}`  |
 
 
 ## Configuration and installation details
