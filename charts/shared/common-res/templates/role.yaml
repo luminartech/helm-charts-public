@@ -11,15 +11,9 @@ metadata:
   name: {{ $itemName | quote }}
     {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
     {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- with .rules }}
 rules:
-  - apiGroups:
-      - argoproj.io
-    verbs:
-      - "*"
-    resources:
-      - workflows
-      - workflowtemplates
-      - cronworkflows
-      - clusterworkflowtemplates
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 2 }}
+    {{- end -}}
   {{- end -}}
 {{- end }}
