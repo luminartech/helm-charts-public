@@ -72,3 +72,15 @@ RoleBinding:
   items:
     _:
       enabled: true
+
+ClusterRole:
+  enabled: true
+  items:
+    _:
+      enabled: true
+
+ClusterRoleBinding:
+  enabled: true
+  items:
+    _:
+      enabled: true

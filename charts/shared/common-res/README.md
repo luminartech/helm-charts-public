@@ -68,6 +68,20 @@
 | `RoleBinding` | for binding service account and role with permissions | `{}`  |
 
 
+### Kubernetes ClusterRole.
+
+| Name          | Description               | Value |
+| ------------- | ------------------------- | ----- |
+| `ClusterRole` | K8s Role with permissions | `{}`  |
+
+
+### Kubernetes ClusterRoleBinding object.
+
+| Name                 | Description                                           | Value |
+| -------------------- | ----------------------------------------------------- | ----- |
+| `ClusterRoleBinding` | for binding service account and role with permissions | `{}`  |
+
+
 ## Configuration and installation details
 
 
