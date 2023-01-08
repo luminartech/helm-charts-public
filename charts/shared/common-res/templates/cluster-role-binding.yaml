@@ -11,10 +11,15 @@ metadata:
   name: {{ $itemName | quote }}
     {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
     {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- with .roleRef }}
+roleRef:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 2 }}
+    {{- else }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
+  kind: ClusterRole
   name: {{ $itemName | quote }}
+    {{- end }}
 subjects:
   - kind: ServiceAccount
     name: {{ $itemName | quote }}
