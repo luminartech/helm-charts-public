@@ -20,11 +20,13 @@ roleRef:
   kind: Role
   name: {{ $itemName | quote }}
     {{- end }}
+    {{- with .subjects }}
+subjects:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 2 }}
+    {{- else }}
 subjects:
   - kind: ServiceAccount
     name: {{ $itemName | quote }}
-    {{- with .subjects }}
-      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 2 }}
     {{- end -}}
   {{- end -}}
 {{- end }}
