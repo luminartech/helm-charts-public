@@ -82,6 +82,13 @@
 | `ClusterRoleBinding` | for binding service account and role with permissions | `{}`  |
 
 
+### Kubernetes Job object.
+
+| Name  | Description                                           | Value |
+| ----- | ----------------------------------------------------- | ----- |
+| `Job` | for binding service account and role with permissions | `{}`  |
+
+
 ## Configuration and installation details
 
 
