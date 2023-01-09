@@ -84,3 +84,20 @@ ClusterRoleBinding:
   items:
     _:
       enabled: true
+
+Job:
+  enabled: true
+  items:
+    _:
+      enabled: true
+      podSpec:
+        annotations:
+          my-annotation: value
+        spec:
+          serviceAccountName: test
+          containers:
+            - name: test
+              image: ubuntu
+              command: ["sh", "-c"]
+              args:
+                - sleep 500

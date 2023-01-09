@@ -23,11 +23,6 @@ roleRef:
     {{- with .subjects }}
 subjects:
       {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 2 }}
-    {{- else }}
-subjects:
-  - kind: ServiceAccount
-    name: "{{ $itemName | quote }}"
-    namespace: "{{ .Release.Namespace }}"
     {{- end -}}
   {{- end -}}
 {{- end }}
