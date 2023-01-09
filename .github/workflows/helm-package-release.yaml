@@ -69,7 +69,7 @@ jobs:
               rm -f *.tgz || true
               helm package .
               chart_name=$(awk -F '[/]' '{print $NF}' <<< ${chart})
-              chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed 's/.tgz//'|awk -F '[-]' '{print $NF}')
+              chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed "s/.tgz//;s/${chart_name}-//")
               # this command should fail the job if tag already exists
               git tag rel-${chart_name}-${chart_version}
               git push -f origin rel-${chart_name}-${chart_version}
