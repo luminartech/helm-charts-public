@@ -7,7 +7,7 @@ description: A Helm chart for external-secrets
 name: external-secrets
 # Below version must match the app version for the consistency.
 # Update minor bit if new tag is needed. e.g. 0.7.0-1
-version: "0.7.1-5"
+version: "0.7.1-6"
 home: https://helm-repo-public.luminarinfra.com
 sources:
   - https://github.com/luminartech/helm-charts-public/
