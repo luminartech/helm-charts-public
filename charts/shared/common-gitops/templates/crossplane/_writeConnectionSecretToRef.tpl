@@ -12,11 +12,11 @@ writeConnectionSecretToRef:
   namespace: "infra-crossplane"
 */}}
 {{- define "common-gitops.crossplane.writeConnectionSecretToRef" -}}
-  {{- $kindObj := (get .root.Values .kind) -}}
-  {{- $item := (get $kindObj.items .name) -}}
-  {{- with (mergeOverwrite ((.root.Values.global).writeConnectionSecretToRef)
-                            ($kindObj.writeConnectionSecretToRef)
-                            ($item.writeConnectionSecretToRef)) -}}
+  {{- $kindObj := (index .root.Values .kind) -}}
+  {{- $item := (index $kindObj.items .name) -}}
+  {{- with merge ($item.writeConnectionSecretToRef)
+                 ($kindObj.writeConnectionSecretToRef)
+                 ((.root.Values.global).writeConnectionSecretToRef) -}}
     {{- if .enabled }}
 writeConnectionSecretToRef:
   name: {{ include "common-gitops.names.itemFullname" (dict "root" $.root "name" $.name "override" $.nameOverride) }}

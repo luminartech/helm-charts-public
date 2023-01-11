@@ -23,9 +23,9 @@ policyArnRef:
 {{- define "common-gitops.crossplane.reference" -}}
   {{- $fieldRef := empty .fieldRef | ternary (print .field "Ref") .fieldRef -}}
   {{- $fieldSelector := empty .fieldSelector | ternary (print .field "Selector") .fieldSelector -}}
-  {{- $fieldObj := get .context .field -}}
-  {{- $fieldRefObj := get .context $fieldRef -}}
-  {{- $fieldSelectorObj := get .context $fieldSelector -}}
+  {{- $fieldObj := index .context .field -}}
+  {{- $fieldRefObj := index .context $fieldRef -}}
+  {{- $fieldSelectorObj := index .context $fieldSelector -}}
   {{- if $fieldRefObj -}}
 {{ $fieldRef }}:
     {{- include "common-gitops.tplvalues.render" (dict "value" $fieldRefObj "context" .root) | nindent 2 -}}

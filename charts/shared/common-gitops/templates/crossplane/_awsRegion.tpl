@@ -12,10 +12,10 @@ region: us-west-1
 
 */}}
 {{- define "common-gitops.crossplane.awsRegion" -}}
-  {{- $kindObj := (get .root.Values .kind) -}}
-  {{- $item := (get $kindObj.items .name) -}}
+  {{- $kindObj := (index .root.Values .kind) -}}
+  {{- $item := (index $kindObj.items .name) -}}
 region: {{ coalesce  ($item.forProvider).region
-                      $kindObj.region
-                      (.root.Values.global).awsRegion
-                      "us-west-2" }}
+                     $kindObj.region
+                     (.root.Values.global).awsRegion
+                     "us-west-2" }}
 {{- end -}}

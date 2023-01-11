@@ -13,11 +13,11 @@ annotations:
   my-annotation: something-here
 */}}
 {{- define "common-gitops.annotations" -}}
-  {{- $kindObj := (get .root.Values .kind) -}}
-  {{- $item := (get $kindObj.items .name) -}}
-  {{- with mergeOverwrite ((.root.Values.global).annotations)
-                           ($kindObj.annotations)
-                           ($item.annotations) -}}
+  {{- $kindObj := (index .root.Values .kind) -}}
+  {{- $item := (index $kindObj.items .name) -}}
+  {{- with merge ($item.annotations)
+                 ($kindObj.annotations)
+                 ((.root.Values.global).annotations) -}}
 annotations:
     {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $.root) | nindent 2 -}}
   {{- end -}}

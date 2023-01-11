@@ -25,11 +25,11 @@ tags:
     value: "{{ .root.Release.Service }}"
   {{- $kindObj := (get (.root.Values) .kind) -}}
   {{- $item := (get $kindObj.items .name) -}}
-  {{- range $key, $value := (mergeOverwrite ((.root.Values.global).tags)
-                                            ($kindObj.tags)
-                                            ($item.tags)
-                                            (($item.forProvider).tags)
-                                            (($item.spec).tags)) }}
+  {{- range $key, $value := merge (($item.spec).tags)
+                                  (($item.forProvider).tags)
+                                  ($item.tags)
+                                  ($kindObj.tags)
+                                  ((.root.Values.global).tags) }}
   - key: "{{ $key }}"
     value: "{{ $value }}"
   {{- end -}}
@@ -62,11 +62,11 @@ tags:
     tagValue: "{{ .root.Release.Service }}"
   {{- $kindObj := (get (.root.Values) .kind) -}}
   {{- $item := (get $kindObj.items .name) -}}
-  {{- range $key, $value := (mergeOverwrite ((.root.Values.global).tags)
-                                            ($kindObj.tags)
-                                            ($item.tags)
-                                            (($item.forProvider).tags)
-                                            (($item.spec).tags)) }}
+  {{- range $key, $value := merge (($item.spec).tags)
+                                  (($item.forProvider).tags)
+                                  ($item.tags)
+                                  ($kindObj.tags)
+                                  ((.root.Values.global).tags) }}
   - tagKey: "{{ $key }}"
     tagValue: "{{ $value }}"
   {{- end -}}
@@ -91,13 +91,13 @@ tags:
   Chart: "{{ include "common-gitops.names.chart" .root }}-{{ .root.Chart.Version }}"
   Release: "{{ include "common-gitops.names.release" .root }}"
   Managed-By: "{{ .root.Release.Service }}"
-  {{- $kindObj := (get (.root.Values) .kind) -}}
-  {{- $item := (get $kindObj.items .name) -}}
-  {{- with (mergeOverwrite ((.root.Values.global).tags)
-                            ($kindObj.tags)
-                            ($item.tags)
-                            (($item.forProvider).tags)
-                            (($item.spec).tags)) }}
+  {{- $kindObj := (index (.root.Values) .kind) -}}
+  {{- $item := (index $kindObj.items .name) -}}
+  {{- with merge (($item.spec).tags)
+                 (($item.forProvider).tags)
+                 ($item.tags)
+                 ($kindObj.tags)
+                 ((.root.Values.global).tags) }}
     {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $.root) | nindent 2 -}}
   {{- end -}}
 {{- end -}}

@@ -17,11 +17,11 @@ publishConnectionDetailsTo:
   {{- $root := .root -}}
   {{- $kind := .kind -}}
   {{- $name := .name -}}
-  {{- $kindObj := (get $root.Values $kind) -}}
-  {{- $item := (get $kindObj.items $name) -}}
-  {{- with (mergeOverwrite (($root.Values.global).publishConnectionDetailsTo)
-                            ($kindObj.publishConnectionDetailsTo)
-                            ($item.publishConnectionDetailsTo)) -}}
+  {{- $kindObj := (index $root.Values $kind) -}}
+  {{- $item := (index $kindObj.items $name) -}}
+  {{- with merge ($item.publishConnectionDetailsTo)
+                 ($kindObj.publishConnectionDetailsTo)
+                 (($root.Values.global).publishConnectionDetailsTo) -}}
     {{- if .enabled -}}
 publishConnectionDetailsTo:
   name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" $.nameOverride) }}
@@ -36,7 +36,8 @@ publishConnectionDetailsTo:
       {{- with .metadata }}
   metadata:
         {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | nindent 4 -}}
-        {{- with (mergeOverwrite (($root.Values.global).annotations) (.annotations)) }}
+        {{- with merge (.annotations)
+                       (($root.Values.global).annotations) }}
     annotations:
           {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 -}}
         {{- end -}}

@@ -12,8 +12,8 @@ deletionPolicy: Orphan
 
 */}}
 {{- define "common-gitops.crossplane.awsDeletionPolicy" -}}
-  {{- $kindObj := (get .root.Values .kind) -}}
-  {{- $item := (get $kindObj.items .name) -}}
+  {{- $kindObj := (index .root.Values .kind) -}}
+  {{- $item := (index $kindObj.items .name) -}}
 deletionPolicy: {{ coalesce $item.deletionPolicy
                             $kindObj.deletionPolicy
                             .root.Values.deletionPolicy
