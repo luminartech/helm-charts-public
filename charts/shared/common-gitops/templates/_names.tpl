@@ -1,6 +1,6 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
-Expand the name of the chart.
+Create the name of the chart.
 */}}
 {{- define "common-gitops.names.chart" -}}
   {{- with (.Values.global).chartNameOverride -}}
@@ -11,7 +11,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
-Create a fully qualified app name.
+Create a release name.
 */}}
 {{- define "common-gitops.names.release" -}}
   {{- with (.Values.global).releaseNameOverride -}}
@@ -23,12 +23,12 @@ Create a fully qualified app name.
 {{- end -}}
 
 {{/*
-Build an item name (release + item name) for gitops entity (item)
+Build a fully qualified name (release + item id/short name) for gitops resource item.
 Example usage: {{ include "common-gitops.names.itemFullname" (dict "name" $name "root" .) }}
 Input:
   .name (optional) - short name of the item
-  .override - will overrdie the generated name if defined
-  .root - Context
+  .override (optional) - will overrdie the generated name if defined
+  .root - Root context
 Example output:
   iac-cicd-karpenter-provisioner-linux-x86-cpu-medium
 */}}
@@ -47,15 +47,18 @@ Example output:
 {{- end -}}
 
 {{/*
-"_" means "empty" name and this character gets truncated from the output.
-Use when you would like item's fullanme be equal to the Release.Name.
-For example, allows to get "cicd-infra-vpc" instead of "cicd-infra-vpc-vpc".
+Process the resource item Id (short name).
+"_" is used to define an "empty" name since empty string ("") is not supported by K8s.
+We still want his character to get truncated from the fullnames and perhaps extend the list of transformations later.
+Use "_" when there's only one item of particular kind in deployment and you would like item's fullanme be equal to the Release.Name.
+For example, allows to avoid word duplication in item name - "cicd-infra-vpc" instead of "cicd-infra-vpc-vpc".
 */}}
 {{- define "common-gitops.names.itemId" -}}
   {{- . | trimSuffix "_" -}}
 {{- end -}}
 
 {{/*
+Create a namespace value.
 Allow the release namespace to be overridden for multi-namespace deployments in combined charts.
 */}}
 {{- define "common-gitops.names.namespace" -}}

@@ -9,12 +9,12 @@ labels:
   app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" .name }}"
 {{- end -}}
 {{/*
-Common labels for gitops resources
+Generate labels map based on values set on global, resource kind and resource item levels.
 Input dict:
 {
-  root: [map] .
-  kind: [map] "Policy"
-  name: [string] item1
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
 }
 Sample return:
 labels:
@@ -27,12 +27,12 @@ labels:
   app.kubernetes.io/part-of: {{ include "common-gitops.names.release" .root }}
   app.kubernetes.io/managed-by: {{ .root.Release.Service }}
   app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" .name }}"
-  {{- $kindObj := (get .root.Values .kind) -}}
-  {{- $item := (get $kindObj.items .name) -}}
-  {{- $mergedLabels := mergeOverwrite ((.root.Values.global).labels)
-                            ($kindObj.labels)
-                            ($item.labels) -}}
-  {{- with $mergedLabels -}}
+  {{- $kindObj := (index .root.Values .kind) -}}
+  {{- $item := (index $kindObj.items .name) -}}
+  {{- /* Left argument takes precedence over the right one */ -}}
+  {{- with merge ($item.labels)
+                 ($kindObj.labels)
+                 ((.root.Values.global).labels) -}}
     {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $.root) | nindent 2 }}
   {{- end -}}
 {{- end -}}

@@ -1,10 +1,10 @@
 {{/* vim: set filetype=mustache: */}}
-{{/* publishConnectionDetailsTo template
+{{/* Create publishConnectionDetailsTo value for Crossplane resource
 Input dict:
 {
-  root: [map] .
-  kind: [map] "Policy"
-  name: [string] item1
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
 }
 Sample return:
 publishConnectionDetailsTo:
@@ -17,11 +17,12 @@ publishConnectionDetailsTo:
   {{- $root := .root -}}
   {{- $kind := .kind -}}
   {{- $name := .name -}}
-  {{- $kindObj := (get $root.Values $kind) -}}
-  {{- $item := (get $kindObj.items $name) -}}
-  {{- with (mergeOverwrite (($root.Values.global).publishConnectionDetailsTo)
-                            ($kindObj.publishConnectionDetailsTo)
-                            ($item.publishConnectionDetailsTo)) -}}
+  {{- $kindObj := (index $root.Values $kind) -}}
+  {{- $item := (index $kindObj.items $name) -}}
+  {{- /* Left argument takes precedence over the right one */ -}}
+  {{- with merge ($item.publishConnectionDetailsTo)
+                 ($kindObj.publishConnectionDetailsTo)
+                 (($root.Values.global).publishConnectionDetailsTo) -}}
     {{- if .enabled -}}
 publishConnectionDetailsTo:
   name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" $.nameOverride) }}
@@ -36,7 +37,9 @@ publishConnectionDetailsTo:
       {{- with .metadata }}
   metadata:
         {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | nindent 4 -}}
-        {{- with (mergeOverwrite (($root.Values.global).annotations) (.annotations)) }}
+        {{- /* Left argument takes precedence over the right one */ -}}
+        {{- with merge (.annotations)
+                       (($root.Values.global).annotations) }}
     annotations:
           {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 -}}
         {{- end -}}
