@@ -6,9 +6,8 @@ on:
     branches:
       - main
     paths:
-      - 'charts/**/**.yaml'
-      - 'charts/**/**.tpl'
-      - 'charts/**/**.txt'
+      # Create a release on version update
+      - 'charts/**/Chart.yaml'
 permissions:
   contents: write
 jobs:
