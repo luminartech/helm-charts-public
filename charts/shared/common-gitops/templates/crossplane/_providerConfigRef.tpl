@@ -1,10 +1,10 @@
 {{/* vim: set filetype=mustache: */}}
-{{/* providerConfigRef template
+{{/* Create providerConfigRef value for Crossplane resource.
 Input dict:
 {
-  root: [map] .
-  kind: [map] "Policy"
-  name: [string] item1
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
 }
 Sample return:
 providerConfigRef:
@@ -14,6 +14,7 @@ providerConfigRef:
   {{- $kindObj := (index (.root.Values) .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
 providerConfigRef:
+  {{- /* Left argument takes precedence over the right one */ -}}
   {{- with merge ($item.providerConfigRef)
                  ($kindObj.providerConfigRef)
                  ((.root.Values.global).providerConfigRef) -}}

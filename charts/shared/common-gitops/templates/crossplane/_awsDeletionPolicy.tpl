@@ -3,17 +3,17 @@
 Render the deletionPolicy value for AWS resource:
 Accepts dict:
 {
-  root: [dict] .
-  kind: [dict] "Policy"
-  name: [string] "item1"
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
 }
 Sample return:
 deletionPolicy: Orphan
-
 */}}
 {{- define "common-gitops.crossplane.awsDeletionPolicy" -}}
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
+  {{- /* Take the first non-empty argument */ -}}
 deletionPolicy: {{ coalesce $item.deletionPolicy
                             $kindObj.deletionPolicy
                             .root.Values.deletionPolicy

@@ -1,10 +1,10 @@
 {{/* vim: set filetype=mustache: */}}
-{{/* publishConnectionDetailsTo template
+{{/* Create publishConnectionDetailsTo value for Crossplane resource
 Input dict:
 {
-  root: [map] .
-  kind: [map] "Policy"
-  name: [string] item1
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
 }
 Sample return:
 publishConnectionDetailsTo:
@@ -19,6 +19,7 @@ publishConnectionDetailsTo:
   {{- $name := .name -}}
   {{- $kindObj := (index $root.Values $kind) -}}
   {{- $item := (index $kindObj.items $name) -}}
+  {{- /* Left argument takes precedence over the right one */ -}}
   {{- with merge ($item.publishConnectionDetailsTo)
                  ($kindObj.publishConnectionDetailsTo)
                  (($root.Values.global).publishConnectionDetailsTo) -}}
@@ -36,6 +37,7 @@ publishConnectionDetailsTo:
       {{- with .metadata }}
   metadata:
         {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | nindent 4 -}}
+        {{- /* Left argument takes precedence over the right one */ -}}
         {{- with merge (.annotations)
                        (($root.Values.global).annotations) }}
     annotations:

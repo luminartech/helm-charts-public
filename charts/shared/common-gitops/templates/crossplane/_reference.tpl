@@ -1,19 +1,17 @@
 {{/* vim: set filetype=mustache: */}}
-{{/* Reference fields set template
+{{/* Generate Crossplane reference fields set
 
-Some objects may refer to others by using the fields like "policyArn", "policyArnRef" and "policyArnSelector".
-Only one such field is expected to be set at the same time.
-Some objects require reference to be defined, some are optional.
-There's also a slight variation of the names for those fields.
+Handle the Crossplane resources reference fields since they are always set of three, e.g. "policyArn", "policyArnRef" and "policyArnSelector",
+and only one can be set at the same time while reference itself being required or optional.
 
 Input dict:
 {
-  root: [map] $root
-  context: [map] .
-  optional: [bool, optional] - do not throw an error if none of "field", "fieldRef" or "fieldSelector is set
-  field: [string] policyArn
-  fieldRef: [string, optional] - name of Ref field. If not set, .field + "Ref" will be used
-  fieldSelector: [string, optional] - name of Selector field. If not set, .field + "Selector" will be used
+  root: [map] - global context
+  context: [map] - current context from which reference fields should be accesible
+  optional: [bool, optional] - make reference optional, i.e. do not throw an error if none of "field", "fieldRef" or "fieldSelector is set
+  field: [string] - name of the first field, e.g. "policyArn"
+  fieldRef: [string, optional] - name of Ref field. First field name + "Ref" is a default value. Since not all Crossplane reference fields follow the same naming pattern, we might want to override these field name. 
+  fieldSelector: [string, optional] - name of Selector field. First field name + "Selector" is a default value. Since not all Crossplane reference fields follow the same naming pattern, we might want to override these field name.
 }
 Sample return:
 

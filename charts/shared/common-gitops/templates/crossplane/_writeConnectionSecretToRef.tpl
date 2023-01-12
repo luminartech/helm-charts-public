@@ -2,9 +2,9 @@
 {{/* writeConnectionSecretToRef template
 Input dict:
 {
-  root: [map] .
-  kind: [map] "Policy"
-  name: [string] item1
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
 }
 Sample return:
 writeConnectionSecretToRef:
@@ -14,6 +14,7 @@ writeConnectionSecretToRef:
 {{- define "common-gitops.crossplane.writeConnectionSecretToRef" -}}
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
+  {{- /* Left argument takes precedence over the right one */ -}}
   {{- with merge ($item.writeConnectionSecretToRef)
                  ($kindObj.writeConnectionSecretToRef)
                  ((.root.Values.global).writeConnectionSecretToRef) -}}
