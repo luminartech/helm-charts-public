@@ -10,7 +10,7 @@ Input dict:
   context: [map] - current context from which reference fields should be accesible
   optional: [bool, optional] - make reference optional, i.e. do not throw an error if none of "field", "fieldRef" or "fieldSelector is set
   field: [string] - name of the first field, e.g. "policyArn"
-  fieldRef: [string, optional] - name of Ref field. First field name + "Ref" is a default value. Since not all Crossplane reference fields follow the same naming pattern, we might want to override these field name. 
+  fieldRef: [string, optional] - name of Ref field. First field name + "Ref" is a default value. Since not all Crossplane reference fields follow the same naming pattern, we might want to override these field name.
   fieldSelector: [string, optional] - name of Selector field. First field name + "Selector" is a default value. Since not all Crossplane reference fields follow the same naming pattern, we might want to override these field name.
 }
 Sample return:
