@@ -26,6 +26,7 @@ jobs:
         name: Get modified assets
         run: |
           [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
+          set -euo pipefail
           # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
           # and jitterbit/get-changed-files does not support pull_request_target
           URL="https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/files"

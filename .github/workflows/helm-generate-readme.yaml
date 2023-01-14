@@ -31,6 +31,7 @@ jobs:
       - name: Execute readme-generator-for-helm
         run: |
           [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
+          set -euo pipefail
           cd luminartech/helm-charts-public
           # Using the Github API to detect the files changed as git merge-base stops working when the branch is behind
           # and jitterbit/get-changed-files does not support pull_request_target
