@@ -2,6 +2,11 @@
 name: '[HELM] Package and release'
 on:
   workflow_dispatch:
+    inputs:
+      chart-path:
+        type: "string"
+        description: "Helm chart relative dir path. e.g. charts/shared/common-gitops"
+        required: true
   push:
     branches:
       - main
@@ -55,11 +60,18 @@ jobs:
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
-          # Adding || true to avoid "Process exited with code 1" errors
-          charts_dirs_changed=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/iac\/.*' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/shared\/.*' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
-          charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
+          if [ ${{ github.event.inputs.chart-path }} ]; then
+            echo "INFO: Doing a manual build and release for helm chart: ${{ github.event.inputs.chart-path }}"
+            echo "INFO: This will overwrite old release if exists"
+            charts_dirs_changed=("${{ github.event.inputs.chart-name }}")
+            mv_cmd_flags="-f"
+          else
+            # Adding || true to avoid "Process exited with code 1" errors
+            charts_dirs_changed=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/iac\/.*' | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
+            charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/shared\/.*' | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
+            charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*' | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
+            charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | xargs dirname | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*' | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
+          fi
           for chart in "${charts_dirs_changed[@]}"; do
             cd ${chart}
             if [ -f Chart.yaml ]; then
@@ -69,12 +81,17 @@ jobs:
               helm package .
               chart_name=$(awk -F '[/]' '{print $NF}' <<< ${chart})
               chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed "s/.tgz//;s/${chart_name}-//")
+              if [ ${{ github.event.inputs.chart-path }} ]; then
+                echo "INFO: Deleting old tag rel-${chart_name}-${chart_version} if exists"
+                git push origin --delete rel-${chart_name}-${chart_version} || true
+              fi
               # this command should fail the job if tag already exists
               git tag rel-${chart_name}-${chart_version}
-              git push -f origin rel-${chart_name}-${chart_version}
-              # Do not force update, we want this job to fail if same version package exists
+              git push origin rel-${chart_name}-${chart_version}
               mkdir -p ${workspace_dir}/luminartech/helm-repo-public/${chart_name}
-              mv *.tgz "${workspace_dir}/luminartech/helm-repo-public/${chart_name}"
+              # We want this job to fail if same version package exists and workflow is runing on_push event
+              # Overwrite only if workflow was triggered manually
+              mv ${mv_cmd_flags} *.tgz "${workspace_dir}/luminartech/helm-repo-public/${chart_name}"
             else
               echo "WARN: Chart.yaml missing for ${chart}"
             fi
