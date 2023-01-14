@@ -5,7 +5,7 @@ on:
     inputs:
       chart-path:
         type: "string"
-        description: "Helm chart relative dir path. e.g. charts/shared/common-gitops"
+        description: "Helm chart relative dir path(s). e.g. charts/shared/common-gitops charts/shared/common-res "
         required: true
   push:
     branches:
@@ -64,7 +64,7 @@ jobs:
           if [ ${{ inputs.chart-path }} ]; then
             echo "INFO: Doing a manual build and release for helm chart: ${{ inputs.chart-path }}"
             echo "INFO: This will overwrite old release if exists"
-            charts_dirs_changed="(${{ inputs.chart-path }})"
+            charts_dirs_changed=(${{ inputs.chart-path }})
             mv_cmd_flags="-f"
           else
             # Adding || true to avoid "Process exited with code 1" errors
