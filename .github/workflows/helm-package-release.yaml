@@ -61,10 +61,11 @@ jobs:
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
-          if [ ${{ inputs.chart-path }} ]; then
-            echo "INFO: Doing a manual build and release for helm chart: ${{ inputs.chart-path }}"
+          chart_paths=(${{ inputs.chart-path }})
+          if [ ${#chart_paths[@]} -gt 0 ]; then
+            echo "INFO: Doing a manual build and release for helm chart(s): ${{ inputs.chart-path }}"
             echo "INFO: This will overwrite old release if exists"
-            charts_dirs_changed=(${{ inputs.chart-path }})
+            charts_dirs_changed=("${chart_paths[@]}")
             mv_cmd_flags="-f"
           else
             # Adding || true to avoid "Process exited with code 1" errors
@@ -82,7 +83,7 @@ jobs:
               helm package .
               chart_name=$(awk -F '[/]' '{print $NF}' <<< ${chart})
               chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed "s/.tgz//;s/${chart_name}-//")
-              if [ ${{ inputs.chart-path }} ]; then
+              if [ ${#chart_paths[@]} -gt 0 ]; then
                 echo "INFO: Deleting old tag rel-${chart_name}-${chart_version} if exists"
                 git push origin --delete rel-${chart_name}-${chart_version} || true
               fi
