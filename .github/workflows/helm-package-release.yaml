@@ -87,8 +87,15 @@ jobs:
                 echo "INFO: Deleting old tag rel-${chart_name}-${chart_version} if exists"
                 git push origin --delete rel-${chart_name}-${chart_version} || true
               fi
-              # this command should fail the job if tag already exists
-              git tag -f rel-${chart_name}-${chart_version}
+              if [ ${#chart_paths[@]} -gt 0 ]; then
+                # Release tags are supposed to be immutable, but manual release execution is already an exception and
+                # can often be used to release multiple charts at once. If that's the case, and one of the charts has
+                # already been released, we don't want the action to fail nor to ignore the git errors
+                git tag -f rel-${chart_name}-${chart_version}
+              else
+                # this command should fail the job if tag already exists
+                git tag rel-${chart_name}-${chart_version}
+              fi
               git push origin rel-${chart_name}-${chart_version}
               mkdir -p ${workspace_dir}/luminartech/helm-repo-public/${chart_name}
               # We want this job to fail if same version package exists and workflow is runing on_push event
