@@ -88,7 +88,7 @@ jobs:
                 git push origin --delete rel-${chart_name}-${chart_version} || true
               fi
               # this command should fail the job if tag already exists
-              git tag rel-${chart_name}-${chart_version}
+              git tag -f rel-${chart_name}-${chart_version}
               git push origin rel-${chart_name}-${chart_version}
               mkdir -p ${workspace_dir}/luminartech/helm-repo-public/${chart_name}
               # We want this job to fail if same version package exists and workflow is runing on_push event
