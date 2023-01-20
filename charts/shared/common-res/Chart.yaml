@@ -20,5 +20,5 @@ maintainers:
     email: "hennadii.mykhailiuta@luminartech.com"
 dependencies:
   - name: "common-gitops"
-    version: "1.0.0"
+    version: "1.0.2"
     repository: "https://helm-repo-public.luminarinfra.com/"
