@@ -1,5 +1,7 @@
 ---
 ## AWS EC2 resources configurations
+global:
+  vpcCidr: 172.21.0.0/16
 
 Address:
   items:
@@ -399,7 +401,7 @@ Subnet:
       deletionPolicy: Delete
       forProvider:
         availabilityZone: us-west-2a
-        cidrBlock: 10.3.0.0/24
+        cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "0.0/24") }}'
         mapPublicIPOnLaunch: true
         tags:
           "kubernetes.io/role/elb": "1"
@@ -407,7 +409,7 @@ Subnet:
       deletionPolicy: Delete
       forProvider:
         availabilityZone: us-west-2b
-        cidrBlock: 10.3.1.0/24
+        cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "1.0/24") }}'
         mapPublicIPOnLaunch: true
         tags:
           "kubernetes.io/role/elb": "1"
@@ -415,7 +417,7 @@ Subnet:
       deletionPolicy: Delete
       forProvider:
         availabilityZone: us-west-2c
-        cidrBlock: 10.3.2.0/24
+        cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "2.0/24") }}'
         mapPublicIPOnLaunch: true
         tags:
           "kubernetes.io/role/elb": "1"
@@ -425,7 +427,7 @@ Subnet:
         "app.kubernetes.io/private": "true"
       forProvider:
         availabilityZone: us-west-2a
-        cidrBlock: 10.3.10.0/24
+        cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "10.0/24") }}'
         mapPublicIPOnLaunch: false
         tags:
           "kubernetes.io/role/internal-elb": "1"
@@ -435,7 +437,7 @@ Subnet:
         "app.kubernetes.io/private": "true"
       forProvider:
         availabilityZone: us-west-2b
-        cidrBlock: 10.3.11.0/24
+        cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "11.0/24") }}'
         mapPublicIPOnLaunch: false
         tags:
           "kubernetes.io/role/internal-elb": "1"
@@ -445,7 +447,7 @@ Subnet:
         "app.kubernetes.io/private": "true"
       forProvider:
         availabilityZone: us-west-2c
-        cidrBlock: 10.3.12.0/24
+        cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "12.0/24") }}'
         mapPublicIPOnLaunch: false
         tags:
           "kubernetes.io/role/internal-elb": "1"
