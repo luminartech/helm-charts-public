@@ -62,6 +62,7 @@ jobs:
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
           chart_paths=(${{ inputs.chart-path }})
+          mv_cmd_flags=""
           if [ ${#chart_paths[@]} -gt 0 ]; then
             echo "INFO: Doing a manual build and release for helm chart(s): ${{ inputs.chart-path }}"
             echo "INFO: This will overwrite old release if exists"
