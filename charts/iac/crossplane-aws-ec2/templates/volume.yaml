@@ -13,42 +13,9 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-      {{- with (.availabilityZone | required "availabilityZone is required") }}
-    availabilityZone: {{ . | quote }}
-      {{- end }}
-
-      {{- with .encrypted }}
-    encrypted: {{ . }}
-      {{- end }}
-      {{- with .iops }}
-    iops: {{ . }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "kmsKeyId"
-                                            "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- with .multiAttachEnabled }}
-    multiAttachEnabled: {{ . }}
-      {{- end }}
-      {{- with .outpostARN }}
-    outpostARN: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .size }}
-    size: {{ . }}
-      {{- end }}
-      {{- with .snapshotID }}
-    snapshotID: {{ . | quote }}
-      {{- end }}
-      {{- with .tagSpecifications }}
-    tagSpecifications:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .throughput }}
-    throughput: {{ . }}
-      {{- end }}
-      {{- with .volumeType }}
-    volumeType: {{ . | quote }}
-      {{- end }}
-    {{- end }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit .forProvider "region")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
