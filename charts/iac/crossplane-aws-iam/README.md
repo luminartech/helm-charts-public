@@ -20,11 +20,16 @@
 | Name                    | Description         | Value |
 | ----------------------- | ------------------- | ----- |
 | `AccessKey`             | resource parameters | `{}`  |
+| `Group`                 | resource parameters | `{}`  |
+| `GroupPolicyAttachment` | resource parameters | `{}`  |
+| `GroupUserMembership`   | resource parameters | `{}`  |
 | `InstanceProfile`       | resource parameters | `{}`  |
 | `OpenIDConnectProvider` | resource parameters | `{}`  |
 | `Policy`                | resource parameters | `{}`  |
 | `Role`                  | resource parameters | `{}`  |
 | `RolePolicyAttachment`  | resource parameters | `{}`  |
+| `User`                  | resource parameters | `{}`  |
+| `UserPolicyAttachment`  | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
