@@ -13,9 +13,9 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    launchTemplateName: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .launchTemplateName) }}
+    launchTemplateName: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" (.forProvider).launchTemplateName) }}
     {{- include "common-gitops.tplvalues.render" (dict
-      "value" (omit .forProvider "launchTemplateName" "tags" "region")
+      "value" (omit (.forProvider) "launchTemplateName" "tags" "region")
       "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.tags.list" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
