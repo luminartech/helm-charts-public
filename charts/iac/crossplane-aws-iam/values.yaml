@@ -5,6 +5,18 @@
 ##
 AccessKey: {}
 
+## @param Group resource parameters
+##
+Group: {}
+
+## @param GroupPolicyAttachment resource parameters
+##
+GroupPolicyAttachment: {}
+
+## @param GroupUserMembership resource parameters
+##
+GroupUserMembership: {}
+
 ## @param InstanceProfile resource parameters
 ##
 InstanceProfile: {}
@@ -24,3 +36,11 @@ Role: {}
 ## @param RolePolicyAttachment resource parameters
 ##
 RolePolicyAttachment: {}
+
+## @param User resource parameters
+##
+User: {}
+
+## @param UserPolicyAttachment resource parameters
+##
+UserPolicyAttachment: {}

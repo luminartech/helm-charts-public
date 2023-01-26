@@ -16,30 +16,28 @@ AccessKey:
       forProvider:
         userNameRef:
           name: someuser
-# Group:
-  # enabled: false
-  # items:
-  #   - name: test
+Group:
+  items:
+    test:
+      name: nameoverride
 
-# GroupPolicyAttachment:
-  # enabled: false
-  # items:
-  #   - name: test
-  #     forProvider:
-  #       policyArnRef:
-  #         name: somepolicy
-  #       groupNameRef:
-  #         name: somegroup
+GroupPolicyAttachment:
+  items:
+    test:
+      forProvider:
+        policyArnRef:
+          name: somepolicy
+        groupNameRef:
+          name: somegroup
 
-# GroupUserMembership:
-  # enabled: false
-  # items:
-  #   - name: test
-  #     forProvider:
-  #       groupNameRef:
-  #         name: somegroup
-  #       userNameRef:
-  #         name: someuser
+GroupUserMembership:
+  items:
+    test:
+      forProvider:
+        groupNameRef:
+          name: somegroup
+        userNameRef:
+          name: someuser
 
 InstanceProfile:
   tags:
@@ -128,23 +126,20 @@ RolePolicyAttachment:
         roleNameRef:
           name: crossplane-aws-iam-test-role
 
-# User:
-  # enabled: false
-  # items:
-  # - name: "test"
-  #   labels:
-  #     crossplane.io/infra-module: test
-  #   tags: {}
-  #   forProvider:
-  #     path: test
-  #     permissionsBoundary: test
+User:
+  items:
+    test:
+      labels:
+        crossplane.io/infra-module: test
+      forProvider:
+        path: test
+        permissionsBoundary: test
 
-# UserPolicyAttachment:
-  # enabled: false
-  # items:
-  # - name: test
-  #   forProvider:
-  #     policyArnRef:
-  #       name: somepolicy
-  #     userNameRef:
-  #       name: someuser
+UserPolicyAttachment:
+  items:
+    test:
+      forProvider:
+        policyArnRef:
+          name: somepolicy
+        userNameRef:
+          name: someuser
