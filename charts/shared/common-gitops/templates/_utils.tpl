@@ -28,3 +28,30 @@ See https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#dns
     {{- . -}}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Calculate subnet Cidr by given vpcCidr and suffix.
+Main goal is to provide end-user the easy way to set the vpcSubnet and get the full list of subnets
+generated automatically.
+
+Input dict:
+{
+  vpcCidr: [strign] - VPC Cidr, e.g. 10.127.16.0/20
+  suffix: [string] - suffix, e.g. "16.0/24"
+}
+Returns string:
+  "10.127.16.0/24"
+*/}}
+{{- define "common-gitops.utils.subnetCidr" -}}
+  {{- $mask := splitList "/" .vpcCidr | last | atoi -}}
+  {{- $net := splitList "/" .vpcCidr| first | split "." -}}
+  {{- if and (ge $mask 24) (le $mask 30) -}}
+    {{- printf "%s.%s.%s.%s" $net._0 $net._1 $net._2 .suffix -}}
+  {{- else if and (ge $mask 16) (lt $mask 24) -}}
+    {{- printf "%s.%s.%s" $net._0 $net._1 .suffix -}}
+  {{- else if and (ge $mask 8) (lt $mask 16) -}}
+    {{- printf "%s.%s" $net._0 .suffix -}}
+  {{- else -}}
+    {{- fail "Netmask is expected to be a number >= 8 and <=30" -}}
+  {{- end -}}
+{{- end -}}
