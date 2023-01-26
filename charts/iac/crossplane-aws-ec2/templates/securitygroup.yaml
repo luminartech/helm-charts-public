@@ -14,20 +14,9 @@ spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
     groupName: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
-    {{- with .forProvider }}
-      {{- with .description }}
-    description: {{ . | quote }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "vpcId" "context" . "root" $root) | nindent 4 }}
-      {{- with .ingress }}
-    ingress:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .egress }}
-    egress:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-    {{- end }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit .forProvider "tags" "region" "groupName")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.tags.list" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
