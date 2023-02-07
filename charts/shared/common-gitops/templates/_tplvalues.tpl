@@ -10,8 +10,11 @@ Usage:
 */}}
 {{- define "common-gitops.tplvalues.render" -}}
     {{- if typeIs "string" .value -}}
-        {{- tpl .value .context }}
+        {{- tpl .value .context -}}
     {{- else -}}
-        {{- tpl (.value | toYaml) .context }}
+        {{- /* Avoid returning {} or [] */ -}}
+        {{- with .value -}}
+            {{- tpl (. | toYaml) $.context -}}
+        {{- end -}}
     {{- end -}}
 {{- end -}}
