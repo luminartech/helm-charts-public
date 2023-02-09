@@ -13,15 +13,9 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "fileSystemID" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- with .ipAddress }}
-    ipAddress: {{ . | quote }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "securityGroups" "fieldRef" "securityGroupsRefs" "fieldSelector" "securityGroupsSelector"
-                                            "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "subnetID" "context" . "root" $root "optional" true) | nindent 4 }}
-    {{- end }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "region")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
