@@ -13,49 +13,11 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-      {{- with .cacheClusterEnabled }}
-    cacheClusterEnabled: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .cacheClusterSize }}
-    cacheClusterSize: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .canarySettings }}
-    canarySettings:
-        {{- include "common-gitops.crossplane.reference" (dict "field" "deploymentId" "context" . "root" $root "optional" true) | nindent 6 }}
-        {{- with .percentTraffic }}
-      percentTraffic: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-        {{- end }}
-        {{- with .stageVariableOverrides }}
-      stageVariableOverrides:
-          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 8 }}
-        {{- end }}
-        {{- with .useStageCache }}
-      useStageCache: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-        {{- end }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "deploymentId" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- with .description }}
-    description: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | default "resource description" }}
-      {{- end }}
-    stageName: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .stageName) }}
-      {{- with .documentationVersion }}
-    documentationVersion: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "restApiId" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- with .tracingEnabled }}
-    tracingEnabled: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      # We can not use the tags function here, format is different
-      {{- with .tags }}
-    tags:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .variables }}
-    variables:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-    {{- end }}
+    stageName: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" (.forProvider).stageName) }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "stageName" "tags" "region")
+      "context" $root) | nindent 4 }}
+    {{- include "common-gitops.tags.dict" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}

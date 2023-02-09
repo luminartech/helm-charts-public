@@ -13,43 +13,9 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-      {{- with .apiKeyRequired }}
-    apiKeyRequired: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .httpMethod }}
-    httpMethod: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with (.authorizationType | required "authorizationType is required") }}
-    authorizationType: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .operationName }}
-    operationName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .authorizerID }}
-    authorizerID: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "authorizerId" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- with .authorizationScopes }}
-    authorizationScopes:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "authorizerId" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- with .requestModels }}
-    requestModels:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .requestParameters }}
-    requestParameters:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .requestValidatorID }}
-    requestValidatorID: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "requestValidatorId" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "resourceId" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "restApiId" "context" . "root" $root "optional" true) | nindent 4 }}
-    {{- end }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "region")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}

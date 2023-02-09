@@ -13,19 +13,10 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-    name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
-      {{- with .description }}
-    description: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | default "resource description" }}
-      {{- end }}
-      {{- with .contentType }}
-    contentType: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "restApiId" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- with .schema }}
-    schema: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-    {{- end }}
+    name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" (.forProvider).name) }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "name" "region")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}

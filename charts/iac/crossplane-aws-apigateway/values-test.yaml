@@ -14,7 +14,7 @@ Authorizer:
     _:
       forProvider:
         type_: "LAMBDA_TOKEN"
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
 
 BasePathMapping:
@@ -23,7 +23,7 @@ BasePathMapping:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
 
 Deployment:
@@ -32,7 +32,7 @@ Deployment:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
 
 DocumentationPart:
@@ -43,10 +43,10 @@ DocumentationPart:
       forProvider:
         location:
           path: /
-          statusCode: 200
+          statusCode: "200"
         properties: |-
           key=value
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
 
 DocumentationVersion:
@@ -55,7 +55,7 @@ DocumentationVersion:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
         documentationVersion: "1.0"
 
@@ -81,7 +81,7 @@ IntegrationResponse:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
         statusCode: "200"
         httpMethod: "GET"
@@ -92,7 +92,7 @@ Integration:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
         type_: "HTTP"
         httpMethod: "GET"
@@ -103,7 +103,7 @@ MethodResponse:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
         statusCode: "200"
         httpMethod: "GET"
@@ -114,7 +114,7 @@ Method:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
         authorizationType: AWS_IAM
         httpMethod: "GET"
@@ -125,7 +125,7 @@ Model:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
         contentType: application/json
 
@@ -142,7 +142,7 @@ Resource:
   items:
     _:
       forProvider:
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
         pathPart: "stack"
 
@@ -170,7 +170,7 @@ UsagePlanKey:
       forProvider:
         keyID: '{{ include "common-gitops.names.release" . }}'
         keyType: API_KEY
-        restApiRef:
+        restApiIdRef:
           name: '{{ include "common-gitops.names.release" . }}'
 
 UsagePlan:
