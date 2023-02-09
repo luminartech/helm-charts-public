@@ -13,32 +13,9 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "clusterName" "context" . "root" $root) | nindent 4 }}
-      {{- with .oidc }}
-    oidc:
-      clientId: "{{ .clientId }}"
-        {{- with .groupsClaim }}
-      groupsClaim: "{{ . }}"
-        {{- end }}
-        {{- with .groupsPrefix }}
-      groupsPrefix: "{{ . }}"
-        {{- end }}
-      issuerUrl: "{{ .issuerUrl }}"
-        {{- with .requiredClaims }}
-      requiredClaims: |
-          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 8 }}
-        {{- end }}
-        {{- with .usernameClaim }}
-      usernameClaim: "{{ . }}"
-        {{- end }}
-        {{- with .usernamePrefix }}
-      usernamePrefix: "{{ . }}"
-        {{- end }}
-      {{- else }}
-        {{- required "oidc is required" .forProvider.oidc }}
-      {{- end }}
-    {{- end }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "tags" "region")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.tags.dict" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
