@@ -2,6 +2,7 @@ HELM_BINARY?=helm
 EXTRA_HELM_ARGS?=
 TEMPLATE_OUTPUT_FILE?=templated-output.yaml
 RELEASE_NAME?=${ENVIRONMENT}-${CHART_NAME}
+NAMESPACE?=test
 VALUES_FILE= --values ./values.yaml
 ifneq (,$(wildcard values-test.y*l))
 VALUES_FILE+= --values ./values-test.yaml
