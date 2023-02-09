@@ -38,7 +38,7 @@ LaunchTemplate:
       labels:
         crossplane.io/infra-resource: test
       forProvider:
-        launchTempalteName: test
+        launchTemplateName: test
         launchTemplateData:
           # blockDeviceMappings:
           #   - deviceName: ""
@@ -155,7 +155,7 @@ LaunchTemplate:
           # userData: ""
         region: us-west-2
         # The tags to apply to the launch template during creation.
-        tagSpecification:
+        tagSpecifications:
           - resourceType: ""
             tags: []
         tags:
@@ -199,8 +199,6 @@ Route:
         destinationCIDRBlock: 172.16.0.0/12
         transitGatewayIdRef:
           name: tgw
-        tags:
-          test-rout: test
 
 RouteTable:
   items:
