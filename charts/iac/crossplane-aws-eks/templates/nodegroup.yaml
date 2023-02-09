@@ -13,53 +13,9 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-      {{- with .amiType }}
-    amiType: "{{ . }}"
-      {{- end }}
-      {{- with .capacityType }}
-    capacityType: "{{ . }}"
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "clusterName" "context" . "root" $root) | nindent 4 }}
-      {{- with .diskSize }}
-    diskSize: {{ . }}
-      {{- end }}
-      {{- with .instanceTypes }}
-    instanceTypes:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .labels }}
-    labels:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .launchTemplate }}
-    launchTemplate:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "nodeRole" "context" . "root" $root) | nindent 4 }}
-      {{- with .releaseVersion }}
-    releaseVersion: "{{ . }}"
-      {{- end }}
-      {{- with .remoteAccess }}
-    remoteAccess:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end}}
-      {{- with .scalingConfig }}
-    scalingConfig:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "subnets"
-                                        "fieldRef" "subnetRefs"
-                                        "fieldSelector" "subnetSelector"
-                                        "context" . "root" $root) | nindent 4 }}
-      {{- with .taints }}
-    taints:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .version }}
-    version: "{{ . }}"
-      {{- end }}
-    {{- end }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "tags" "region")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.tags.dict" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
