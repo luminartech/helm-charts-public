@@ -11,14 +11,18 @@ on:
     branches:
       - main
     paths:
-      # Create a release on version update
-      - 'charts/**/Chart.yaml'
+      - 'charts/**/**.yaml'
+      - 'charts/**/**.tpl'
 permissions:
   contents: write
 jobs:
   package-and-release:
     runs-on: ubuntu-latest
     steps:
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
       - name: Generate token
         id: generate_token
         uses: tibdex/github-app-token@v1
@@ -26,7 +30,7 @@ jobs:
           app_id: ${{ secrets.SOFTWARE_APP_ID }}
           private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
           installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
-      - name: Checkout repo
+      - name: Current Repository Checkout
         uses: actions/checkout@v3
         with:
           token: ${{ steps.generate_token.outputs.token }}
@@ -61,6 +65,7 @@ jobs:
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
           git config user.email "sre@luminartech.com"
+          pip3 install -r scripts/requirements.txt
           chart_paths=(${{ inputs.chart-path }})
           mv_cmd_flags=""
           if [ ${#chart_paths[@]} -gt 0 ]; then
@@ -78,6 +83,11 @@ jobs:
           for chart in "${charts_dirs_changed[@]}"; do
             cd ${chart}
             if [ -f Chart.yaml ]; then
+              echo "Incrementing the version"
+              ./${{workspace_dir}}/luminartech/helm-charts-public/scripts/incver.py Chart.yaml
+              git add Chart.yaml
+              git commit -m "Release of ${chart}"
+              git push origin
               echo "Generating helm package for ${chart}"
               helm dependency update
               rm -f *.tgz || true
