@@ -13,32 +13,10 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-      {{- with .name }}
-    name: {{ . | quote }}
-      {{- end }}
-      {{- with .config }}
-    config:
-        {{- with .comment }}
-      comment: {{ . | quote }}
-        {{- end }}
-        {{- with .privateZone }}
-      privateZone: {{ . }}
-        {{- end }}
-      {{- end }}
-      {{- with .delegationSetId }}
-    delegationSetId: {{ . | quote }}
-      {{- end }}
-      {{- with .vpc }}
-    vpc:
-        {{- if any (hasKey . "vpcId") (hasKey . "vpcIdRef") (hasKey . "vpcIdSelector") }}
-          {{- include "common-gitops.crossplane.reference" (dict "field" "vpcId" "context" . "root" $root) | nindent 6 }}
-        {{- end }}
-        {{- with .vpcRegion }}
-      vpcRegion: {{ . | quote }}
-        {{- end }}
-      {{- end }}
-    {{- end }}
+    name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" (.forProvider).name) }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "name")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
