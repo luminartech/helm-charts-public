@@ -8,6 +8,6 @@ ResourceShare:
       forProvider:
         allowExternalPrincipals: true
         principals:
-          - 123456789012
+          - "123456789012"
         resourceARNs:
           - arn:aws:ec2:us-west-2:123456789012:transit-gateway/tgw-a1234c56f7890c12
