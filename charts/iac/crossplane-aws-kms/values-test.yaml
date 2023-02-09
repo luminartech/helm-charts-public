@@ -6,8 +6,8 @@ Alias:
     test:
       forProvider:
         region: us-west-2
-        targetKeyIdSelector:
-          test: iac-infra-eks-cluster-key
+        targetKeyIdRef:
+          name: iac-infra-eks-cluster-key
 
 Key:
   items:
