@@ -1,277 +1,130 @@
 ---
 ## AWS S3 bucket resources configurations
-    ##############
-    # Global
-    ##############
-    # global:
-    #   chartNameOverride: "infra"
+##############
+# Global
+##############
+# global:
+#   chartNameOverride: "infra"
 
-    #   releaseNameOverride: "infra"
+#   releaseNameOverride: "infra"
 
-    #   tags: {}
-      # tags:
-      #   - key: k1
-      #     value: v1
+#   tags: {}
+  # tags:
+  #   - key: k1
+  #     value: v1
 
-      # labels: {}
+  # labels: {}
 
-      # Annotations to be added to the published metadata secret
-      # annotations: {}
+  # Annotations to be added to the published metadata secret
+  # annotations: {}
 
-      # aws provider configmap
-      # providerConfigRef:
-      #   name: aws-provider-cicd
+  # aws provider configmap
+  # providerConfigRef:
+  #   name: aws-provider-cicd
 
-    Bucket:
-      enabled: true
-      items:
-        test-bucket:
-          deletionPolicy: Delete
-          annotations:
-            # This will be the actual bucket name. It must be globally unique, so you
-            # probably want to change it before trying to apply this example.
-            crossplane.io/external-name: lt-test-bucket-22
-          forProvider:
-            acl: private
-            grantFullControl: fullGrant
-            grantRead: readGrant
-            grantReadAcp: readACPGrant
-            grantWrite: writeGrant
-            grantWriteACP: writeACPGrant
-            locationConstraint: us-west-2
-            loggingConfiguration:
-              targetBucket: target-s3-bucket
-              targetBucketRef:
-                name: targetS3name
-                policy:
-                  resolution: Optional
-                  resolve: Always
-              targetBucketRefSelector:
-                matchControllerRef: 1
-                matchLabels:
-                  s3.aws.crossplane.io/selector-name: "test"
-                policy:
-                  resolution: Optional
-                  resolve: Always
-              targetGrants:
-                bucketLogsPermission: FULL_CONTROL
-                targetGrantee:
-                  ID:
-                  URI:
-                  displayName:
-                  emailAddress:
-                  type:
-              targetPrefix: prefix
-            notificationConfiguration:
-              lambdaFunctionConfigurations:
-                ID:
-                events:
-                  - event
-                filter:
-                  key:
-                    filterRules:
-                      name:
-                      value:
-                lambdaFunctionArn: arn-test
-              queueConfigurations:
-                ID:
-                events:
-                  - event
-                filter:
-                  key:
-                    filterRules:
-                      name:
-                      value:
-                queueArn:
-                queueArnRef:
-                  name:
-                  policy:
-                    resolution: Optional
-                    resolve: Always
-                queueArnSelector:
-                  matchControllerRef: 1
-                  matchLabels:
-                    s3.aws.crossplane.io/selector-name: "test"
-                  policy:
-                    resolution: Optional
-                    resolve: Always
-              topicConfigurations:
-                ID:
-                events:
-                  - event
-                filter:
-                  key:
-                    filterRules:
-                      name:
-                      value:
-                topicArn:
-                topicRef:
-                  name:
-                  policy:
-                    resolution: Optional
-                    resolve: Always
-                topicSelector:
-                  matchControllerRef: 1
-                  matchLabels:
-                    s3.aws.crossplane.io/selector-name: "test"
-                  policy:
-                    resolution: Optional
-                    resolve: Always
-            publicAccessBlockConfiguration:
-              blockPublicPolicy: true
-              blockPublicAcls: true
-              ignorePublicAcls: true
-              restrictPublicBuckets: true
-            accelerateConfiguration:
+Bucket:
+  enabled: true
+  items:
+    test-bucket:
+      deletionPolicy: Delete
+      annotations:
+        # This will be the actual bucket name. It must be globally unique, so you
+        # probably want to change it before trying to apply this example.
+        crossplane.io/external-name: lt-test-bucket-22
+      forProvider:
+        acl: private
+        locationConstraint: us-east-1
+        publicAccessBlockConfiguration:
+          blockPublicPolicy: true
+        accelerateConfiguration:
+          status: Enabled
+        versioningConfiguration:
+          status: Enabled
+        tagging:
+          tagSet:
+            - key: key1
+              value: val1
+            - key: secondKey
+              value: val2
+            - key: key3
+              value: val3
+        objectLockEnabledForBucket: false
+        serverSideEncryptionConfiguration:
+          rules:
+            - applyServerSideEncryptionByDefault:
+                sseAlgorithm: AES256
+        corsConfiguration:
+          corsRules:
+            - allowedMethods:
+                - "GET"
+              allowedOrigins:
+                - "*"
+              allowedHeaders:
+                - "*"
+              exposeHeaders:
+                - "x-amz-server-side-encryption"
+        lifecycleConfiguration:
+          rules:
+            - status: Enabled
+              filter:
+                prefix: "ola/"
+              expiration:
+                days: 15
+        replicationConfiguration:
+          roleRef:
+            name: somerole
+          rules:
+            - destination:
+                storageClass: STANDARD
+                bucketRef:
+                  name: repl-dest
+              deleteMarkerReplication:
+                status: Disabled
+              filter:
+                prefix: ""
+              priority: 0
+              id: rule-1
               status: Enabled
-            versioningConfiguration:
-              status: Enabled
-              mfaDelete: Enabled
-            objectLockEnabledForBucket: true
-            objectOwnership: BucketOwnerEnforced
-            serverSideEncryptionConfiguration:
-              rules:
-                - applyServerSideEncryptionByDefault:
-                    kmsMasterId: 1234abcd-12ab-34cd-56ef-1234567890ab
-                    kmsMasterIdRef:
-                      name: kmsMaster
-                      policy:
-                        resolution: Optional
-                        resolve: Always
-                    kmsMasterIdSelector:
-                      matchControllerRef: 1
+BucketPolicy:
+  enabled: true
+  items:
+    test-bucket-policy:
+      deletionPolicy: Delete
+      forProvider:
+        region: us-east-1
+        bucketNameRef:
+          name: test-bucket
+        policy:
+          version: '2012-10-17'
+          statements:
+            - action:
+                - s3:ListBucket
+                - s3:GetBucketLocation
+                - s3:ListBucketMultipartUploads
+                - s3:PutBucketCORS
+              effect: Allow
+              principal:
+                awsPrincipals:
+                  - iamUserArnSelector:
                       matchLabels:
-                        s3.aws.crossplane.io/selector-name: "test"
-                      policy:
-                        resolution: Optional
-                        resolve: Always
-                    sseAlgorithm: AES256
-                - bucketKeyEnabled: true
-            tagging:
-              tagSet:
-                - key: key1
-                  value: val1
-                - key: secondKey
-                  value: val2
-                - key: key3
-                  value: val3
-            corsConfiguration:
-              corsRules:
-                - allowedMethods:
-                    - "GET"
-                  allowedOrigins:
-                    - "*"
-                  allowedHeaders:
-                    - "*"
-                  exposeHeaders:
-                    - "x-amz-server-side-encryption"
-            lifecycleConfiguration:
-              rules:
-                - status: Enabled
-                  filter:
-                    prefix: "/"
-                  expiration:
-                    days: 15
-            replicationConfiguration:
-              role: test-role
-              roleRef:
-                name: arn:aws:iam::345990455111:role/iac-cicd-infra-artifactory-apm
-              roleSelector:
-                matchControllerRef: 1
-                matchLabels:
-                  s3.aws.crossplane.io/selector-name: "test"
-                policy:
-                  resolution: Optional
-                  resolve: Always
-              rules:
-                - destination:
-                    storageClass: STANDARD
-                    bucketRef:
-                      name: repl-dest
-                  deleteMarkerReplication:
-                    status: Disabled
-                  filter:
-                    prefix: ""
-                  priority: 0
-                  id: rule-1
-                  status: Enabled
-            websiteConfiguration:
-              errorDocument:
-                key: string
-              indexDocument:
-                suffix: suffix
-              redirectAllRequestsTo:
-                hostName: hostname
-                protocol: http
-              routingRules:
-                - condition:
-                  httpErrorCodeReturnedEquals: 402
-                  keyPrefixEquals: prefix
-                - redirect:
-                  httpRedirectCode: 302
-                  keyPrefixEquals: prefix
-                  protocol: HTTP
-                  replaceKeyPrefixWith: prefix-with
-                  replaceKeyWith: replaceKeyWith
-    BucketPolicy:
-      enabled: true
-      items:
-        test-bucket-policy:
-          deletionPolicy: Delete
-          forProvider:
-            bucketName: test-bucket
-            region: us-east-1
-            rawPolicy: |
-              {
-                "Statement": [
-                  {
-                    "Action":"s3:ListBucket",
-                    "Effect":"Allow",
-                    "Principal":"*",
-                    "Resource":"arn:aws:s3:::crossplane-example-bucket"
-                  }
-                ],
-                "Version":"2012-10-17"
-              }
-            bucketNameRef:
-              name: test-bucket
-            bucketNameSelector:
-              matchControllerRef: true
-              matchLabels: test-label
-              policy:
-                resolution: target-s3-ref-name-resolution
-                resolve: target-s3-ref-name-resolve
-            policy:
-              version: '2012-10-17'
-              statements:
-                - action:
-                    - s3:ListBucket
-                    - s3:GetBucketLocation
-                    - s3:ListBucketMultipartUploads
-                    - s3:PutBucketCORS
-                  effect: Allow
-                  principal:
-                    awsPrincipals:
-                      - iamUserArnSelector:
-                          matchLabels:
-                            example: "true"
-                  resource:
-                    # This is unfortunately not currently able to be inferred from a
-                    # reference to test-bucket, and must therefore be set to the ARN of
-                    # test-bucket (i.e. its actual external name).
-                    - "arn:aws:s3:::crossplane-example-bucket"
-                  condition:
-                  - operatorKey: StringEquals
-                    conditions:
-                      - key: "aws:Key1"
-                        stringValue: "value1"
-                      - key: "aws:Key2"
-                        stringValue: "value2"
-                  - operatorKey: IpAddress
-                    conditions:
-                      - key: "aws:SourceIp"
-                        stringValue: "192.0.2.0/24"
-                  - operatorKey: NotIpAddress
-                    conditions:
-                      - key: "aws:SourceIp"
-                        stringValue: "192.0.2.188/32"
+                        example: "true"
+              resource:
+                # This is unfortunately not currently able to be inferred from a
+                # reference to test-bucket, and must therefore be set to the ARN of
+                # test-bucket (i.e. its actual external name).
+                - "arn:aws:s3:::crossplane-example-bucket"
+              condition:
+              - operatorKey: StringEquals
+                conditions:
+                  - key: "aws:Key1"
+                    stringValue: "value1"
+                  - key: "aws:Key2"
+                    stringValue: "value2"
+              - operatorKey: IpAddress
+                conditions:
+                  - key: "aws:SourceIp"
+                    stringValue: "192.0.2.0/24"
+              - operatorKey: NotIpAddress
+                conditions:
+                  - key: "aws:SourceIp"
+                    stringValue: "192.0.2.188/32"
