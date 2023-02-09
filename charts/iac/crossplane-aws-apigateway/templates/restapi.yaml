@@ -13,52 +13,11 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-    name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
-      {{- with .apiKeySource }}
-    apiKeySource: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .binaryMediaTypes }}
-    binaryMediaTypes:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .cloneFrom }}
-    cloneFrom: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .description }}
-    description: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .disableExecuteAPIEndpoint }}
-    disableExecuteAPIEndpoint: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .endpointConfiguration }}
-    endpointConfiguration:
-        {{- with .type }}
-      types:
-          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 8 }}
-        {{- end }}
-        {{- with .vpcEndpointIDs }}
-      vpcEndpointIDs:
-          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 8 }}
-        {{- end }}
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "parentResourceId" "context" . "root" $root "optional" true) | nindent 4 }}
-      {{- with .minimumCompressionSize }}
-    minimumCompressionSize: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-      {{- with .policy }}
-    policy: |-
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      # We can not use the tags function here, format is different
-      {{- with .tags }}
-    tags:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
-      {{- end }}
-      {{- with .version }}
-    version: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end }}
-    {{- end }}
+    name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" (.forProvider).name) }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "tags" "region")
+      "context" $root) | nindent 4 }}
+    {{- include "common-gitops.tags.dict" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
