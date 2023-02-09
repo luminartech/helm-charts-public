@@ -7,7 +7,7 @@ description: A Helm chart for ServiceMonitor resource
 name: prometheus-service-discovery
 # Below version must match the app version for the consistency.
 # Update minor bit if new tag is needed. e.g. 40.1.0-1
-version: "40.1.0-2"
+version: "40.1.0-3"
 home: https://helm-repo-public.luminarinfra.com
 sources:
   - https://github.com/luminartech/helm-charts-public/
@@ -20,5 +20,6 @@ maintainers:
     email: hennadii.mykhailiuta@luminartech.com
 dependencies:
   - name: common-gitops
-    version: "1.0.2"
+    version: "1.0.4"
     repository: https://helm-repo-public.luminarinfra.com/
+
