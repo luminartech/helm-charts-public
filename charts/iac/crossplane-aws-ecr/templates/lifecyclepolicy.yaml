@@ -13,14 +13,9 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
-    {{- with .forProvider }}
-    lifecyclePolicyText: |-
-      {{- .lifecyclePolicyText | nindent 6 }}
-      {{- with .registryID }}
-    registryID: "{{ . }}"
-      {{- end }}
-      {{- include "common-gitops.crossplane.reference" (dict "field" "repositoryName" "context" . "root" $root) | nindent 4 }}
-    {{- end }}
+    {{- include "common-gitops.tplvalues.render" (dict
+      "value" (omit (.forProvider) "region")
+      "context" $root) | nindent 4 }}
     {{- include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
