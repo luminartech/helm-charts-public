@@ -1,0 +1,33 @@
+## @section AWS resources
+
+## @param Attachment resource parameters
+##
+Attachment: {}
+
+## @param Attachment resource parameters
+##
+AutoscalingGroup: {}
+
+## @param GroupTag resource parameters
+##
+GroupTag: {}
+
+## @param LaunchConfiguration resource parameters
+##
+LaunchConfiguration: {}
+
+## @param LifecycleHook resource parameters
+##
+LifecycleHook: {}
+
+## @param Notification resource parameters
+##
+Notification: {}
+
+## @param Policy resource parameters
+##
+Policy: {}
+
+## @param Schedule resource parameters
+##
+Schedule: {}

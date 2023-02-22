@@ -1,0 +1,136 @@
+---
+## AWS ASG resources configurations
+
+Attachment:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+          autoscalingGroupNameSelector:
+            matchLabels:
+              testing.upbound.io/example-name: asg
+          elbSelector:
+            matchLabels:
+              testing.upbound.io/example-name: bar
+
+AutoscalingGroup:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        desiredCapacity: 4
+        forceDelete: true
+        healthCheckGracePeriod: 300
+        healthCheckType: ELB
+        initialLifecycleHook:
+          - defaultResult: CONTINUE
+            heartbeatTimeout: 2000
+            lifecycleTransition: autoscaling:EC2_INSTANCE_LAUNCHING
+            name: foobar
+            notificationMetadata: |
+              {
+                "foo": "bar"
+              }
+            notificationTargetArn: arn:aws:sqs:{data.aws_region}}:${data.aws_account_id}:queue1*
+            roleArn: arn:aws:iam::${data.aws_account_id}:role/S3Access
+        launchConfiguration: ${aws_launch_configuration.foobar.name}
+        maxSize: 1
+        minSize: 1
+        placementGroupSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test
+
+GroupTag:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        autoscalingGroupName: example
+        region: us-west-1
+        tag:
+          - key: k8s.io/cluster-autoscaler/node-template/label/eks.amazonaws.com/capacityType
+            propagateAtLaunch: false
+            value: SPOT
+
+LaunchConfiguration:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        imageId: ami-0a1a70369f0fce06a
+        instanceType: t2.micro
+
+LifecycleHook:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        autoscalingGroupNameSelector:
+          matchLabels:
+            app.kubernetes.io/component: crossplane-aws-asg
+        defaultResult: CONTINUE
+        heartbeatTimeout: 2000
+        lifecycleTransition: autoscaling:EC2_INSTANCE_LAUNCHING
+        notificationMetadata: |
+          {
+            "foo": "bar"
+          }
+
+Notification:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        groupNames:
+          - bar
+          - foo
+        notifications:
+          - autoscaling:EC2_INSTANCE_LAUNCH
+          - autoscaling:EC2_INSTANCE_TERMINATE
+          - autoscaling:EC2_INSTANCE_LAUNCH_ERROR
+          - autoscaling:EC2_INSTANCE_TERMINATE_ERROR
+        topicArnSelector:
+          matchLabels:
+            app.kubernetes.io/component: crossplane-aws-asg
+
+Policy:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        adjustmentType: ChangeInCapacity
+        autoscalingGroupNameSelector:
+          matchLabels:
+            app.kubernetes.io/component: crossplane-aws-asg
+        cooldown: 300
+        scalingAdjustment: 1
+
+Schedule:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        autoscalingGroupNameSelector:
+          matchLabels:
+            app.kubernetes.io/component: crossplane-aws-asg
+        desiredCapacity: 1
+        endTime: 2023-12-12T06:00:00Z
+        maxSize: 1
+        minSize: 1
+        startTime: 2023-12-11T18:00:00Z
