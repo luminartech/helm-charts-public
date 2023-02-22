@@ -22,10 +22,15 @@ AutoscalingGroup:
       providerConfigRef: 
         name: aws-provider
       forProvider:
+        availabilityZones:
+          - us-west-2a
+          - us-west-2b
+          - us-west-2c
         desiredCapacity: 4
         forceDelete: true
+        forceDeleteWarmPool: false
         healthCheckGracePeriod: 300
-        healthCheckType: ELB
+        healthCheckType: EC2
         initialLifecycleHook:
           - defaultResult: CONTINUE
             heartbeatTimeout: 2000
@@ -37,6 +42,16 @@ AutoscalingGroup:
               }
             notificationTargetArn: arn:aws:sqs:{data.aws_region}}:${data.aws_account_id}:queue1*
             roleArn: arn:aws:iam::${data.aws_account_id}:role/S3Access
+        instanceRefresh:
+          - strategy: "Rolling"
+          - triggers:
+            - launch_configuration
+          - preferences:
+            - checkpointDelay: "3600"
+            - checkpointPercentages: [35, 70, 100]
+            - instanceWarmup: 300
+            - minHealthyPercentage: 90
+            - skipMatching: false
         launchConfiguration: ${aws_launch_configuration.foobar.name}
         maxSize: 1
         minSize: 1
