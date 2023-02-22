@@ -1,6 +1,6 @@
 <!--- app-name: Apache -->
 
-# ECR AWS Resources Chart for Crossplane AWS Provider
+# ELB AWS Resources Chart for Crossplane AWS Provider
 
 ## TL;DR
 
@@ -19,9 +19,15 @@
 
 | Name               | Description         | Value |
 | ------------------ | ------------------- | ----- |
-| `LifecyclePolicy`  | resource parameters | `{}`  |
-| `Repository`       | resource parameters | `{}`  |
-| `RepositoryPolicy` | resource parameters | `{}`  |
+| `ELB`                       | resource parameters | `{}`  |
+| `AppCookieStickinessPolicy` | resource parameters | `{}`  |
+| `Attachment`                | resource parameters | `{}`  |
+| `BackendServerPolicy`       | resource parameters | `{}`  |
+| `LBCookieStickinessPolicy`  | resource parameters | `{}`  |
+| `LBSSLNegotiationPolicy`    | resource parameters | `{}`  |
+| `ListenerPolicy`            | resource parameters | `{}`  |
+| `Policy`                    | resource parameters | `{}`  |
+| `ProxyProtocolPolicy`       | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
