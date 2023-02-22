@@ -1,0 +1,170 @@
+---
+## AWS ECR resources configurations
+ELB:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+          availabilityZones:
+            - us-west-2a
+          instances:
+            - i-049f320f4c0e97b6a
+            - i-049f320f4c0e97b6b
+          listener:
+            - instancePort: 5060
+              instanceProtocol: tcp
+              lbPort: 5060
+              lbProtocol: tcp
+            - instancePort: 5053 - 5057
+              instanceProtocol: tcp
+              lbPort: 5053 - 5057
+              lbProtocol: tcp
+          subnets:
+            - subnet-1a
+            - subnet-1b
+
+AppCookieStickinessPolicy:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+          cookieName: "test-cookie"
+          lbPort: 5060
+          loadBalancer: test
+
+Attachment:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+          elbRef:
+            name: test
+          instanceRef:
+            name: test-upbound-instance
+
+BackendServerPolicy:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        instancePort: 5060
+        loadBalancerNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: infra-crossplane-aws-elb-test
+        policyNames:
+          - root-ca-backend-auth-policy
+
+LBCookieStickinessPolicy:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        cookieExpirationPeriod: 600
+        lbPort: 5060
+        loadBalancerSelector:
+          matchLabels:
+            app.kubernetes.io/component: crossplane-aws-elb
+        name: foo-policy
+
+LBSSLNegotiationPolicy:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        attribute:
+          - name: Protocol-TLSv1
+            value: "false"
+          - name: Protocol-TLSv1.1
+            value: "false"
+          - name: Protocol-TLSv1.2
+            value: "true"
+          - name: Server-Defined-Cipher-Order
+            value: "true"
+          - name: ECDHE-RSA-AES128-GCM-SHA256
+            value: "true"
+          - name: AES128-GCM-SHA256
+            value: "true"
+          - name: EDH-RSA-DES-CBC3-SHA
+            value: "false"
+        lbPort: 5060
+        loadBalancerSelector:
+          matchLabels:
+            app.kubernetes.io/component: crossplane-aws-elb
+        name: foo-policy
+
+ListenerPolicy:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        loadBalancerNameSelector:
+        matchLabels:
+          app.kubernetes.io/component: crossplane-aws-elb
+        loadBalancerPort: 5060
+        policyNames:
+          - infra-policy-name
+
+Policy:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        loadBalancerNameSelector:
+          matchLabels:
+            app.kubernetes.io/component: crossplane-aws-elb
+        policyAttribute:
+          - name: PublicKey
+            value: |
+              -----BEGIN CERTIFICATE-----
+              MIIDijCCAnICCQD0lyGO4+O2jzANBgkqhkiG9w0BAQsFADCBhjELMAkGA1UEBhMC
+              dWExCzAJBgNVBAgMAnVhMQ4wDAYDVQQHDAVPZGVzYTEOMAwGA1UECgwFTXlPcmcx
+              DzANBgNVBAsMBk15VW5pdDEUMBIGA1UEAwwLd3UtdGFuZy5uZXQxIzAhBgkqhkiG
+              9w0BCQEWFHN0ZXBlcmNodWtAZ21haWwuY29tMB4XDTIyMTIyMzEwMDUyNloXDTIz
+              MTIyMzEwMDUyNlowgYYxCzAJBgNVBAYTAnVhMQswCQYDVQQIDAJ1YTEOMAwGA1UE
+              BwwFT2Rlc2ExDjAMBgNVBAoMBU15T3JnMQ8wDQYDVQQLDAZNeVVuaXQxFDASBgNV
+              BAMMC3d1LXRhbmcubmV0MSMwIQYJKoZIhvcNAQkBFhRzdGVwZXJjaHVrQGdtYWls
+              LmNvbTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAOajEtcDWjkFomTt
+              CH4R/SZdmHxZeDFpfoJwtPFBPXD4b76HY4HrVAErd0u3ZxjcQmj00N+9Xng4NrEU
+              gRrAXjsjdJ1a+RmPT68UVHFtE7kT0zaXG87YxDMU5UzdD+ajOVUeqqy5AbNKi/yU
+              qftXhQ67qAIw1ta1Uj9EwR+Gx5slEEAEO8qh1Qvk268b7U751WGDro4BJ00EEsyo
+              h4xp7RbjjF1MyzxgZa4YgUkZ69o8kxzUmFMKhMmTvyEWjaNnlU6B63HqIx5s4+sC
+              hvEaNh6VomuSf9P68SQVn/L7dMtC0psdmitgcUl8E+nDj34um6sbjP1L4wENTluc
+              xmFwqCsCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAa5BgVbW9LTEKDVevAhvz4evF
+              Ncjvq+Mcn2yJAz2phsDDIsWVsjHj9sGrn9i+BY7nKY9dDtrX/dyPTJN86Q6KIZB2
+              uAwnE3x/7OgaFgmKk7RHLR+kU7K+f9YQftiZC6PXTNGX0idoHcuRp3GdpP5fxqLw
+              iTHY/seMxUgFEIWnLCm57/UE6QIGyhhSbNE9X4tKlb+kuDFjkwmoZRoundnq5DLb
+              zKzRxXP2bukcNYW2r7U03ZUi4+x721aEWFdSLixvxsDLo+gpYGAEu09ii01v5AAP
+              OycSKfeAWae+oG5TNt3M7qcIeBXXtePGiFK0jF9ugui5vzAmCqRzMUKgnCjpeQ==
+              -----END CERTIFICATE-----
+        policyName: ca-pubkey-policy
+        policyTypeName: PublicKeyPolicyType
+
+ProxyProtocolPolicy:
+  items:
+    test:
+      deletionPolicy: Delete
+      providerConfigRef: 
+        name: aws-provider
+      forProvider:
+        instancePorts:
+          - "5060"
+          - "5053"
+        loadBalancerSelector:
+          matchLabels:
+            app.kubernetes.io/component: crossplane-aws-elb

@@ -1,0 +1,37 @@
+## @section AWS resources
+
+## @param ELB resource parameters
+##
+ELB: {}
+
+## @param AppCookieStickinessPolicy resource parameters
+##
+AppCookieStickinessPolicy: {}
+
+## @param Attachment resource parameters
+##
+Attachment: {}
+
+## @param BackendServerPolicy resource parameters
+##
+BackendServerPolicy: {}
+
+## @param LBCookieStickinessPolicy resource parameters
+##
+LBCookieStickinessPolicy: {}
+
+## @param LBSSLNegotiationPolicy resource parameters
+##
+LBSSLNegotiationPolicy: {}
+
+## @param ListenerPolicy resource parameters
+##
+ListenerPolicy: {}
+
+## @param Policy resource parameters
+##
+Policy: {}
+
+## @param ProxyProtocolPolicy resource parameters
+##
+ProxyProtocolPolicy: {}
