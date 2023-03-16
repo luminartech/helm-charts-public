@@ -36,6 +36,9 @@ global:
   ## @param global.secretStoreNamespace (Deprecated) Deploy external-secret store configs to different namespace than helm chart target namespace.
   ##
   secretStoreNamespace: infra-argo-cd
+  ## @param global.deploymentName Deployment name used as fullnameoverride for upstream chart.
+  ##
+  deploymentName: external-secrets
 
 ## @section Dependency: external-secrets upstream helm chart parameters.
 ## ref: https://github.com/external-secrets/external-secrets/blob/v0.7.0/deploy/charts/external-secrets/values.yaml
@@ -49,6 +52,10 @@ external-secrets:
   ## @param external-secrets.replicaCount Default minimum replicas for app.
   ##
   replicaCount: 2
+
+  ## @param external-secrets.fullnameOverride Default full name override for upstream chart. This is needed to stop upstream chart from hitting the 63 char limit for object names
+  ##
+  fullnameOverride: external-secrets
 
   ## @param external-secrets.installCRDs Install CRDs with helm chart.
   ##
@@ -188,7 +195,7 @@ crossplane-aws-iam:
                   },
                   "Condition": {
                     "StringEquals": {
-                      "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ .Release.Name }}",
+                      "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ .Values.global.deploymentName }}",
                       "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud": "sts.amazonaws.com"
                     }
                   }

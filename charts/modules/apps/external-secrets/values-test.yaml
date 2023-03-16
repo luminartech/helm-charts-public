@@ -17,9 +17,11 @@ global:
   providerConfigRef:
     name: aws-provider
   secretStoreNamespace: infra-argo-cd
+  deploymentName: external-secrets
 
 external-secrets:
   enabled: true
+  fullnameOverride: external-secrets
   installCRDs: true
   serviceMonitor:
     enabled: true
