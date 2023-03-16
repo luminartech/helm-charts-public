@@ -188,7 +188,7 @@ crossplane-aws-iam:
                   },
                   "Condition": {
                     "StringEquals": {
-                      "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ include "common-gitops.names.release" . }}",
+                      "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ .Release.Name }}",
                       "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud": "sts.amazonaws.com"
                     }
                   }
