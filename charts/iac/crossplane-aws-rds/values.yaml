@@ -1,0 +1,25 @@
+## @section AWS resources
+
+## @param DBCluster resource parameters
+##
+DBCluster: {}
+
+## @param DBClusterParameterGroup resource parameters
+##
+DBClusterParameterGroup: {}
+
+## @param DBInstance resource parameters
+##
+DBInstance: {}
+
+## @param DBInstanceRoleAssociation resource parameters
+##
+DBInstanceRoleAssociation: {}
+
+## @param DBParameterGroup resource parameters
+##
+DBParameterGroup: {}
+
+## @param GlobalCluster resource parameters
+##
+GlobalCluster: {}

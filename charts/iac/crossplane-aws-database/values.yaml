@@ -1,0 +1,10 @@
+## @section AWS Database resources
+
+
+## @param DBSubnetGroup resource parameters
+##
+DBSubnetGroup: {}
+
+## @param RDSInstance resource parameters
+##
+RDSInstance: {}
