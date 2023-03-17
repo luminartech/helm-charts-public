@@ -1,0 +1,96 @@
+---
+## AWS RDS resources configurations
+
+DBCluster:
+  items:
+    _:
+      forProvider:
+        region: us-east-1
+        engine: aurora-mysql
+        masterUsername: admin
+        masterUserPasswordSecretRef:
+          name: example-aurora-mysql-cluster
+          namespace: crossplane-system
+          key: password
+        databaseName: auroradb
+        skipFinalSnapshot: true
+        dbClusterParameterGroupName: example-clusterparametergroup
+        applyImmediately: true
+
+DBClusterParameterGroup:
+  items:
+    _:
+      forProvider:
+        region: us-east-1
+        dbParameterGroupFamilySelector:
+          engine: aurora-mysql
+        description: example
+        tags:
+          created-by: example
+        parameters:
+          - parameterName: performance_schema
+            parameterValue: '1'
+            applyMethod: pending-reboot
+          - parameterName: max_connections
+            parameterValue: '500'
+            applyMethod: immediate
+
+DBInstance:
+  items:
+    _:
+      forProvider:
+        region: us-east-1
+        allocatedStorage: 20
+        autoMinorVersionUpgrade: true
+        autogeneratePassword: true
+        backupRetentionPeriod: 14
+        dbInstanceClass: db.t2.micro
+        dbName: example
+        engine: postgres
+        engineVersion: "12.9"
+        masterUsername: adminuser
+        masterUserPasswordSecretRef:
+          key: password
+          name: example-dbinstance
+          namespace: crossplane-system
+        preferredBackupWindow: "7:00-8:00"
+        preferredMaintenanceWindow: "Sat:8:00-Sat:11:00"
+        publiclyAccessible: false
+        skipFinalSnapshot: true
+        storageEncrypted: false
+        storageType: gp2
+        dbParameterGroupName: example-dbparametergroup
+        applyImmediately: true
+
+DBInstanceRoleAssociation:
+  items:
+    _:
+      forProvider:
+        region: us-east-1
+        featureName: s3Import
+        roleArnRef:
+          name: somerole
+        dbInstanceIdentifierRef:
+          name: example-dbinstance
+
+DBParameterGroup:
+  items:
+    _:
+      forProvider:
+        region: us-east-1
+        dbParameterGroupFamilySelector:
+          engine: postgres
+        description: example
+        parameters:
+          - parameterName: application_name
+            parameterValue: "example"
+            applyMethod: immediate
+
+GlobalCluster:
+  items:
+    _:
+      forProvider:
+        region: us-east-1
+        engine: aurora-postgresql
+        databaseName: example
+        deletionProtection: false
