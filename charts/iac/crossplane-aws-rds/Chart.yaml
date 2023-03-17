@@ -3,7 +3,7 @@ annotations:
 apiVersion: v2
 # App version follows crossplane AWS provider version
 appVersion: "0.31.0"
-description: A Helm chart for crossplane AWS SQS resources
+description: A Helm chart for crossplane AWS RDS resources
 # Naming pattern: crossplane-aws-<AWS_SERVICENAME>
 # Note: This chart name is used to extract the aws service name as common-gitops.names.aws.service variable
 # AWS service name must match with the actual lowercase service names used in the crossplane aws provider CRDs
