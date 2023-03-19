@@ -1,0 +1,71 @@
+---
+## AWS SQS resources configurations
+
+Queue:
+  items:
+    example:
+      forProvider:
+        name: upbound-sqs
+        delaySeconds: 90
+        maxMessageSize: 2048
+        messageRetentionSeconds: 86400
+        receiveWaitTimeSeconds: 10
+        region: us-west-1
+        tags:
+          Environment: production
+
+QueuePolicy:
+  items:
+    example:
+      forProvider:
+        policy: |
+          {
+            "Version": "2012-10-17",
+            "Id": "sqspolicy",
+            "Statement": [
+              {
+                "Sid": "First",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": "sqs:SendMessage",
+                "Resource": "${resource_arn}",
+                "Condition": {
+                  "ArnEquals": {
+                    "aws:SourceArn": "${source_arn}}"
+                  }
+                }
+              }
+            ]
+          }
+        queueUrlSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+
+QueueRedriveAllowPolicy:
+  items:
+    example:
+      forProvider:
+        redriveAllowPolicy: |-
+          ${jsonencode({
+              redrivePermission = "byQueue",
+              sourceQueueArns   = ["arn:aws:sqs:us-east-1:153891904029:srcqueue"]
+            })}
+        region: us-east-1
+        queueUrlSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+QueueRedrivePolicy:
+  items:
+    example:
+      forProvider:
+        redrivePolicy: |-
+          ${jsonencode({
+              deadLetterTargetArn = "arn:aws:sqs:us-east-1:153891904029:examplequeue-ddl"
+              maxReceiveCount     = 4
+            })}
+        region: us-east-1
+        queueUrlSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
