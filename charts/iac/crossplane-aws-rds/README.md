@@ -17,14 +17,30 @@
 
 ### AWS resources
 
-| Name                        | Description         | Value |
-| --------------------------- | ------------------- | ----- |
-| `DBCluster`                 | resource parameters | `{}`  |
-| `DBClusterParameterGroup`   | resource parameters | `{}`  |
-| `DBInstance`                | resource parameters | `{}`  |
-| `DBInstanceRoleAssociation` | resource parameters | `{}`  |
-| `DBParameterGroup`          | resource parameters | `{}`  |
-| `GlobalCluster`             | resource parameters | `{}`  |
+| Name                                    | Description         | Value |
+| --------------------------------------- | ------------------- | ----- |
+| `Cluster`                               | resource parameters | `{}`  |
+| `ClusterActivityStream`                 | resource parameters | `{}`  |
+| `ClusterEndpoint`                       | resource parameters | `{}`  |
+| `ClusterInstance`                       | resource parameters | `{}`  |
+| `ClusterParameterGroup`                 | resource parameters | `{}`  |
+| `ClusterRoleAssociation`                | resource parameters | `{}`  |
+| `ClusterSnapshot`                       | resource parameters | `{}`  |
+| `DBInstanceAutomatedBackupsReplication` | resource parameters | `{}`  |
+| `DBSnapshotCopy`                        | resource parameters | `{}`  |
+| `EventSubscription`                     | resource parameters | `{}`  |
+| `GlobalCluster`                         | resource parameters | `{}`  |
+| `Instance`                              | resource parameters | `{}`  |
+| `InstanceRoleAssociation`               | resource parameters | `{}`  |
+| `OptionGroup`                           | resource parameters | `{}`  |
+| `ParameterGroup`                        | resource parameters | `{}`  |
+| `Proxy`                                 | resource parameters | `{}`  |
+| `ProxyDefaultTargetGroup`               | resource parameters | `{}`  |
+| `ProxyEndpoint`                         | resource parameters | `{}`  |
+| `ProxyTarget`                           | resource parameters | `{}`  |
+| `SecurityGroup`                         | resource parameters | `{}`  |
+| `Snapshot`                              | resource parameters | `{}`  |
+| `SubnetGroup`                           | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
