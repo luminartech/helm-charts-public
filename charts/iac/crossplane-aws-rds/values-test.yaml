@@ -1,96 +1,271 @@
 ---
 ## AWS RDS resources configurations
 
-DBCluster:
+Cluster:
   items:
     _:
       forProvider:
-        region: us-east-1
-        engine: aurora-mysql
-        masterUsername: admin
-        masterUserPasswordSecretRef:
-          name: example-aurora-mysql-cluster
-          namespace: crossplane-system
+        region: us-west-1
+        engine: aurora-postgresql
+        masterUsername: cpadmin
+        masterPasswordSecretRef:
+          name: sample-cluster-password
+          namespace: upbound-system
           key: password
-        databaseName: auroradb
         skipFinalSnapshot: true
-        dbClusterParameterGroupName: example-clusterparametergroup
-        applyImmediately: true
 
-DBClusterParameterGroup:
+ClusterActivityStream:
   items:
     _:
       forProvider:
-        region: us-east-1
-        dbParameterGroupFamilySelector:
-          engine: aurora-mysql
-        description: example
-        tags:
-          created-by: example
-        parameters:
-          - parameterName: performance_schema
-            parameterValue: '1'
-            applyMethod: pending-reboot
-          - parameterName: max_connections
-            parameterValue: '500'
-            applyMethod: immediate
+        kmsKeyIdRef:
+          name: default
+        mode: async
+        region: us-west-1
+        resourceArnRef:
+          name: example
 
-DBInstance:
+ClusterEndpoint:
   items:
     _:
       forProvider:
-        region: us-east-1
-        allocatedStorage: 20
-        autoMinorVersionUpgrade: true
-        autogeneratePassword: true
-        backupRetentionPeriod: 14
-        dbInstanceClass: db.t2.micro
-        dbName: example
-        engine: postgres
-        engineVersion: "12.9"
-        masterUsername: adminuser
-        masterUserPasswordSecretRef:
-          key: password
-          name: example-dbinstance
-          namespace: crossplane-system
-        preferredBackupWindow: "7:00-8:00"
-        preferredMaintenanceWindow: "Sat:8:00-Sat:11:00"
-        publiclyAccessible: false
-        skipFinalSnapshot: true
-        storageEncrypted: false
-        storageType: gp2
-        dbParameterGroupName: example-dbparametergroup
-        applyImmediately: true
+        region: us-west-1
+        clusterIdentifierRef:
+          name: example
+        customEndpointType: READER
 
-DBInstanceRoleAssociation:
+ClusterInstance:
   items:
     _:
       forProvider:
-        region: us-east-1
+        region: us-west-1
+        clusterIdentifierRef:
+          name: example
+        engine: aurora-postgresql
+        instanceClass: db.r5.large
+
+ClusterParameterGroup:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        description: RDS default cluster parameter group
+        family: aurora5.6
+        parameter:
+          - name: character_set_server
+            value: utf8
+          - name: character_set_client
+            value: utf8
+
+ClusterRoleAssociation:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        dbClusterIdentifierRef:
+          name: example
         featureName: s3Import
         roleArnRef:
-          name: somerole
-        dbInstanceIdentifierRef:
-          name: example-dbinstance
+          name: sample-db-role
 
-DBParameterGroup:
+ClusterSnapshot:
   items:
     _:
       forProvider:
-        region: us-east-1
-        dbParameterGroupFamilySelector:
-          engine: postgres
-        description: example
-        parameters:
-          - parameterName: application_name
-            parameterValue: "example"
-            applyMethod: immediate
+        dbClusterIdentifier: database-1
+        dbClusterSnapshotIdentifier: resourcetestsnapshot1234
+        region: us-west-1
+
+DBInstanceAutomatedBackupsReplication:
+  items:
+    _:
+      forProvider:
+        region: us-east-2
+        retentionPeriod: 7
+        sourceDbInstanceArn: arn-for-db-instance
+
+DBSnapshotCopy:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        sourceDbSnapshotIdentifierSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        targetDbSnapshotIdentifier: testsnapshot1234-copy
+
+EventSubscription:
+  items:
+    _:
+      forProvider:
+        eventCategories:
+        - availability
+        - deletion
+        - failover
+        - failure
+        - low storage
+        - maintenance
+        - notification
+        - read replica
+        - recovery
+        - restoration
+        region: us-west-1
+        snsTopicSelector:
+          matchLabels:
+            testing.upbound.io/example-name: default
+        sourceIds:
+        - database-1
+        sourceType: db-instance
 
 GlobalCluster:
   items:
     _:
       forProvider:
-        region: us-east-1
-        engine: aurora-postgresql
-        databaseName: example
-        deletionProtection: false
+        region: us-west-1
+        databaseName: example_db
+        engine: aurora
+        engineVersion: 5.6.mysql_aurora.1.22.2
+
+Instance:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        allocatedStorage: 20
+        autoMinorVersionUpgrade: true
+        backupRetentionPeriod: 14
+        instanceClass: db.t3.micro
+        name: example
+        engine: postgres
+        engineVersion: "13.7"
+        username: adminuser
+        passwordSecretRef:
+          key: password
+          name: example-dbinstance
+          namespace: upbound-system
+        backupWindow: "09:46-10:16"
+        maintenanceWindow: "Mon:00:00-Mon:03:00"
+        publiclyAccessible: false
+        skipFinalSnapshot: true
+        storageEncrypted: true
+        storageType: gp2
+        kmsKeyIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: sample-key
+
+InstanceRoleAssociation:
+  items:
+    _:
+      forProvider:
+        dbInstanceIdentifierRef:
+          name: example-dbinstance
+        featureName: s3Import
+        region: us-west-1
+        roleArnRef:
+          name: sample-db-role
+
+OptionGroup:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        engineName: sqlserver-ee
+        majorEngineVersion: "11.00"
+        option:
+          - optionName: TDE
+        optionGroupDescription: Upbound Option Group
+
+ParameterGroup:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        family: postgres12
+        description: example
+        parameter:
+          - name: application_name
+            value: "example"
+            applyMethod: immediate
+
+Proxy:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        auth:
+          - authScheme: SECRETS
+            description: example
+            iamAuth: DISABLED
+            secretArn: arn:aws:secretsmanager:us-west-1:123456789012:secret:example
+        debugLogging: false
+        engineFamily: POSTGRESQL
+        idleClientTimeout: 1800
+        requireTls: true
+        roleArn: arn:aws:iam::123456789012:role/example
+        tags:
+          Key: value
+          Name: example
+        vpcSubnetIds:
+          - example1
+          - example2
+
+ProxyDefaultTargetGroup:
+  items:
+    _:
+      forProvider:
+        dbProxyName: example
+        region: us-west-1
+        connectionPoolConfig:
+          - connectionBorrowTimeout: 120
+            initQuery: SET x=1, y=2
+            maxConnectionsPercent: 100
+            maxIdleConnectionsPercent: 50
+            sessionPinningFilters:
+              - EXCLUDE_VARIABLE_SETS
+
+ProxyEndpoint:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        dbProxyName: example
+        targetRole: READ_ONLY
+        vpcSubnetIds:
+          - example1
+          - example2
+
+ProxyTarget:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        dbProxyName: example
+        dbClusterIdentifier: example
+        targetGroupName: default
+
+SecurityGroup:
+  items:
+    _:
+      forProvider:
+        ingress:
+          - cidr: 10.0.0.0/24
+        region: us-west-1
+
+Snapshot:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        dbInstanceIdentifierRef:
+          name: example-dbinstance
+
+SubnetGroup:
+  items:
+    _:
+      forProvider:
+        region: us-west-1
+        subnetIdRefs:
+          - name: sample-db-subnet1
+          - name: sample-db-subnet2
+        tags:
+          Name: My DB subnet group

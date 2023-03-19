@@ -1,25 +1,89 @@
 ## @section AWS resources
 
-## @param DBCluster resource parameters
+## @param Cluster resource parameters
 ##
-DBCluster: {}
+Cluster: {}
 
-## @param DBClusterParameterGroup resource parameters
+## @param ClusterActivityStream resource parameters
 ##
-DBClusterParameterGroup: {}
+ClusterActivityStream: {}
 
-## @param DBInstance resource parameters
+## @param ClusterEndpoint resource parameters
 ##
-DBInstance: {}
+ClusterEndpoint: {}
 
-## @param DBInstanceRoleAssociation resource parameters
+## @param ClusterInstance resource parameters
 ##
-DBInstanceRoleAssociation: {}
+ClusterInstance: {}
 
-## @param DBParameterGroup resource parameters
+## @param ClusterParameterGroup resource parameters
 ##
-DBParameterGroup: {}
+ClusterParameterGroup: {}
+
+## @param ClusterRoleAssociation resource parameters
+##
+ClusterRoleAssociation: {}
+
+## @param ClusterSnapshot resource parameters
+##
+ClusterSnapshot: {}
+
+## @param DBInstanceAutomatedBackupsReplication resource parameters
+##
+DBInstanceAutomatedBackupsReplication: {}
+
+## @param DBSnapshotCopy resource parameters
+##
+DBSnapshotCopy: {}
+
+## @param EventSubscription resource parameters
+##
+EventSubscription: {}
 
 ## @param GlobalCluster resource parameters
 ##
 GlobalCluster: {}
+
+## @param Instance resource parameters
+##
+Instance: {}
+
+## @param InstanceRoleAssociation resource parameters
+##
+InstanceRoleAssociation: {}
+
+## @param OptionGroup resource parameters
+##
+OptionGroup: {}
+
+## @param ParameterGroup resource parameters
+##
+ParameterGroup: {}
+
+## @param Proxy resource parameters
+##
+Proxy: {}
+
+## @param ProxyDefaultTargetGroup resource parameters
+##
+ProxyDefaultTargetGroup: {}
+
+## @param ProxyEndpoint resource parameters
+##
+ProxyEndpoint: {}
+
+## @param ProxyTarget resource parameters
+##
+ProxyTarget: {}
+
+## @param SecurityGroup resource parameters
+##
+SecurityGroup: {}
+
+## @param Snapshot resource parameters
+##
+Snapshot: {}
+
+## @param SubnetGroup resource parameters
+##
+SubnetGroup: {}

@@ -1,10 +1,10 @@
-{{- $kind := "DBInstanceRoleAssociation" -}}
+{{- $kind := "ClusterActivityStream" -}}
 {{- $root := . -}}
 {{- $kindObj := or (get $root.Values $kind) (dict) -}}
 {{- range $name, $item := $kindObj.items -}}
   {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
 ---
-apiVersion: rds.aws.crossplane.io/v1alpha1
+apiVersion: rds.aws.upbound.io/v1beta1
 kind: {{ $kind }}
 metadata:
   name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
