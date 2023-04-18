@@ -4,6 +4,22 @@
 ##
 LifecyclePolicy: {}
 
+## @param PullThroughCacheRule resource parameters
+##
+PullThroughCacheRule: {}
+
+## @param RegistryPolicy resource parameters
+##
+RegistryPolicy: {}
+
+## @param RegistryScanningConfiguration resource parameters
+##
+RegistryScanningConfiguration: {}
+
+## @param ReplicationConfiguration resource parameters
+##
+ReplicationConfiguration: {}
+
 ## @param Repository resource parameters
 ##
 Repository: {}

@@ -4,68 +4,138 @@
 LifecyclePolicy:
   labels:
     ecr.aws.crossplane.io/selector-name: test
-  tags: {}
   items:
     test:
       labels:
         ecr.aws.crossplane.io/infra-resource: test
       forProvider:
-        region: us-west-2
-        repositoryNameRef:
-          name: example
-        lifecyclePolicyText: |-
+        region: us-east-1
+        policy: |
           {
-            "rules": [
-              {
-                "rulePriority": 1,
-                "description": "Expire images older than 14 days",
-                "selection": {
-                  "tagStatus": "untagged",
-                  "countType": "sinceImagePushed",
-                  "countUnit": "days",
-                  "countNumber": 14
-                },
-                "action": {
-                  "type": "expire"
-                }
-              }
-            ]
+              "rules": [
+                  {
+                      "rulePriority": 1,
+                      "description": "Expire images older than 14 days",
+                      "selection": {
+                          "tagStatus": "untagged",
+                          "countType": "sinceImagePushed",
+                          "countUnit": "days",
+                          "countNumber": 14
+                      },
+                      "action": {
+                          "type": "expire"
+                      }
+                  }
+              ]
           }
+        repository: upbound-sample-repository
+
+PullThroughCacheRule:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        ecrRepositoryPrefix: ecr-public
+        upstreamRegistryUrl: public.ecr.aws
+
+RegistryPolicy:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        policy: |-
+          {
+              "Version":"2012-10-17",
+              "Statement":[
+                  {
+                      "Sid":"ReplicationAccessCrossAccount",
+                      "Effect":"Allow",
+                      "Principal":{
+                          "AWS":"arn:aws:iam::${data.aws_account_id}:root"
+                      },
+                      "Action":[
+                          "ecr:CreateRepository",
+                          "ecr:ReplicateImage"
+                      ],
+                      "Resource": [
+                          "arn:aws:ecr:us-west-2:${data.aws_account_id}:repository/*"
+                      ]
+                  }
+              ]
+          }
+
+RegistryScanningConfiguration:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        rule:
+        - repositoryFilter:
+          - filter: example
+            filterType: WILDCARD
+          scanFrequency: CONTINUOUS_SCAN
+        scanType: ENHANCED
+
+ReplicationConfiguration:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        replicationConfiguration:
+        - rule:
+          - destination:
+            - region: us-east-1
+              registryId: "${aws_account_id}"
 
 Repository:
   labels:
     ecr.aws.crossplane.io/selector-name: test
-  tags: {}
   items:
     test:
       labels:
         ecr.aws.crossplane.io/infra-resource: test
       forProvider:
-        region: us-west-2
+        region: us-east-1
         imageScanningConfiguration:
-          scanOnPush: true
-        imageTagMutability: IMMUTABLE
+          - scanOnPush: true
+        imageTagMutability: "IMMUTABLE"
+        tags:
+          key1: value1
 
 RepositoryPolicy:
   labels:
     ecr.aws.crossplane.io/selector-name: test
-  tags: {}
   items:
     test:
       labels:
         ecr.aws.crossplane.io/infra-resource: test
       forProvider:
-        region: us-west-2
-        repositoryNameRef:
-          name: example
-        policy:
-          statements:
-            - action:
-                - "ecr:DescribeRepositories"
-                - "ecr:DescribeImages"
-              effect: Allow
-              principal:
-                awsPrincipals:
-                  - iamUserArnRef:
-                      name: someuser
-          version: '2012-10-17'
+        region: us-east-1
+        policy: |
+          {
+            "Version": "2008-10-17",
+            "Statement": [
+              {
+                "Sid": "new policy",
+                "Effect": "Allow",
+                "Principal": "*",
+                "Action": [
+                  "ecr:GetDownloadUrlForLayer",
+                  "ecr:BatchGetImage",
+                  "ecr:BatchCheckLayerAvailability",
+                  "ecr:PutImage",
+                  "ecr:InitiateLayerUpload",
+                  "ecr:UploadLayerPart",
+                  "ecr:CompleteLayerUpload",
+                  "ecr:DescribeRepositories",
+                  "ecr:GetRepositoryPolicy",
+                  "ecr:ListImages",
+                  "ecr:DeleteRepository",
+                  "ecr:BatchDeleteImage",
+                  "ecr:SetRepositoryPolicy",
+                  "ecr:DeleteRepositoryPolicy"
+                ]
+              }
+            ]
+          }
+        repository: upbound-sample-repository
