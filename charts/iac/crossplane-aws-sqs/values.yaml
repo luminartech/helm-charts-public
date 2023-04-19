@@ -1,0 +1,18 @@
+## @section AWS resources
+
+
+## @param Queue resource parameters
+##
+Queue: {}
+
+## @param QueuePolicy resource parameters
+##
+QueuePolicy: {}
+
+## @param QueueRedriveAllowPolicy resource parameters
+##
+QueueRedriveAllowPolicy: {}
+
+## @param QueueRedrivePolicy resource parameters
+##
+QueueRedrivePolicy: {}
