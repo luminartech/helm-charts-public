@@ -17,11 +17,15 @@
 
 ### AWS resources
 
-| Name               | Description         | Value |
-| ------------------ | ------------------- | ----- |
-| `LifecyclePolicy`  | resource parameters | `{}`  |
-| `Repository`       | resource parameters | `{}`  |
-| `RepositoryPolicy` | resource parameters | `{}`  |
+| Name                            | Description         | Value |
+| ------------------------------- | ------------------- | ----- |
+| `LifecyclePolicy`               | resource parameters | `{}`  |
+| `PullThroughCacheRule`          | resource parameters | `{}`  |
+| `RegistryPolicy`                | resource parameters | `{}`  |
+| `RegistryScanningConfiguration` | resource parameters | `{}`  |
+| `ReplicationConfiguration`      | resource parameters | `{}`  |
+| `Repository`                    | resource parameters | `{}`  |
+| `RepositoryPolicy`              | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
