@@ -15,12 +15,12 @@
 
 ## Parameters
 
-### AWS resources
+### AWS Database resources
 
-| Name           | Description         | Value |
-| -------------- | ------------------- | ----- |
-| `Bucket`       | resource parameters | `{}`  |
-| `BucketPolicy` | resource parameters | `{}`  |
+| Name            | Description         | Value |
+| --------------- | ------------------- | ----- |
+| `DBSubnetGroup` | resource parameters | `{}`  |
+| `RDSInstance`   | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
