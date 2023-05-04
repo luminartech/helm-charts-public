@@ -14,8 +14,24 @@ spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
     name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" (.forProvider).name) }}
+    {{ with (.forProvider).document -}}
+    document: |
+      {
+        "Version": "{{ .Version | default "2012-10-17" }}",
+        "Statement": [
+        {{- $Sids := keys .Statement | sortAlpha -}}
+        {{ $Statement := .Statement -}}
+        {{ range $sid := $Sids -}}
+          {{ $data := get $Statement $sid -}}
+          {{ $_ := set $data "Sid" $sid -}}
+          {{ $data | mustToPrettyJson | nindent 10 -}}
+          {{ if ne (last $Sids) $sid }},{{ end -}}
+        {{ end }}
+        ]
+      }
+    {{- end }}
     {{- include "common-gitops.tplvalues.render" (dict
-      "value" (omit (.forProvider) "name" "tags")
+      "value" (omit (.forProvider) "name" "tags" "document")
       "context" $root) | nindent 4 }}
     {{- include "common-gitops.tags.list" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
