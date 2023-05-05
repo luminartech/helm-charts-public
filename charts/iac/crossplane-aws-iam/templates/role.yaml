@@ -15,19 +15,7 @@ spec:
   forProvider:
     {{ with (.forProvider).assumeRolePolicyDocument -}}
     assumeRolePolicyDocument: |
-      {
-        "Version": "{{ .Version | default "2012-10-17" }}",
-        "Statement": [
-        {{- $Sids := keys .Statement | sortAlpha -}}
-        {{ $Statement := .Statement -}}
-        {{ range $sid := $Sids -}}
-          {{ $data := get $Statement $sid -}}
-          {{ $_ := set $data "Sid" $sid -}}
-          {{ $data | mustToPrettyJson | nindent 10 -}}
-          {{ if ne (last $Sids) $sid }},{{ end -}}
-        {{ end }}
-        ]
-      }
+      {{- include "common-gitops.crossplane.awsPolicy" (dict "value" . "root" $root) | nindent 6 }}
     {{- end }}
     {{- include "common-gitops.tplvalues.render" (dict
       "value" (omit (.forProvider) "tags" "assumeRolePolicyDocument")
