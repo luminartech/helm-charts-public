@@ -13,8 +13,10 @@ metadata:
 spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
+    assumeRolePolicyDocument: |
+      {{- include "common-gitops.crossplane.awsPolicy" (dict "value" .forProvider.assumeRolePolicyDocument "root" $root) | nindent 6 }}
     {{- include "common-gitops.tplvalues.render" (dict
-      "value" (omit (.forProvider) "tags")
+      "value" (omit (.forProvider) "tags" "assumeRolePolicyDocument")
       "context" $root) | nindent 4 }}
     {{- include "common-gitops.tags.list" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}

@@ -72,25 +72,27 @@ Policy:
       deletionPolicy: Delete
       forProvider:
         description: "IAM Policy generated using crossplane + helm chart"
-        document: |-
-          {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Effect": "Allow",
-                "Action": [
-                  "route53:ChangeResourceRecordSets",
-                  "route53:ListResourceRecordSets"
-                ],
-                "Resource": "arn:aws:route53:::hostedzone/*"
-              },
-              {
-                "Effect": "Allow",
-                "Action": "route53:ListHostedZonesByName",
-                "Resource": "*"
-              }
-            ]
-          }
+        document:
+          Version: "2012-10-17"
+          Statement:
+            accountRead:
+              Effect: "Allow"
+              Action:
+                - "iam:GetAccountSummary"
+                - "iam:ListAccountAliases"
+                - "account:ListRegions"
+              Resource: "*"
+            route53RecordSets:
+              Effect: "Allow"
+              Action:
+                - "route53:ChangeResourceRecordSets"
+                - "route53:ListResourceRecordSets"
+              Resource: "arn:aws:route53:::hostedzone/*"
+            route53ListHostedZones:
+              Effect: "Allow"
+              Action:
+                - "route53:ListHostedZonesByName"
+              Resource: "*"
 
 Role:
   items:
@@ -101,19 +103,13 @@ Role:
       forProvider:
         description: "IAM Role generated using crossplane + helm chart"
         maxSessionDuration: 3600 # 1 to 12 hours
-        assumeRolePolicyDocument: |-
-          {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Effect": "Allow",
-                "Principal": {
-                    "Service": "ec2.amazonaws.com"
-                },
-                "Action": "sts:AssumeRole"
-              }
-            ]
-          }
+        assumeRolePolicyDocument:
+          Statement:
+            _:
+              Effect: "Allow"
+              Principal:
+                Service: "ec2.amazonaws.com"
+              Action: "sts:AssumeRole"
 
 RolePolicyAttachment:
   items:
