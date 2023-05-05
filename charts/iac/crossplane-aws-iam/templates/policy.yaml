@@ -14,10 +14,8 @@ spec:
     {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   forProvider:
     name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" (.forProvider).name) }}
-    {{ with (.forProvider).document -}}
     document: |
-      {{- include "common-gitops.crossplane.awsPolicy" (dict "value" . "root" $root) | nindent 6 }}
-    {{- end }}
+      {{- include "common-gitops.crossplane.awsPolicy" (dict "value" .forProvider.document "root" $root) | nindent 6 }}
     {{- include "common-gitops.tplvalues.render" (dict
       "value" (omit (.forProvider) "name" "tags" "document")
       "context" $root) | nindent 4 }}
