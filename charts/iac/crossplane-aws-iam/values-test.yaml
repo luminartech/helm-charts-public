@@ -4,9 +4,10 @@
 ##
 # IAM
 ##
-# global:
+global:
 #   # 64 chars long to test trimming
 #   releaseNameOverride: shah5zieta8cu4ahve9ooy2eix5eeseis6jaecop3nahjae4keizohbeiyoo5sho
+  env: team-tier
 AccessKey:
   items:
     test:
@@ -87,7 +88,7 @@ Policy:
               Action:
                 - "route53:ChangeResourceRecordSets"
                 - "route53:ListResourceRecordSets"
-              Resource: "arn:aws:route53:::hostedzone/*"
+              Resource: 'arn:aws:route53:::hostedzone/{{ .Values.global.env | replace "-" "" }}*'
             route53ListHostedZones:
               Effect: "Allow"
               Action:
