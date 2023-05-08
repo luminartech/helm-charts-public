@@ -40,8 +40,11 @@ Sample return:
     {{ range $sid := $Sids -}}
       {{ $stmt := get $Statement $sid -}}
       {{ $_ := set $stmt "Sid" $sid -}}
-      {{ $json := $stmt | mustToPrettyJson | replace "  " "    " -}}
-      {{ include "common-gitops.tplvalues.render" (dict "value" $json "context" $.root) | nindent 8 -}}
+      {{ include "common-gitops.tplvalues.render" (dict "value" $stmt "context" $.root) |
+          fromYaml |
+          mustToPrettyJson |
+          replace "  " "    " |
+          nindent 8 -}}
       {{ if ne (last $Sids) $sid }},{{ end -}}
     {{ end }}
     ]
