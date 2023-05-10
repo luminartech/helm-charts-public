@@ -101,3 +101,21 @@ Job:
               command: ["sh", "-c"]
               args:
                 - sleep 500
+
+Secret:
+  enabled: true
+  items:
+    _:
+      enabled: true
+      data:
+        runner-registration-token: dGVzdHRlc3R0ZXN0Cg==
+        runner-token: ""
+
+ConfigMap:
+  enabled: true
+  items:
+    _:
+      enabled: true
+      data:
+        config.yaml: |
+          SomeConfigFile
