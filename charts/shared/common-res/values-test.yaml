@@ -108,8 +108,8 @@ Secret:
     _:
       enabled: true
       data:
-        runner-registration-token: dGVzdHRlc3R0ZXN0Cg==
-        runner-token: ""
+        '.dockerconfigjson': 'ewogICJjcmVkSGVscGVycyI6IHsKICAgICIzNDU5OTA0NTUxMTEuZGtyLmVjci51cy13ZXN0LTIuYW1hem9uYXdzLmNvbSI6ICJlY3ItbG9naW4iCiAgfQp9'
+      type: 'kubernetes.io/dockerconfigjson'
 
 ConfigMap:
   enabled: true

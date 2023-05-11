@@ -2,7 +2,7 @@ apiVersion: "v2"
 appVersion: "latest"
 name: "common-res"
 type: "application"
-version: "1.0.8"
+version: "1.0.9"
 deprecated: false
 description: "Helm chart with common resources"
 home: https://helm-repo-public.luminarinfra.com
