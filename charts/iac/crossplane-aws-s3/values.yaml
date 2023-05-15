@@ -1,10 +1,93 @@
 ## @section AWS resources
 
-
 ## @param Bucket resource parameters
 ##
 Bucket: {}
 
+## @param BucketAccelerateConfiguration resource parameters
+##
+BucketAccelerateConfiguration: {}
+
+## @param BucketACL resource parameters
+##
+BucketACL: {}
+
+## @param BucketAnalyticsConfiguration resource parameters
+##
+BucketAnalyticsConfiguration: {}
+
+## @param BucketCorsConfiguration resource parameters
+##
+BucketCorsConfiguration: {}
+
+## @param BucketIntelligentTieringConfiguration resource parameters
+##
+BucketIntelligentTieringConfiguration: {}
+
+## @param BucketInventory resource parameters
+##
+BucketInventory: {}
+
+## @param BucketLifecycleConfiguration resource parameters
+##
+BucketLifecycleConfiguration: {}
+
+## @param BucketLogging resource parameters
+##
+BucketLogging: {}
+
+## @param BucketMetric resource parameters
+##
+BucketMetric: {}
+
+## @param BucketNotification resource parameters
+##
+BucketNotification: {}
+
+## @param BucketObject resource parameters
+##
+BucketObject: {}
+
+## @param BucketObjectLockConfiguration resource parameters
+##
+BucketObjectLockConfiguration: {}
+
+## @param BucketOwnershipControls resource parameters
+##
+BucketOwnershipControls: {}
+
 ## @param BucketPolicy resource parameters
 ##
 BucketPolicy: {}
+
+## @param BucketPublicAccessBlock resource parameters
+##
+BucketPublicAccessBlock: {}
+
+## @param BucketReplicationConfiguration resource parameters
+##
+BucketReplicationConfiguration: {}
+
+## @param BucketRequestPaymentConfiguration resource parameters
+##
+BucketRequestPaymentConfiguration: {}
+
+## @param BucketServerSideEncryptionConfiguration resource parameters
+##
+BucketServerSideEncryptionConfiguration: {}
+
+## @param BucketVersioning resource parameters
+##
+BucketVersioning: {}
+
+## @param BucketWebsiteConfiguration resource parameters
+##
+BucketWebsiteConfiguration: {}
+
+## @param Object resource parameters
+##
+Object: {}
+
+## @param ObjectCopy resource parameters
+##
+ObjectCopy: {}
