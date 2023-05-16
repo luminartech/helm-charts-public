@@ -143,23 +143,17 @@ crossplane-aws-iam:
         ##
         forProvider:
           description: "IAM Policy for external secrets IAM role to access aws secret manager resources"
-          document: |-
-            {
-                "Version": "2012-10-17",
-                "Statement": [
-                    {
-                        "Effect": "Allow",
-                        "Action": [
-                            "secretsmanager:ListSecrets",
-                            "secretsmanager:GetResourcePolicy",
-                            "secretsmanager:GetSecretValue",
-                            "secretsmanager:DescribeSecret",
-                            "secretsmanager:ListSecretVersionIds"
-                        ],
-                        "Resource": "arn:aws:secretsmanager:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:secret:*"
-                    }
-                ]
-            }
+          document:
+            Statement:
+              secretsManagerRead:
+                Effect: "Allow"
+                Action:
+                  - "secretsmanager:ListSecrets"
+                  - "secretsmanager:GetResourcePolicy"
+                  - "secretsmanager:GetSecretValue"
+                  - "secretsmanager:DescribeSecret"
+                  - "secretsmanager:ListSecretVersionIds"
+                Resource: "arn:aws:secretsmanager:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:secret:*"
 
   ## AWS IAM Role resources parameters.
   ## items: Dict of one or more Role resources.
@@ -183,42 +177,30 @@ crossplane-aws-iam:
         ## Default policy grants assume role permission to the service pod running in given eks cluster, namespace and service account.
         ##
         forProvider:
-          assumeRolePolicyDocument: |-
-            {
-              "Version": "2012-10-17",
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": "sts:AssumeRoleWithWebIdentity",
-                  "Principal": {
-                    "Federated": "arn:aws:iam::{{ .Values.global.awsAccountId }}:oidc-provider/oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}"
-                  },
-                  "Condition": {
-                    "StringEquals": {
-                      "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:{{ .Values.global.deploymentName }}",
-                      "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud": "sts.amazonaws.com"
-                    }
-                  }
-                },
-                {
-                  "Effect": "Allow",
-                  "Principal": {
-                      "Service": "ec2.amazonaws.com"
-                  },
-                  "Action": "sts:AssumeRole"
-                },
-                {
-                  "Effect": "Allow",
-                  "Principal" : { "AWS" : "*" },
-                  "Action": "sts:AssumeRole",
-                  "Condition": {
-                    "ArnLike": {
-                      "aws:PrincipalArn": "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}"
-                    }
-                  }
-                }
-              ]
-            }
+          assumeRolePolicyDocument:
+            Statement:
+              assumeRoleWithWebIdentitiy:
+                Effect: "Allow"
+                Action: "sts:AssumeRoleWithWebIdentity"
+                Principal:
+                  Federated: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:oidc-provider/oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}'
+                Condition:
+                  StringEquals:
+                    'oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub': 'system:serviceaccount:{{ .Release.Namespace }}:{{ .Values.global.deploymentName }}'
+                    'oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud': 'sts.amazonaws.com'
+              assumeRole:
+                Effect: "Allow"
+                Principal:
+                  Service: "ec2.amazonaws.com"
+                Action: "sts:AssumeRole"
+              selfAssume:
+                Effect: "Allow"
+                Principal:
+                  AWS: "*"
+                Action: "sts:AssumeRole"
+                Condition:
+                  ArnLike:
+                    "aws:PrincipalArn": 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}'
 
   ## AWS IAM RolePolicyAttachment resources parameters.
   ## items: Dict of one or more RolePolicyAttachment resources.

@@ -138,4 +138,4 @@ ExternalSecretsServiceAccount:
   enabled: false
 
 crossplane-aws-iam:
-  enabled: false
+  enabled: true
