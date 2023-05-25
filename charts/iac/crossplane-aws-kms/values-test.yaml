@@ -13,21 +13,14 @@ Key:
   items:
     test:
       forProvider:
-        policy: |-
-          {
-            "Version": "2012-10-17",
-            "Statement": [
-              {
-                "Sid": "Enable IAM User Permissions",
-                "Effect": "Allow",
-                "Principal": {
-                  "AWS": "arn:aws:iam::123456789012:user/root"
-                },
-                "Action": "kms:*",
-                "Resource": "*"
-              }
-            ]
-          }
+        policy:
+          Statement:
+            enableIAMUserPermissions:
+              Effect: Allow
+              Principal:
+                AWS: "arn:aws:iam::123456789012:user/root"
+              Action: "kms:*"
+              Resource: "*"
         region: us-west-2
         tags:
           k1: v1
