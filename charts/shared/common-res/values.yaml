@@ -109,3 +109,27 @@ Secret: {}
 ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 ConfigMap: {}
+
+## @section Kubernetes PersistentVolumeClaim object.
+## @param PersistentVolumeClaim
+## items: Dict of one or more PVC resources
+## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
+## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
+##
+PersistentVolumeClaim: {}
+
+## @section Kubernetes PersistentVolume object.
+## @param PersistentVolume
+## items: Dict of one or more PV resources
+## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
+## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
+##
+PersistentVolume: {}
+
+## @section Kubernetes Pod object.
+## @param Pod
+## items: Dict of one or more POD resources
+## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
+## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
+##
+Pod: {}
