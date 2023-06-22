@@ -67,12 +67,12 @@ Policy:
   tags:
     policy-only: test_value
   items:
-    test:
+    inputAsDictStatementAsDict:
       labels:
         crossplane.io/infra-resource: test
       deletionPolicy: Delete
       forProvider:
-        description: "IAM Policy generated using crossplane + helm chart"
+        description: "IAM Policy that was defined as a yaml with Statement as a dict (most advanced form)"
         document:
           Version: "2012-10-17"
           Statement:
@@ -94,6 +94,74 @@ Policy:
               Action:
                 - "route53:ListHostedZonesByName"
               Resource: "*"
+
+    inputAsDictStatementAsList:
+      labels:
+        crossplane.io/infra-resource: test
+      deletionPolicy: Delete
+      forProvider:
+        description: "IAM Policy that was defined as a yaml with Statement as a list"
+        document:
+          Version: "2012-10-17"
+          Statement:
+            - Sid: "accountRead"
+              Effect: "Allow"
+              Action:
+                - "iam:GetAccountSummary"
+                - "iam:ListAccountAliases"
+                - "account:ListRegions"
+              Resource: "*"
+            - Sid: "route53RecordSets"
+              Effect: "Allow"
+              Action:
+                - "route53:ChangeResourceRecordSets"
+                - "route53:ListResourceRecordSets"
+              Resource: 'arn:aws:route53:::hostedzone/{{ .Values.global.env | replace "-" "" }}*'
+            - Sid: route53ListHostedZones
+              Effect: "Allow"
+              Action:
+                - "route53:ListHostedZonesByName"
+              Resource: "*"
+
+    inputAsJsonString:
+      labels:
+        crossplane.io/infra-resource: test
+      deletionPolicy: Delete
+      forProvider:
+        description: "IAM Policy that was defined as a json string"
+        document: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "accountRead",
+                "Effect": "Allow",
+                "Action": [
+                  "iam:GetAccountSummary",
+                  "iam:ListAccountAliases",
+                  "account:ListRegions"
+                ],
+                "Resource": "*"
+              },
+              {
+                "Sid": "route53RecordSets",
+                "Effect": "Allow",
+                "Action": [
+                  "route53:ChangeResourceRecordSets",
+                  "route53:ListResourceRecordSets"
+                ],
+                "Resource": "arn:aws:route53:::hostedzone/{{ .Values.global.env | replace "-" "" }}*"
+              },
+              {
+                "Sid": "route53ListHostedZones",
+                "Effect": "Allow",
+                "Action": [
+                  "route53:ListHostedZonesByName"
+                ],
+                "Resource": "*"
+              }
+            }
+          }
 
 Role:
   items:
