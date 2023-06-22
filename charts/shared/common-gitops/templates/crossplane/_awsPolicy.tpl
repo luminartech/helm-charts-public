@@ -36,7 +36,7 @@ Sample return:
 }
 */}}
 {{- define "common-gitops.crossplane.awsPolicy" -}}
-  {{- if typeIs "string" .value -}}
+  {{- if kindIs "string" .value -}}
     {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) }}
   {{- else if kindIs "slice" .value.Statement -}}
     {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) |
