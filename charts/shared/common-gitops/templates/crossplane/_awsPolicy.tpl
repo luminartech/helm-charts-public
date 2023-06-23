@@ -5,8 +5,13 @@ Render the policy Json from Yaml with support of templating in input.
 Accepts dict:
 {
   root: [map] - root context
-  value: [dict] - policy
+  value: [string or dict] - policy
 }
+Important note. Policy can be provided in 3 mutually exclusive formats:
+- raw Json (string)
+- yaml that is exact representation of Json (Statement value is a list)
+- yaml in which Statement value is a dict with keys playing a role of statement Sids
+See values-test.yaml for examples.
 Sample return:
 {
     "Version": "2012-10-17",
@@ -31,6 +36,14 @@ Sample return:
 }
 */}}
 {{- define "common-gitops.crossplane.awsPolicy" -}}
+  {{- if kindIs "string" .value -}}
+    {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) }}
+  {{- else if kindIs "slice" .value.Statement -}}
+    {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) |
+      fromYaml |
+      mustToPrettyJson |
+      replace "  " "    " -}}
+  {{- else if kindIs "map" .value.Statement -}}
 {
     "Version": "{{ .value.Version | default "2012-10-17" }}",
     "Statement": [
@@ -49,4 +62,7 @@ Sample return:
     {{ end }}
     ]
 }
+  {{- else -}}
+    {{- fail (print "Unsupported Statement type of policy document: " (kindOf .value.Statement)) -}}
+  {{- end -}}
 {{- end -}}
