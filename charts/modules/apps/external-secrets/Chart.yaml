@@ -28,5 +28,5 @@ dependencies:
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-iam.enabled
   - name: common-gitops
-    version: "1.0.6"
+    version: "1.0.7"
     repository: https://helm-repo-public.luminarinfra.com/
