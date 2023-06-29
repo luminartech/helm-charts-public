@@ -1,0 +1,25 @@
+## @section AWS resources
+
+## @param Cluster resource parameters
+##
+Cluster: {}
+
+## @param ParameterGroup resource parameters
+##
+ParameterGroup: {}
+
+## @param ReplicationGroup resource parameters
+##
+ReplicationGroup: {}
+
+## @param SubnetGroup resource parameters
+##
+SubnetGroup: {}
+
+## @param User resource parameters
+##
+User: {}
+
+## @param UserGroup resource parameters
+##
+UserGroup: {}
