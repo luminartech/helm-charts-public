@@ -1,0 +1,87 @@
+---
+## AWS S3 bucket resources configurations
+##############
+# Global
+##############
+# global:
+#   chartNameOverride: "infra"
+#   releaseNameOverride: "infra"
+#   tags: {}
+
+Cluster:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        engine: memcached
+        nodeType: cache.t2.micro
+        numCacheNodes: 1
+        parameterGroupName: default.memcached1.6
+        port: 11211
+
+ParameterGroup:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        name: cache-params
+        family: redis2.8
+        parameter:
+        - name: activerehashing
+          value: "yes"
+        - name: min-slaves-to-write
+          value: "2"
+        region: us-west-1
+
+ReplicationGroup:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        automaticFailoverEnabled: true
+        description: example description
+        nodeType: cache.m4.large
+        numberCacheClusters: 2
+        parameterGroupName: default.redis7
+        port: 6379
+        preferredCacheClusterAzs:
+          - us-west-1b
+          - us-west-1c
+        region: us-west-1
+
+SubnetGroup:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        subnetIdRefs:
+          - name: foo
+
+User:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        userName: "testUserName"
+        accessString: "on ~app::* -@all +@read +@hash +@bitmap +@geo -setbit -bitfield -hset -hsetnx -hmset -hincrby -hincrbyfloat -hdel -bitop -geoadd -georadius -georadiusbymember"
+        engine: "REDIS"
+        region: us-west-1
+        passwordsSecretRef:
+          - name: user-passwords
+            namespace: crossplane-system
+            key: pwd-1
+          - name: user-passwords
+            namespace: crossplane-system
+            key: pwd-2
+
+UserGroup:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        engine: REDIS
+        region: us-west-1
+        userIdRefs:
+        - name: test
