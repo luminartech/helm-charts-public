@@ -12,9 +12,6 @@ Usage:
     {{- if typeIs "string" .value -}}
         {{- tpl .value .context -}}
     {{- else -}}
-        {{- /* Avoid returning {} or [] */ -}}
-        {{- with .value -}}
-            {{- tpl (. | toYaml) $.context -}}
-        {{- end -}}
+        {{- tpl (.value | toYaml) .context | trim -}}
     {{- end -}}
 {{- end -}}
