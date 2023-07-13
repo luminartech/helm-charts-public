@@ -53,10 +53,9 @@ tags:
 TODO: Add other common resource tags such as costing, BU, owner...
 */}}
 {{- define "common-gitops.tags.list" -}}
-tags:
   {{- range $key, $value := (include "common-gitops.tags._common" (dict "root" .root "kind" .kind "name" .name "nameOverride" .nameOverride) | fromYaml) }}
-  - key: "{{ $key }}"
-    value: "{{ $value }}"
+- key: "{{ $key }}"
+  value: "{{ $value }}"
   {{- end -}}
 {{- end -}}
 
@@ -76,10 +75,9 @@ tags:
 TODO: Add other common resource tags such as costing, BU, owner...
 */}}
 {{- define "common-gitops.tags.prefixed_list" -}}
-tags:
   {{- range $key, $value := include "common-gitops.tags._common" (dict "root" .root "kind" .kind "name" .name "nameOverride" .nameOverride) | fromYaml }}
-  - tagKey: "{{ $key }}"
-    tagValue: "{{ $value }}"
+- tagKey: "{{ $key }}"
+  tagValue: "{{ $value }}"
   {{- end -}}
 {{- end -}}
 {{/*
@@ -97,6 +95,5 @@ tags:
 TODO: Add other common resource tags such as costing, BU, owner...
 */}}
 {{- define "common-gitops.tags.dict" -}}
-tags:
-  {{- include "common-gitops.tags._common" (dict "root" .root "kind" .kind "name" .name "nameOverride" .nameOverride) | nindent 2 -}}
+  {{- include "common-gitops.tags._common" (dict "root" .root "kind" .kind "name" .name "nameOverride" .nameOverride) -}}
 {{- end -}}

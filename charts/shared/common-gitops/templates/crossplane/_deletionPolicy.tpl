@@ -1,6 +1,6 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
-Render the deletionPolicy value for AWS resource:
+Render the deletionPolicy value for crossplane resource:
 Accepts dict:
 {
   root: [map] - root context
@@ -10,7 +10,7 @@ Accepts dict:
 Sample return:
 deletionPolicy: Orphan
 */}}
-{{- define "common-gitops.crossplane.awsDeletionPolicy" -}}
+{{- define "common-gitops.crossplane.deletionPolicy" -}}
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
   {{- /* Take the first non-empty argument */ -}}
