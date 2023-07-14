@@ -1,26 +1,82 @@
 ---
-## AWS KMS resources configurations
-
 Alias:
   items:
     test:
       forProvider:
-        region: us-west-2
+        region: us-east-1
         targetKeyIdRef:
-          name: iac-infra-eks-cluster-key
+          name: sample-key
+
+Ciphertext:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        keyIdRef:
+          name: sample-key
+        plaintextSecretRef:
+          key: example-key
+          name: example-secret
+          namespace: upbound-system
+
+ExternalKey:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        description: Created with Crossplane
+        multiRegion: true
+        deletionWindowInDays: 7
+
+Grant:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        constraints:
+        - encryptionContextEquals:
+            Department: Finance
+        granteePrincipalSelector:
+          matchLabels:
+            testing.upbound.io/example-name: sample-kms-principal
+        keyIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: sample-key
+        name: my-grant
+        operations:
+        - Encrypt
+        - Decrypt
+        - GenerateDataKey
 
 Key:
   items:
     test:
       forProvider:
-        policy:
-          Statement:
-            enableIAMUserPermissions:
-              Effect: Allow
-              Principal:
-                AWS: "arn:aws:iam::123456789012:user/root"
-              Action: "kms:*"
-              Resource: "*"
+        region: us-east-1
+        description: Created with Crossplane
+        deletionWindowInDays: 7
+
+ReplicaExternalKey:
+  items:
+    test:
+      forProvider:
         region: us-west-2
-        tags:
-          k1: v1
+        description: "Multi-Region replica key"
+        deletionWindowInDays: 7
+        keyMaterialBase64SecretRef:
+          key: key-metarial
+          name: example-externalkey
+          namespace: upbound-system
+        primaryKeyArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: sample-externalkey-replicated
+
+ReplicaKey:
+  items:
+    test:
+      forProvider:
+        region: us-east-2
+        description: "Multi-Region replica key"
+        deletionWindowInDays: 7
+        primaryKeyArnRef:
+          name: sample-replicakey
