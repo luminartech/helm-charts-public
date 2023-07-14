@@ -9,6 +9,14 @@ Addon: {}
 ##
 Cluster: {}
 
+## @param ClusterAuth resource parameters
+##
+ClusterAuth: {}
+
+## @param FargateProfile resource parameters
+##
+FargateProfile: {}
+
 ## @param IdentityProviderConfig resource parameters
 ##
 IdentityProviderConfig: {}
