@@ -4,3 +4,15 @@
 ## @param Secret resource parameters
 ##
 Secret: {}
+
+## @param SecretPolicy resource parameters
+##
+SecretPolicy: {}
+
+## @param SecretRotation resource parameters
+##
+SecretRotation: {}
+
+## @param SecretVersion resource parameters
+##
+SecretVersion: {}

@@ -17,9 +17,12 @@
 
 ### AWS resources
 
-| Name     | Description         | Value |
-| -------- | ------------------- | ----- |
-| `Secret` | resource parameters | `{}`  |
+| Name             | Description         | Value |
+| ---------------- | ------------------- | ----- |
+| `Secret`         | resource parameters | `{}`  |
+| `SecretPolicy`   | resource parameters | `{}`  |
+| `SecretRotation` | resource parameters | `{}`  |
+| `SecretVersion`  | resource parameters | `{}`  |
 
 
 ## Configuration and installation details

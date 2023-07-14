@@ -1,10 +1,30 @@
 ## @section AWS resources
 
 
-## @param Alias resource parameters
+## @param Alias resources parameters
 ##
 Alias: {}
 
-## @param Key resource parameters
+## @param Ciphertext resources parameters
+##
+Ciphertext: {}
+
+## @param ExternalKey resources parameters
+##
+ExternalKey: {}
+
+## @param Grant resources parameters
+##
+Grant: {}
+
+## @param Key resources parameters
 ##
 Key: {}
+
+## @param ReplicaExternalKey resources parameters
+##
+ReplicaExternalKey: {}
+
+## @param ReplicaKey resources parameters
+##
+ReplicaKey: {}

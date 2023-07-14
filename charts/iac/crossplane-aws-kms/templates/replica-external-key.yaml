@@ -1,4 +1,4 @@
-{{- $kind := "Key" -}}
+{{- $kind := "ReplicaExternalKey" -}}
 {{- $root := . -}}
 {{- $kindObj := or (get $root.Values $kind) (dict) -}}
 {{- range $name, $item := $kindObj.items -}}
