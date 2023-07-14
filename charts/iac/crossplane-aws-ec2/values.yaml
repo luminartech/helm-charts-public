@@ -1,29 +1,169 @@
 ## @section AWS resources
 
 
-## @param Address resource parameters
+## @param AMI resource parameters
 ##
-Address: {}
+AMI: {}
+
+## @param AMICopy resource parameters
+##
+AMICopy: {}
+
+## @param AMILaunchPermission resource parameters
+##
+AMILaunchPermission: {}
+
+## @param AvailabilityZoneGroup resource parameters
+##
+AvailabilityZoneGroup: {}
+
+## @param CapacityReservation resource parameters
+##
+CapacityReservation: {}
+
+## @param CarrierGateway resource parameters
+##
+CarrierGateway: {}
+
+## @param CustomerGateway resource parameters
+##
+CustomerGateway: {}
+
+## @param DefaultNetworkACL resource parameters
+##
+DefaultNetworkACL: {}
+
+## @param DefaultRouteTable resource parameters
+##
+DefaultRouteTable: {}
+
+## @param DefaultSecurityGroup resource parameters
+##
+DefaultSecurityGroup: {}
+
+## @param DefaultSubnet resource parameters
+##
+DefaultSubnet: {}
+
+## @param DefaultVPC resource parameters
+##
+DefaultVPC: {}
+
+## @param DefaultVPCDHCPOptions resource parameters
+##
+DefaultVPCDHCPOptions: {}
+
+## @param EBSDefaultKMSKey resource parameters
+##
+EBSDefaultKMSKey: {}
+
+## @param EBSEncryptionByDefault resource parameters
+##
+EBSEncryptionByDefault: {}
+
+## @param EBSSnapshot resource parameters
+##
+EBSSnapshot: {}
+
+## @param EBSSnapshotCopy resource parameters
+##
+EBSSnapshotCopy: {}
+
+## @param EBSSnapshotImport resource parameters
+##
+EBSSnapshotImport: {}
+
+## @param EBSVolume resource parameters
+##
+EBSVolume: {}
+
+## @param EIP resource parameters
+##
+EIP: {}
+
+## @param EIPAssociation resource parameters
+##
+EIPAssociation: {}
+
+## @param EgressOnlyInternetGateway resource parameters
+##
+EgressOnlyInternetGateway: {}
+
+## @param FlowLog resource parameters
+##
+FlowLog: {}
+
+## @param Host resource parameters
+##
+Host: {}
 
 ## @param Instance resource parameters
 ##
 Instance: {}
 
+## @param InstanceState resource parameters
+##
+InstanceState: {}
+
 ## @param InternetGateway resource parameters
 ##
 InternetGateway: {}
+
+## @param KeyPair resource parameters
+##
+KeyPair: {}
 
 ## @param LaunchTemplate resource parameters
 ##
 LaunchTemplate: {}
 
-## @param LaunchTemplateVersion resource parameters
+## @param MainRouteTableAssociation resource parameters
 ##
-LaunchTemplateVersion: {}
+MainRouteTableAssociation: {}
+
+## @param ManagedPrefixList resource parameters
+##
+ManagedPrefixList: {}
+
+## @param ManagedPrefixListEntry resource parameters
+##
+ManagedPrefixListEntry: {}
 
 ## @param NATGateway resource parameters
 ##
 NATGateway: {}
+
+## @param NetworkACL resource parameters
+##
+NetworkACL: {}
+
+## @param NetworkACLRule resource parameters
+##
+NetworkACLRule: {}
+
+## @param NetworkInsightsAnalysis resource parameters
+##
+NetworkInsightsAnalysis: {}
+
+## @param NetworkInsightsPath resource parameters
+##
+NetworkInsightsPath: {}
+
+## @param NetworkInterface resource parameters
+##
+NetworkInterface: {}
+
+## @param NetworkInterfaceAttachment resource parameters
+##
+NetworkInterfaceAttachment: {}
+
+## @param NetworkInterfaceSgAttachment resource parameters
+##
+NetworkInterfaceSgAttachment: {}
+
+## @param PlacementGroup resource parameters
+##
+PlacementGroup: {}
 
 ## @param Route resource parameters
 ##
@@ -33,21 +173,101 @@ Route: {}
 ##
 RouteTable: {}
 
+## @param RouteTableAssociation resource parameters
+##
+RouteTableAssociation: {}
+
 ## @param SecurityGroup resource parameters
 ##
 SecurityGroup: {}
+
+## @param SecurityGroupRule resource parameters
+##
+SecurityGroupRule: {}
+
+## @param SerialConsoleAccess resource parameters
+##
+SerialConsoleAccess: {}
+
+## @param SnapshotCreateVolumePermission resource parameters
+##
+SnapshotCreateVolumePermission: {}
+
+## @param SpotDatafeedSubscription resource parameters
+##
+SpotDatafeedSubscription: {}
+
+## @param SpotFleetRequest resource parameters
+##
+SpotFleetRequest: {}
+
+## @param SpotInstanceRequest resource parameters
+##
+SpotInstanceRequest: {}
 
 ## @param Subnet resource parameters
 ##
 Subnet: {}
 
-## @param TransitGatewayVPCAttachmentAccepter resource parameters
+## @param SubnetCidrReservation resource parameters
 ##
-TransitGatewayVPCAttachmentAccepter: {}
+SubnetCidrReservation: {}
+
+## @param Tag resource parameters
+##
+Tag: {}
+
+## @param TrafficMirrorFilter resource parameters
+##
+TrafficMirrorFilter: {}
+
+## @param TrafficMirrorFilterRule resource parameters
+##
+TrafficMirrorFilterRule: {}
 
 ## @param TransitGateway resource parameters
 ##
 TransitGateway: {}
+
+## @param TransitGatewayConnect resource parameters
+##
+TransitGatewayConnect: {}
+
+## @param TransitGatewayConnectPeer resource parameters
+##
+TransitGatewayConnectPeer: {}
+
+## @param TransitGatewayMulticastDomain resource parameters
+##
+TransitGatewayMulticastDomain: {}
+
+## @param TransitGatewayMulticastDomainAssociation resource parameters
+##
+TransitGatewayMulticastDomainAssociation: {}
+
+## @param TransitGatewayMulticastGroupMember resource parameters
+##
+TransitGatewayMulticastGroupMember: {}
+
+## @param TransitGatewayMulticastGroupSource resource parameters
+##
+TransitGatewayMulticastGroupSource: {}
+
+## @param TransitGatewayPeeringAttachment resource parameters
+##
+TransitGatewayPeeringAttachment: {}
+
+## @param TransitGatewayPeeringAttachmentAccepter resource parameters
+##
+TransitGatewayPeeringAttachmentAccepter: {}
+
+## @param TransitGatewayPolicyTable resource parameters
+##
+TransitGatewayPolicyTable: {}
+
+## @param TransitGatewayPrefixListReference resource parameters
+##
+TransitGatewayPrefixListReference: {}
 
 ## @param TransitGatewayRoute resource parameters
 ##
@@ -57,30 +277,118 @@ TransitGatewayRoute: {}
 ##
 TransitGatewayRouteTable: {}
 
+## @param TransitGatewayRouteTableAssociation resource parameters
+##
+TransitGatewayRouteTableAssociation: {}
+
+## @param TransitGatewayRouteTablePropagation resource parameters
+##
+TransitGatewayRouteTablePropagation: {}
+
 ## @param TransitGatewayVPCAttachment resource parameters
 ##
 TransitGatewayVPCAttachment: {}
 
-## @param Volume resource parameters
+## @param TransitGatewayVPCAttachmentAccepter resource parameters
 ##
-Volume: {}
+TransitGatewayVPCAttachmentAccepter: {}
 
 ## @param VPC resource parameters
 ##
 VPC: {}
 
-## @param VPCCIDRBlock resource parameters
+## @param VPCDHCPOptions resource parameters
 ##
-VPCCIDRBlock: {}
+VPCDHCPOptions: {}
+
+## @param VPCDHCPOptionsAssociation resource parameters
+##
+VPCDHCPOptionsAssociation: {}
 
 ## @param VPCEndpoint resource parameters
 ##
 VPCEndpoint: {}
 
-## @param VPCEndpointServiceConfiguration resource parameters
+## @param VPCEndpointConnectionNotification resource parameters
 ##
-VPCEndpointServiceConfiguration: {}
+VPCEndpointConnectionNotification: {}
+
+## @param VPCEndpointRouteTableAssociation resource parameters
+##
+VPCEndpointRouteTableAssociation: {}
+
+## @param VPCEndpointSecurityGroupAssociation resource parameters
+##
+VPCEndpointSecurityGroupAssociation: {}
+
+## @param VPCEndpointService resource parameters
+##
+VPCEndpointService: {}
+
+## @param VPCEndpointServiceAllowedPrincipal resource parameters
+##
+VPCEndpointServiceAllowedPrincipal: {}
+
+## @param VPCEndpointSubnetAssociation resource parameters
+##
+VPCEndpointSubnetAssociation: {}
+
+## @param VPCIPv4CidrBlockAssociation resource parameters
+##
+VPCIPv4CidrBlockAssociation: {}
+
+## @param VPCIpam resource parameters
+##
+VPCIpam: {}
+
+## @param VPCIpamPool resource parameters
+##
+VPCIpamPool: {}
+
+## @param VPCIpamPoolCidr resource parameters
+##
+VPCIpamPoolCidr: {}
+
+## @param VPCIpamPoolCidrAllocation resource parameters
+##
+VPCIpamPoolCidrAllocation: {}
+
+## @param VPCIpamScope resource parameters
+##
+VPCIpamScope: {}
 
 ## @param VPCPeeringConnection resource parameters
 ##
 VPCPeeringConnection: {}
+
+## @param VPCPeeringConnectionAccepter resource parameters
+##
+VPCPeeringConnectionAccepter: {}
+
+## @param VPCPeeringConnectionOptions resource parameters
+##
+VPCPeeringConnectionOptions: {}
+
+## @param VPNConnection resource parameters
+##
+VPNConnection: {}
+
+## @param VPNConnectionRoute resource parameters
+##
+VPNConnectionRoute: {}
+
+## @param VPNGateway resource parameters
+##
+VPNGateway: {}
+
+## @param VPNGatewayAttachment resource parameters
+##
+VPNGatewayAttachment: {}
+
+## @param VPNGatewayRoutePropagation resource parameters
+##
+VPNGatewayRoutePropagation: {}
+
+## @param VolumeAttachment resource parameters
+##
+VolumeAttachment: {}

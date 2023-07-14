@@ -1,4 +1,4 @@
-{{- $kind := "Route" -}}
+{{- $kind := "AMILaunchPermission" -}}
 {{- $root := . -}}
 {{- $kindObj := or (get $root.Values $kind) (dict) -}}
 {{- range $name, $item := $kindObj.items -}}

@@ -3,393 +3,610 @@
 global:
   vpcCidr: 172.21.0.0/16
 
-Address:
-  items:
-    nat-gateway:
-      deletionPolicy: Delete
-      forProvider:
-        domain: vpc
-
-Instance:
-  deletionPolicy: Orphan
+AMI:
   items:
     test:
       forProvider:
-        imageId: ami-0dc2d3e4c0f9ebd18
-        blockDeviceMappings:
-         - deviceName: /dev/sdx
-           ebs:
-             volumeSize: 100
-        securityGroupRefs:
-          - name: sample-cluster-sg
-        subnetIdRef:
-          name: sample-subnet1
+        ebsBlockDevice:
+        - deviceName: /dev/xvda
+          snapshotIdSelector:
+            matchLabels:
+              testing.upbound.io/example-name: example
+          volumeSize: 8
+        name: terraform-example
+        region: us-west-1
+        rootDeviceName: /dev/xvda
+        virtualizationType: hvm
+
+AMICopy:
+  items:
+    test:
+      forProvider:
+        description: A copy of ami-xxxxxxxx
+        name: terraform-example
+        region: us-west-1
+        sourceAmiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        sourceAmiRegion: us-west-1
+        tags:
+          Name: HelloWorld
+
+AMILaunchPermission:
+  items:
+    test:
+      forProvider:
+        accountId: "123456789012"
+        imageIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+
+AvailabilityZoneGroup:
+  items:
+    test:
+      forProvider:
+        optInStatus: opted-in
+        region: us-west-2
+
+CapacityReservation:
+  items:
+    test:
+      forProvider:
+        availabilityZone: us-west-1a
+        instanceCount: 1
+        instancePlatform: Linux/UNIX
+        instanceType: t2.micro
+        region: us-west-1
+
+CarrierGateway:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        tags:
+          Name: example-carrier-gateway
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+CustomerGateway:
+  items:
+    test:
+      forProvider:
+        bgpAsn: "65000"
+        ipAddress: 172.83.124.10
+        region: us-west-1
+        tags:
+          Name: main-customer-gateway
+        type: ipsec.1
+
+DefaultNetworkACL:
+  items:
+    test:
+      forProvider:
+        defaultNetworkAclIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: mainvpc
+        egress:
+        - action: allow
+          cidrBlock: 0.0.0.0/0
+          fromPort: 0
+          protocol: "-1"
+          ruleNo: 100
+          toPort: 0
+        ingress:
+        - action: allow
+          cidrBlock: 10.1.0.0/16
+          fromPort: 0
+          protocol: "-1"
+          ruleNo: 100
+          toPort: 0
+        region: us-west-1
+
+DefaultRouteTable:
+  items:
+    test:
+      forProvider:
+        defaultRouteTableIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+        route:
+        - cidrBlock: 10.0.1.0/24
+          gatewayIdSelector:
+            matchLabels:
+              testing.upbound.io/example-name: example
+        - egressOnlyGatewayIdSelector:
+            matchLabels:
+              testing.upbound.io/example-name: example
+          ipv6CidrBlock: ::/0
+        tags:
+          Name: example
+
+DefaultSecurityGroup:
+  items:
+    test:
+      forProvider:
+        egress:
+        - cidrBlocks:
+          - 0.0.0.0/0
+          fromPort: 0
+          protocol: "-1"
+          toPort: 0
+        ingress:
+        - fromPort: 0
+          protocol: "-1"
+          self: true
+          toPort: 0
+        region: us-west-1
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: mainvpc
+
+DefaultSubnet:
+  items:
+    test:
+      forProvider:
+        availabilityZone: us-west-1a
+        region: us-west-1
+        tags:
+          Name: Default subnet for us-west-1a
+
+DefaultVPC:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        tags:
+          Name: Default VPC
+
+DefaultVPCDHCPOptions:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        tags:
+          Name: Default DHCP Option Set
+
+EBSDefaultKMSKey:
+  items:
+    test:
+      forProvider:
+        keyArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+
+EBSEncryptionByDefault:
+  items:
+    test:
+      forProvider:
+        enabled: true
+        region: us-west-1
+
+EBSSnapshot:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        tags:
+          Name: HelloWorld_snap
+        volumeIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+EBSSnapshotCopy:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        sourceRegion: us-west-1
+        sourceSnapshotIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example_snapshot
+        tags:
+          Name: HelloWorld_copy_snap
+
+EBSSnapshotImport:
+  items:
+    test:
+      forProvider:
+        diskContainer:
+        - format: VMDK
+          userBucket:
+          - s3Bucket: upbound-provider-test-data
+            s3Key: centos.vmdk
+        region: us-east-1
+        tags:
+          Name: HelloWorld
+
+EBSVolume:
+  items:
+    test:
+      forProvider:
+        availabilityZone: us-west-1c
+        region: us-west-1
+        size: 1
+        tags:
+          Name: HelloWorld
+
+EIP:
+  items:
+    test:
+      forProvider:
+        instanceRef:
+          name: sample-instance
+        vpc: true
+        region: us-west-1
+
+EIPAssociation:
+  items:
+    test:
+      forProvider:
+        allocationIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        instanceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: web
+        region: us-west-1
+
+EgressOnlyInternetGateway:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        tags:
+          Name: main
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+FlowLog:
+  items:
+    test:
+      forProvider:
+        iamRoleArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        logDestinationSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+        trafficType: ALL
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+Host:
+  items:
+    test:
+      forProvider:
+        autoPlacement: "on"
+        availabilityZone: us-west-1a
+        hostRecovery: "on"
+        instanceType: c5.18xlarge
+        region: us-west-1
+
+Instance:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        ami: ami-07b068f843ec78e72
+        instanceType: t2.micro
+        networkInterface:
+        - deviceIndex: 0
+          networkInterfaceIdSelector:
+            matchLabels:
+              testing.upbound.io/example-name: sample-instance
+        creditSpecification:
+        - cpuCredits: unlimited
+
+InstanceState:
+  items:
+    test:
+      forProvider:
+        instanceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test
+        region: us-west-1
+        state: stopped
 
 InternetGateway:
   items:
-    vpc:
+    test:
       forProvider:
+        region: us-west-1
+        tags:
+          Name: main
         vpcIdRef:
-          name: test
+          name: sample-vpc
+
+KeyPair:
+  items:
+    test:
+      forProvider:
+        publicKey: <public-key>
+        region: us-west-1
 
 LaunchTemplate:
   items:
     test:
-      labels:
-        crossplane.io/infra-resource: test
       forProvider:
-        launchTemplateName: test
-        launchTemplateData:
-          # blockDeviceMappings:
-          #   - deviceName: ""
-          #     ebs: {}
-          #     noDevice: ""
-          #     virtualName: ""
-          # # Describes an instance's Capacity Reservation targeting option. You can specify only one option at a time. Use the CapacityReservationPreference parameter to configure the instance to run in On-Demand capacity or to run in any open Capacity Reservation that has matching attributes (instance type, platform, Availability Zone). Use the CapacityReservationTarget parameter to explicitly target a specific Capacity Reservation or a Capacity Reservation group.
-          # capacityReservationSpecification:
-          #   capacityReservationPreference: ""
-          #   capacityReservationTarget: {}
-          # # The CPU options for the instance. Both the core count and threads per core must be specified in the request.
-          # cpuOptions:
-          #   coreCount: 0
-          #   threadsPerCore: 0
-          # #zThe credit option for CPU usage of a T2, T3, or T3a instance.
-          # creditSpecification:
-          #   cpuCredits: ""
-          disableAPITermination: false
-          ebsOptimized: true
-          # elasticGPUSpecifications:
-          #   - type_: ""
-          # elasticInferenceAccelerators:
-          #   - count: 0
-          #     type_: ""
-          # # Indicates whether the instance is enabled for Amazon Web Services Nitro Enclaves. For more information, see What is Amazon Web Services Nitro Enclaves? (https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave.html) in the Amazon Web Services Nitro Enclaves User Guide.
-          # enclaveOptions:
-          #   enabled: false
-          # # Indicates whether the instance is configured for hibernation. This parameter is valid only if the instance meets the hibernation prerequisites (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/Hibernate.html#hibernating-prerequisites).
-          # hibernationOptions:
-          #   configured: false
-          # # An IAM instance profile.
-          # iamInstanceProfile:
-          #   arn: ""
-          #   name: ""
-          # imageID: ""
-          # instanceInitiatedShutdownBehavior: ""
-          # # The market (purchasing) option for the instances.
-          # instanceMarketOptions:
-          #   marketType: ""
-          #   spotOptions: {}
-          # The attributes for the instance types. When you specify instance attributes, Amazon EC2 will identify instance types with these attributes. When you specify multiple parameters, you get instance types that satisfy all of the specified parameters. If you specify multiple values for a parameter, you get instance types that satisfy any of the specified values. You must specify VCpuCount and MemoryMiB. All other parameters are optional. Any unspecified optional parameter is set to its default. For more information, see Attribute-based instance type selection for EC2 Fleet (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-fleet-attribute-based-instance-type-selection.html), Attribute-based instance type selection for Spot Fleet (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-fleet-attribute-based-instance-type-selection.html), and Spot placement score (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/spot-placement-score.html) in the Amazon EC2 User Guide.
-          # instanceRequirements:
-          #   acceleratorCount: {}
-          #   acceleratorManufacturers: []
-          #   acceleratorNames: []
-          #   acceleratorTotalMemoryMiB: {}
-          #   acceleratorTypes: []
-          #   bareMetal: ""
-          #   baselineEBSBandwidthMbps: {}
-          #   burstablePerformance: ""
-          #   cpuManufacturers: []
-          #   excludedInstanceTypes: []
-          #   instanceGenerations: []
-          #   localStorage: ""
-          #   localStorageTypes: []
-          #   memoryGiBPerVCPU: {}
-          #   memoryMiB: {}
-          #   networkInterfaceCount: {}
-          #   onDemandMaxPricePercentageOverLowestPrice: 0
-          #   requireHibernateSupport: false
-          #   spotMaxPricePercentageOverLowestPrice: 0
-          #   totalLocalStorageGB: {}
-          #   vCPUCount: {}
-          instanceType: "t3.micro"
-          # kernelID: ""
-          keyName: "salt-master"
-          # licenseSpecifications:
-          #   - licenseConfigurationARN: ""
-          # # The metadata options for the instance. For more information, see Instance Metadata and User Data (https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-instance-metadata.html) in the Amazon Elastic Compute Cloud User Guide.
-          # metadataOptions:
-          #   httpEndpoint: ""
-          #   httpProtocolIPv6: ""
-          #   httpPutResponseHopLimit: 0
-          #   httpTokens: ""
-          # # Describes the monitoring for the instance.
-          # monitoring:
-          #   enabled: false
-          # networkInterfaces:
-          #   associateCarrierIPAddress: false
-          #   associatePublicIPAddress: false
-          #   deleteOnTermination: false
-          #   description: ""
-          #   deviceIndex: 0
-          #   groups: []
-          #   interfaceType: ""
-          #   ipv4PrefixCount: 0
-          #   ipv4Prefixes: []
-          #   ipv6AddressCount: 0
-          #   ipv6Addresses: []
-          #   ipv6PrefixCount: 0
-          #   ipv6Prefixes: []
-          #   networkCardIndex: 0
-          #   networkInterfaceID: ""
-          #   privateIPAddress: ""
-          #   privateIPAddresses: ""
-          #   secondaryPrivateIPAddressCount: 0
-          #   subnetID: ""
-          # # Describes the placement of an instance.
-          # placement:
-          #   affinity: ""
-          #   availabilityZone: ""
-          #   groupName: ""
-          #   hostID: ""
-          #   hostResourceGroupARN: ""
-          #   partitionNumber: 0
-          #   spreadDomain: ""
-          #   tenancy: ""
-          # ramDiskID: ""
-          # securityGroupIDs: []
-          # securityGroups: []
-          # tagSpecifications: []
-          #   resourceType: ""
-          #   tags: []
-          # userData: ""
-        region: us-west-2
-        # The tags to apply to the launch template during creation.
+        region: us-west-1
+        blockDeviceMappings:
+        - deviceName: /dev/sda1
+          ebs:
+          - volumeSize: 20
+        capacityReservationSpecification:
+        - capacityReservationPreference: open
+        cpuOptions:
+        - coreCount: 4
+          threadsPerCore: 2
+        creditSpecification:
+        - cpuCredits: standard
+        disableApiTermination: true
+        ebsOptimized: "true"
+        elasticGpuSpecifications:
+        - type: test
+        elasticInferenceAccelerator:
+        - type: eia1.medium
+        instanceInitiatedShutdownBehavior: terminate
+        instanceMarketOptions:
+        - marketType: spot
+        instanceType: t2.micro
+        keyName: test
+        metadataOptions:
+        - httpEndpoint: enabled
+          httpPutResponseHopLimit: 1
+          httpTokens: required
+          instanceMetadataTags: enabled
+        monitoring:
+        - enabled: true
+        name: foo
+        networkInterfaces:
+        - associatePublicIpAddress: "true"
+        placement:
+        - availabilityZone: us-west-2a
         tagSpecifications:
-          - resourceType: ""
-            tags: []
-        tags:
-          test-lt: test
-        # # A description for the first version of the launch template.
-        # versionDescription: ""
+        - resourceType: instance
+          tags:
+            Name: test
 
-LaunchTemplateVersion:
+MainRouteTableAssociation:
   items:
     test:
       forProvider:
-        sourceVersion: "1"
-        launchTemplateNameRef:
-          name: test-crossplane-obj
-        launchTemplateData:
-          # resourceTags
-          tagSpecifications:
-          - resourceType: volume
-            tags:
-            - key: version
-              value: "2"
+        region: us-west-1
+        routeTableIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: table
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: route-vpc
+
+ManagedPrefixList:
+  items:
+    test:
+      forProvider:
+        addressFamily: IPv4
+        maxEntries: 10
+        name: test
+
+ManagedPrefixListEntry:
+  items:
+    test:
+      forProvider: {}
 
 NATGateway:
   items:
-    vpc:
+    test:
       forProvider:
-        allocationIdRef:
-          name: 'test-nat-gateway'
+        region: us-west-1
+        connectivityType: "private"
+        subnetIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        tags:
+          Name: gw NAT
+
+NetworkACL:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        tags:
+          Name: main
+        vpcIdRef:
+          name: example
+
+NetworkACLRule:
+  items:
+    test:
+      forProvider:
+        cidrBlock: ${aws_vpc.foo.cidr_block}
+        egress: false
+        fromPort: 22
+        networkAclId: ${aws_network_acl.bar.id}
+        protocol: tcp
+        region: us-west-1
+        ruleAction: allow
+        ruleNumber: 200
+        toPort: 22
+
+NetworkInsightsAnalysis:
+  items:
+    test:
+      forProvider:
+        networkInsightsPathIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: path
+        region: us-west-1
+
+
+NetworkInsightsPath:
+  items:
+    test:
+      forProvider:
+        destinationSelector:
+          matchLabels:
+            testing.upbound.io/example-name: destination
+        protocol: tcp
+        region: us-west-1
+        sourceSelector:
+          matchLabels:
+            testing.upbound.io/example-name: source
+
+
+NetworkInterface:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
         subnetIdRef:
-          name: 'test-public-a'
+          name: sample-subnet1
+        privateIps:
+          - "172.16.10.100"
+
+NetworkInterfaceAttachment:
+  items:
+    test:
+      forProvider:
+        deviceIndex: 1
+        instanceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test
+        networkInterfaceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test2
+        region: us-west-1
+
+NetworkInterfaceSgAttachment:
+  items:
+    test:
+      forProvider:
+        networkInterfaceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: instance
+        region: us-west-1
+        securityGroupIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: sg
+
+PlacementGroup:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        strategy: cluster
 
 Route:
   items:
     test:
-      labels:
-        crossplane.io/infra-resource: test
       forProvider:
-        region: us-west-2
+        region: us-west-1
+        destinationCidrBlock: 0.0.0.0/0
+        gatewayIdRef:
+          name: routegw
         routeTableIdRef:
-          name: sample-routetable-ignore-routes
-        destinationCIDRBlock: 172.16.0.0/12
-        transitGatewayIdRef:
-          name: tgw
+          name: table
 
 RouteTable:
   items:
-    private:
-      deletionPolicy: Delete
+    test:
       forProvider:
+        region: us-west-1
         vpcIdRef:
-          name: 'test-vpc'
-        associations:
-          - subnetIdRef:
-              name: 'test-private-a'
-          - subnetIdRef:
-              name: 'test-private-b'
-          - subnetIdRef:
-              name: 'test-private-c'
-        routes:
-          - destinationCidrBlock: "0.0.0.0/0"
-            natGatewayIdRef:
-              name: 'test-vpc'
-    public:
-      deletionPolicy: Delete
+          name: rta
+
+RouteTableAssociation:
+  items:
+    test:
       forProvider:
-        vpcIdRef:
-          name: 'test-vpc'
-        associations:
-          - subnetIdRef:
-              name: 'test-public-a'
-          - subnetIdRef:
-              name: 'test-public-b'
-          - subnetIdRef:
-              name: 'test-public-c'
-        routes:
-          - destinationCidrBlock: "0.0.0.0/0"
-            gatewayIdRef:
-              name: 'test-vpc'
+        region: us-west-1
+        routeTableIdRef:
+          name: rta
+        subnetIdRef:
+          name: rta
 
 SecurityGroup:
   items:
     test:
-      deletionPolicy: Delete
       forProvider:
+        region: us-west-1
+        description: Allow TLS inbound traffic
+        name: allow_tls
         tags:
-          test-sg: test
-        description: "Security Group generated using crossplane + helm chart"
-        # Region is the region you'd like your SecurityGroup to be created in.
-        # global.awsRegion overrides this value
-        region: us-west-2
-        # VPCID is the ID of the VPC.
-        # vpcId: {}
-        # VPCIDRef reference a VPC to retrieve its vpcId
-        # Name of the referenced object.
+          Name: allow_tls
         vpcIdRef:
-          name: test-vpc
-        # vpcIdSelector:
-        #   # MatchControllerRef ensures an object with the same controller reference as the selecting object is selected.
-        #   matchControllerRef: 1
-        #   # MatchLabels ensures an object with matching labels is selected.
-        #   matchLabels:
-        #     ec2.aws.crossplane.io/selector-name: test
-        ingress:
-            # The start of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 type number.
-            # A value of -1 indicates all ICMP/ICMPv6 types. If you specify all ICMP/ICMPv6 types, you must specify all codes.
-          - fromPort: 80
-            # The end of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 code. A value of -1 indicates all ICMP/ICMPv6 codes. If you specify all ICMP/ICMPv6 types, you must specify all codes.
-            toPort: 80
-            # The IP protocol name (tcp, udp, icmp, icmpv6) or number (see Protocol Numbers (http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml)).
-            # [VPC only] Use -1 to specify all protocols.
-            # When authorizing security group rules, specifying -1 or a protocol number other than tcp, udp, icmp, or icmpv6 allows traffic on all ports, regardless of any port range you specify.
-            # For tcp, udp, and icmp, you must specify a port range. For icmpv6, the port range is optional; if you omit the port range, traffic for all types and codes is allowed.
-            ipProtocol: "tcp"
-            # The IPv4 ranges
-            ipRanges:
-              # The IPv4 CIDR range. You can either specify a CIDR range or a source security group, not both. To specify a single IPv4 address, use the /32 prefix length.
-              - cidrIp: "10.0.0.0/8"
-              # A description for the security group rule that references this IPv4 address range. Constraints: Up to 255 characters in length. Allowed characters are a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*
-                description: "CIDR IPv4 range/Security Group defined using crossplane + helm chart"
-            # # The IPv6 ranges (VPC Only)
-            # ipv6Ranges:
-            #   # The IPv6 CIDR range. You can either specify a CIDR range or a source security group, not both. To specify a single IPv6 address, use the /128 prefix length.
-            #   - cidrIPv6: "fddb:48c1:f920:a89f:0000:0000:0000:01/128" # local private IP address range
-            #   # A description for the security group rule that references this IPv6 address range. Constraints: Up to 255 characters in length. Allowed characters are a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*
-            #     description: "CIDR IPv6 range/Security Group defined using crossplane + helm chart"
-            # # PrefixListIDs for an AWS service. With outbound rules, this is the AWS service to access through a VPC endpoint from instances associated with the security group. [VPC only]
-            # prefixListIds:
-            #   # A description for the security group rule that references this prefix list ID. Constraints: Up to 255 characters in length. Allowed characters are a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=;{}!$*
-            #   description: "Security group rule for prefix list ID generated using crossplane + helm chart"
-            #   # The ID of the prefix.
-            #   prefixListId: "1" # this is a string
-            # # UserIDGroupPairs are the source security group and AWS account ID pairs. It contains one or more accounts and security groups to allow flows from security groups of other accounts.
-            # userIdGroupPairs:
-            #   # A description for the security group rule that references this user ID group pair. Constraints: Up to 255 characters in length. Allowed characters are a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=;{}!$*
-            #   description: "Source security group and AWS account ID pair generated using crossplane + helm chart"
-            #   # The ID of the security group.
-            #   groupId: "groupid"
-            #   # GroupIDRef reference a security group to retrieve its GroupID
-            #   groupIdRef:
-            #     # Name of the referenced object.
-            #     name: "testSecurityGroupName"
-            #   # GroupIDSelector selects reference to a security group to retrieve its GroupID
-            #   groupIdSelector:
-            #     # MatchControllerRef ensures an object with the same controller reference as the selecting object is selected.
-            #     matchControllerRef: 1
-            #     # MatchLabels ensures an object with matching labels is selected.
-            #     matchLabels:
-            #       ec2.aws.crossplane.io/selector-name: "test"
-            #   # The name of the security group. In a request, use this parameter for a security group in EC2-Classic or a default VPC only. For a security group in a nondefault VPC, use the security group ID. For a referenced security group in another VPC, this value is not returned if the referenced security group is deleted.
-            #   groupName: {}
-            #   # The ID of an AWS account. For a referenced security group in another VPC, the account ID of the referenced security group is returned in the response. If the referenced security group is deleted, this value is not returned. [EC2-Classic] Required when adding or removing rules that reference a security group in another AWS account.
-            #   userId: {}
-            #   # The ID of the VPC for the referenced security group, if applicable.
-            #   vpcId: {}
-            #   # VPCIDRef reference a VPC to retrieve its vpcId
-            #   vpcIdRef:
-            #     # Name of the referenced object.
-            #     name: "vpcId"
-            #   # VPCIDSelector selects reference to a VPC to retrieve its vpcId
-            #   vpcIdSelector:
-            #     # MatchControllerRef ensures an object with the same controller reference as the selecting object is selected.
-            #     matchControllerRef: 1
-            #     # MatchLabels ensures an object with matching labels is selected.
-            #     matchLabels:
-            #       ec2.aws.crossplane.io/selector-name: "test"
-            #   # The ID of the VPC peering connection, if applicable.
-            #   vpcPeeringConnectionId:
-            #     id: {}
-        egress:
-            # The start of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 type number.
-            # A value of -1 indicates all ICMP/ICMPv6 types. If you specify all ICMP/ICMPv6 types, you must specify all codes.
-          - fromPort: 80
-            # The end of port range for the TCP and UDP protocols, or an ICMP/ICMPv6 code. A value of -1 indicates all ICMP/ICMPv6 codes. If you specify all ICMP/ICMPv6 types, you must specify all codes.
-            toPort: 80
-            # The IP protocol name (tcp, udp, icmp, icmpv6) or number (see Protocol Numbers (http://www.iana.org/assignments/protocol-numbers/protocol-numbers.xhtml)).
-            # [VPC only] Use -1 to specify all protocols.
-            # When authorizing security group rules, specifying -1 or a protocol number other than tcp, udp, icmp, or icmpv6 allows traffic on all ports, regardless of any port range you specify.
-            # For tcp, udp, and icmp, you must specify a port range. For icmpv6, the port range is optional; if you omit the port range, traffic for all types and codes is allowed.
-            ipProtocol: "tcp"
-            # The IPv4 ranges
-            ipRanges:
-              # The IPv4 CIDR range. You can either specify a CIDR range or a source security group, not both. To specify a single IPv4 address, use the /32 prefix length.
-              - cidrIp: "10.0.0.0/8"
-              # A description for the security group rule that references this IPv4 address range. Constraints: Up to 255 characters in length. Allowed characters are a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*
-                description: "CIDR IPv4 range/Security Group defined using crossplane + helm chart"
-            # # The IPv6 ranges (VPC Only)
-            # ipv6Ranges:
-            #   # The IPv6 CIDR range. You can either specify a CIDR range or a source security group, not both. To specify a single IPv6 address, use the /128 prefix length.
-            #   - cidrIPv6: "fddb:48c1:f920:a89f:0000:0000:0000:01/128" # local private IP address range
-            #   # A description for the security group rule that references this IPv6 address range. Constraints: Up to 255 characters in length. Allowed characters are a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=&;{}!$*
-            #     description: "CIDR IPv6 range/Security Group defined using crossplane + helm chart"
-            # # PrefixListIDs for an AWS service. With outbound rules, this is the AWS service to access through a VPC endpoint from instances associated with the security group. [VPC only]
-            # prefixListIds:
-            #   # A description for the security group rule that references this prefix list ID. Constraints: Up to 255 characters in length. Allowed characters are a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=;{}!$*
-            #   description: "Security group rule for prefix list ID generated using crossplane + helm chart"
-            #   # The ID of the prefix.
-            #   prefixListId: "1" # this is a string
-            # # UserIDGroupPairs are the source security group and AWS account ID pairs. It contains one or more accounts and security groups to allow flows from security groups of other accounts.
-            # userIdGroupPairs:
-            #   # A description for the security group rule that references this user ID group pair. Constraints: Up to 255 characters in length. Allowed characters are a-z, A-Z, 0-9, spaces, and ._-:/()#,@[]+=;{}!$*
-            #   description: "Source security group and AWS account ID pair generated using crossplane + helm chart"
-            #   # The ID of the security group.
-            #   groupId: "groupid"
-            #   # GroupIDRef reference a security group to retrieve its GroupID
-            #   groupIdRef:
-            #     # Name of the referenced object.
-            #     name: "testSecurityGroupName"
-            #   # GroupIDSelector selects reference to a security group to retrieve its GroupID
-            #   groupIdSelector:
-            #     # MatchControllerRef ensures an object with the same controller reference as the selecting object is selected.
-            #     matchControllerRef: 1
-            #     # MatchLabels ensures an object with matching labels is selected.
-            #     matchLabels:
-            #       ec2.aws.crossplane.io/selector-name: "test"
-            #   # The name of the security group. In a request, use this parameter for a security group in EC2-Classic or a default VPC only. For a security group in a nondefault VPC, use the security group ID. For a referenced security group in another VPC, this value is not returned if the referenced security group is deleted.
-            #   groupName: {}
-            #   # The ID of an AWS account. For a referenced security group in another VPC, the account ID of the referenced security group is returned in the response. If the referenced security group is deleted, this value is not returned. [EC2-Classic] Required when adding or removing rules that reference a security group in another AWS account.
-            #   userId: {}
-            #   # The ID of the VPC for the referenced security group, if applicable.
-            #   vpcId: {}
-            #   # VPCIDRef reference a VPC to retrieve its vpcId
-            #   vpcIdRef:
-            #     # Name of the referenced object.
-            #     name: "vpcId"
-            #   # VPCIDSelector selects reference to a VPC to retrieve its vpcId
-            #   vpcIdSelector:
-            #     # MatchControllerRef ensures an object with the same controller reference as the selecting object is selected.
-            #     matchControllerRef: 1
-            #     # MatchLabels ensures an object with matching labels is selected.
-            #     matchLabels:
-            #       ec2.aws.crossplane.io/selector-name: "test"
-            #   # The ID of the VPC peering connection, if applicable.
-            #   vpcPeeringConnectionId:
-            #     id: {}
+          name: sample-vpc
+
+SecurityGroupRule:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        cidrBlocks:
+          - 10.0.0.0/16
+        fromPort: 0
+        protocol: tcp
+        securityGroupIdRef:
+          name: example
+        toPort: 65535
+        type: ingress
+
+SerialConsoleAccess:
+  items:
+    test:
+      forProvider:
+        enabled: true
+        region: us-west-1
+
+SnapshotCreateVolumePermission:
+  items:
+    test:
+      forProvider:
+        accountId: "123456789012"
+        region: us-west-1
+        snapshotIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example_snapshot
+
+SpotDatafeedSubscription:
+  items:
+    test:
+      forProvider:
+        bucket: up-spotdata
+        prefix: my_subdirectory
+        region: us-west-1
+
+SpotFleetRequest:
+  items:
+    test:
+      forProvider:
+        allocationStrategy: capacityOptimized
+        iamFleetRole: arn:aws:iam::${data.aws_account_id}:role/aws-service-role/spotfleet.amazonaws.com/AWSServiceRoleForEC2SpotFleet
+        launchSpecification:
+        - ami: ami-0bdb828fd58c52235
+          iamInstanceProfileArnSelector:
+            matchLabels:
+              testing.upbound.io/example-name: test_profile
+          instanceType: t3.micro
+          placementTenancy: dedicated
+          spotPrice: "2.793"
+        region: us-west-1
+        spotPrice: "0.03"
+        targetCapacity: 6
+
+SpotInstanceRequest:
+  items:
+    test:
+      forProvider:
+        ami: ami-0d9858aa3c6322f73
+        instanceType: c4.xlarge
+        region: us-west-1
 
 Subnet:
   tags:
@@ -400,7 +617,6 @@ Subnet:
       forProvider:
         availabilityZone: us-west-2a
         cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "0.0/24") }}'
-        mapPublicIPOnLaunch: true
         tags:
           "kubernetes.io/role/elb": "1"
     public-b:
@@ -408,7 +624,6 @@ Subnet:
       forProvider:
         availabilityZone: us-west-2b
         cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "1.0/24") }}'
-        mapPublicIPOnLaunch: true
         tags:
           "kubernetes.io/role/elb": "1"
     public-c:
@@ -416,7 +631,6 @@ Subnet:
       forProvider:
         availabilityZone: us-west-2c
         cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "2.0/24") }}'
-        mapPublicIPOnLaunch: true
         tags:
           "kubernetes.io/role/elb": "1"
     private-a:
@@ -426,7 +640,6 @@ Subnet:
       forProvider:
         availabilityZone: us-west-2a
         cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "10.0/24") }}'
-        mapPublicIPOnLaunch: false
         tags:
           "kubernetes.io/role/internal-elb": "1"
     private-b:
@@ -436,7 +649,6 @@ Subnet:
       forProvider:
         availabilityZone: us-west-2b
         cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "11.0/24") }}'
-        mapPublicIPOnLaunch: false
         tags:
           "kubernetes.io/role/internal-elb": "1"
     private-c:
@@ -446,126 +658,526 @@ Subnet:
       forProvider:
         availabilityZone: us-west-2c
         cidrBlock: '{{ include "common-gitops.utils.subnetCidr" (dict "vpcCidr" .Values.global.vpcCidr "suffix" "12.0/24") }}'
-        mapPublicIPOnLaunch: false
         tags:
           "kubernetes.io/role/internal-elb": "1"
+
+SubnetCidrReservation:
+  items:
+    test:
+      forProvider:
+        cidrBlock: 172.16.10.0/28
+        region: us-west-1
+        reservationType: prefix
+        subnetIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+Tag:
+  items:
+    test:
+      forProvider:
+        key: karpenter.sh/discovery
+        region: us-west-1
+        resourceId: <resourceid-arn>
+        value: sample-eks-cluster
+
+TrafficMirrorFilter:
+  items:
+    test:
+      forProvider:
+        description: traffic mirror filter - terraform example
+        networkServices:
+        - amazon-dns
+        region: us-west-1
+
+TrafficMirrorFilterRule:
+  items:
+    test:
+      forProvider:
+        description: test rule
+        destinationCidrBlock: 10.0.0.0/8
+        region: us-west-1
+        ruleAction: accept
+        ruleNumber: 1
+        sourceCidrBlock: 10.0.0.0/8
+        trafficDirection: egress
+        trafficMirrorFilterIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: filter
 
 TransitGateway:
   items:
     test:
       forProvider:
+        region: us-west-1
+        multicastSupport: enable
+
+TransitGatewayConnect:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        transitGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        transportAttachmentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+TransitGatewayConnectPeer:
+  items:
+    test:
+      forProvider:
+        insideCidrBlocks: ["169.254.100.0/29"]
+        peerAddress: 10.1.2.3
+        region: us-west-1
+        transitGatewayAttachmentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+TransitGatewayMulticastDomain:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        staticSourcesSupport: enable
+        tags:
+          Name: Transit_Gateway_Multicast_Domain_Example
+        transitGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+TransitGatewayMulticastDomainAssociation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        subnetIdRef:
+          name: sample-subnet1
+        transitGatewayAttachmentIdRef:
+          name: example
+        transitGatewayMulticastDomainIdRef:
+          name: domain
+
+TransitGatewayMulticastGroupMember:
+  items:
+    test:
+      forProvider:
+        groupIpAddress: 224.0.0.1
+        networkInterfaceIdRef:
+          name: sample-ni
+        region: us-west-1
+        transitGatewayMulticastDomainIdRef:
+          name: domain
+
+TransitGatewayMulticastGroupSource:
+  items:
+    test:
+      forProvider:
+        groupIpAddress: 224.0.0.1
+        networkInterfaceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test
+        region: us-west-1
+        transitGatewayMulticastDomainIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+TransitGatewayPeeringAttachment:
+  items:
+    test:
+      forProvider:
+        peerAccountId: "${data.aws_account_id}"
+        peerRegion: us-west-2
+        peerTransitGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example-peer
+        region: us-west-1
+        tags:
+          Name: TGW Peering Requestor
+        transitGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example-local
+
+TransitGatewayPeeringAttachmentAccepter:
+  items:
+    test:
+      forProvider:
+        region: us-west-2
+        tags:
+          Name: Example cross-account attachment
+        transitGatewayAttachmentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+TransitGatewayPolicyTable:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        tags:
+          Name: Example Policy Table
+        transitGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: policytable
+
+TransitGatewayPrefixListReference:
+  items:
+    test:
+      forProvider:
+        prefixListIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+        transitGatewayAttachmentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: attachment1
+        transitGatewayRouteTableIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
 
 TransitGatewayRoute:
   items:
-    blackhole:
+    test:
       forProvider:
-        blackhole: true
-        destinationCIDRBlock: 10.0.0.0/8
-        transitGatewayRouteTableIdRef:
-          name: tgw-routetable
-    attack:
-      forProvider:
-        destinationCIDRBlock: 0.0.0.0/0
-        transitGatewayAttachmentIdRef:
-          name: tgw-vpc-attach
-        transitGatewayRouteTableIdRef:
-          name: tgw-routetable
+        destinationCidrBlock: 0.0.0.0/0
+        region: us-west-1
+        transitGatewayAttachmentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        transitGatewayRouteTableIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
 
 TransitGatewayRouteTable:
   items:
     test:
       forProvider:
-        transitGatewayIdRef:
-          name: tgw
+        region: us-west-1
+        transitGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+TransitGatewayRouteTableAssociation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        transitGatewayAttachmentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        transitGatewayRouteTableIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+TransitGatewayRouteTablePropagation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        transitGatewayAttachmentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        transitGatewayRouteTableIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
 
 TransitGatewayVPCAttachment:
   items:
     test:
       forProvider:
+        region: us-west-1
         subnetIdRefs:
-          - name: sample-subnet1
-          - name: sample-subnet2
-        transitGatewayIdRef:
-          name: tgw
+        - name: sample-subnet1
+        transitGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
         vpcIdRef:
           name: sample-vpc
+
 TransitGatewayVPCAttachmentAccepter:
   items:
     test:
-      deletionPolicy: Delete
-      providerConfigRef:
-        name: aws-provider
       forProvider:
-        transitGatewayAttachmentIdRef:
-          name: "test"
-
-Volume:
-  items:
-    test:
-      forProvider:
-        availabilityZone: us-east-1a
-        encrypted: true
-        kmsKeyIdRef:
-          name: dev-key
-        volumeType: gp3
-        size: 1
+        region: us-west-1
+        tags:
+          Name: Example cross-account attachment
+        transitGatewayAttachmentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
 
 VPC:
   items:
-    vpc:
-      deletionPolicy: Delete
+    test:
       forProvider:
-        cidrBlock: "10.3.0.0/16"
-        enableDnsSupport: true
-        enableDnsHostNames: true
+        region: us-west-1
+        cidrBlock: 172.16.0.0/16
+        tags:
+          Name: DemoVpc
 
-VPCCIDRBlock:
+VPCDHCPOptions:
   items:
-    sample:
+    test:
       forProvider:
-        cidrBlock: 100.64.0.0/16
+        domainNameServers:
+        - 8.8.8.8
+        - 8.8.4.4
+        region: us-west-1
+
+VPCDHCPOptionsAssociation:
+  items:
+    test:
+      forProvider:
+        dhcpOptionsId: ${aws_vpc_dhcp_options.foo.id}
+        region: us-west-1
         vpcIdRef:
-          name:  sample-vpc
+          name: example
 
 VPCEndpoint:
   items:
-    vpcendpoint:
+    test:
       forProvider:
-        privateDNSEnabled: true
-        serviceName: com.amazonaws.us-east-1.appstream.streaming
-        securityGroupIdRefs:
-        - name: sample-cluster-sg
-        subnetIdRefs:
-        - name: sample-subnet1
-        - name: sample-subnet2
-        vpcEndpointType: Interface
-        vpcIdRef:
-          name: sample-vpc
-    vpcendpoint-rtb:
-      forProvider:
-        routeTableIdRefs:
-          - name: sample-routetable-ignore-routes
-        serviceName: com.amazonaws.us-east-1.s3
+        region: us-west-1
+        serviceName: com.amazonaws.us-west-1.s3
         vpcEndpointType: Gateway
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: vpc1
+
+VPCEndpointConnectionNotification:
+  items:
+    test:
+      forProvider:
+        connectionEvents:
+          - Accept
+          - Reject
+        connectionNotificationArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: topic
+        region: us-west-1
+        vpcEndpointServiceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: foo
+
+VPCEndpointRouteTableAssociation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        routeTableIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        vpcEndpointIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+VPCEndpointSecurityGroupAssociation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        securityGroupIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: securitygroup1
+        vpcEndpointIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: ec2
+
+VPCEndpointService:
+  items:
+    test:
+      forProvider:
+        acceptanceRequired: false
+        networkLoadBalancerArns:
+          - ${networkLoadBalancerArn}
+        region: us-west-1
+
+VPCEndpointServiceAllowedPrincipal:
+  items:
+    test:
+      forProvider:
+        principalArn: ${data.aws_caller_identity.current.arn}
+        region: us-west-1
+        vpcEndpointServiceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: foo
+
+VPCEndpointSubnetAssociation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        subnetIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: subnet1
+        vpcEndpointIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: ec2
+
+VPCIPv4CidrBlockAssociation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        cidrBlock: 172.2.0.0/16
         vpcIdRef:
           name: sample-vpc
 
-VPCEndpointServiceConfiguration:
+VPCIpam:
   items:
-    sample:
+    test:
       forProvider:
-        gatewayLoadBalancerARNRefs:
-          - name: gatewayloadbalancer
+        description: My IPAM
+        operatingRegions:
+        - regionName: us-west-1
+        region: us-west-1
+        tags:
+          Test: Main
+
+VPCIpamPool:
+  items:
+    test:
+      forProvider:
+        addressFamily: ipv4
+        ipamScopeIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        locale: us-west-1
+        region: us-west-1
+
+VPCIpamPoolCidr:
+  items:
+    test:
+      forProvider:
+        cidr: 172.2.0.0/16
+        ipamPoolIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+
+VPCIpamPoolCidrAllocation:
+  items:
+    test:
+      forProvider:
+        cidr: 172.2.0.0/24
+        ipamPoolIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+
+VPCIpamScope:
+  items:
+    test:
+      forProvider:
+        description: Another Scope
+        ipamIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: main
+        region: us-west-1
 
 VPCPeeringConnection:
   items:
     test:
       forProvider:
-        # vpcID: vpc-123123123
-        vpcIDRef:
-          name: sample-vpc
-        region: us-east-1
-        peerVPCID: vpc-312312312
-        # peerVPCIDRef:
-        #   name: sample-vpc2
-        acceptRequest: true
+        peerOwnerId: <peer-owner-id>
+        peerVpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: bar
+        region: us-west-1
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: foo
+
+VPCPeeringConnectionAccepter:
+  items:
+    test:
+      forProvider:
+        autoAccept: true
+        region: eu-west-1
+        tags:
+          Side: Accepter
+        vpcPeeringConnectionIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: vpcpeerconnectionlabel
+
+VPCPeeringConnectionOptions:
+  items:
+    test:
+      forProvider:
+        accepter:
+        - allowRemoteVpcDnsResolution: true
+        region: eu-west-1
+        requester:
+        - allowClassicLinkToRemoteVpc: true
+          allowVpcToRemoteClassicLink: true
+        vpcPeeringConnectionIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: vpcpeerconnectionlabel
+
+VPNConnection:
+  items:
+    test:
+      forProvider:
+        customerGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: customer_gateway
+        region: us-west-1
+        staticRoutesOnly: true
+        type: "ipsec.1"
+        vpnGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: vpn_gateway
+
+VPNConnectionRoute:
+  items:
+    test:
+      forProvider:
+        destinationCidrBlock: 192.168.10.0/24
+        region: us-west-1
+        vpnConnectionIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: main
+
+VPNGateway:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        tags:
+          Name: main
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: main
+
+VPNGatewayAttachment:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: network
+        vpnGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: vpn
+
+VPNGatewayRoutePropagation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        routeTableIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        vpnGatewayIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+VolumeAttachment:
+  items:
+    test:
+      forProvider:
+        deviceName: /dev/sdh
+        instanceId: ${aws_instance.web.id}
+        region: us-west-1
+        volumeId: ${aws_ebs_volume.example.id}
