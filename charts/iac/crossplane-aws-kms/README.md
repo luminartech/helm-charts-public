@@ -17,10 +17,15 @@
 
 ### AWS resources
 
-| Name    | Description         | Value |
-| ------- | ------------------- | ----- |
-| `Alias` | resource parameters | `{}`  |
-| `Key`   | resource parameters | `{}`  |
+| Name                 | Description          | Value |
+| -------------------- | -------------------- | ----- |
+| `Alias`              | resources parameters | `{}`  |
+| `Ciphertext`         | resources parameters | `{}`  |
+| `ExternalKey`        | resources parameters | `{}`  |
+| `Grant`              | resources parameters | `{}`  |
+| `Key`                | resources parameters | `{}`  |
+| `ReplicaExternalKey` | resources parameters | `{}`  |
+| `ReplicaKey`         | resources parameters | `{}`  |
 
 
 ## Configuration and installation details
