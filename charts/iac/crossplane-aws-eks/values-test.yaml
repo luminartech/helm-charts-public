@@ -1,59 +1,80 @@
 ---
 ## AWS EKS resources configurations
 
+global:
+  tags:
+    globaltag: globalvalue
+
 Addon:
   items:
     coredns:
       forProvider:
-        addonName: coredns
-        addonVersion: "v1.8.4-eksbuild.1"
-        clusterName: "test"
-
-IdentityProviderConfig:
-  items:
-    test:
-      forProvider:
-        clusterNameRef:
-          name: sample-cluster
-        oidc:
-          clientId: spn:example-client-id
-          issuerUrl: https://sts.windows.net/example-tenant-id/
-          usernameClaim: "upn"
-          usernamePrefix: "aad:"
-          groupsClaim: "group"
-          groupsPrefix: "aad:"
-
-NodeGroup:
-  items:
-    "_":
-      forProvider:
-        region: us-west-2
-        clusterNameRef:
-          name: sample-cluster
-        subnetRefs:
-          - name: sample-subnet1
-        nodeRoleRef:
-          name: somenoderole
-        scalingConfig:
-          desiredSize: 1
-          maxSize: 1
-          minSize: 1
+        addonName: vpc-cni
+        clusterNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
 
 Cluster:
   items:
     test:
       forProvider:
+        region: us-west-1
         roleArnRef:
-          name: somerole
-        resourcesVpcConfig:
-          endpointPrivateAccess: true
-          endpointPublicAccess: true
-          subnetIdRefs:
-            - name: sample-subnet1
-            - name: sample-subnet2
-          securityGroupIdRefs:
-            - name: sample-cluster-sg
-        version: "1.23"
+          name: sample-eks-cluster
+        vpcConfig:
+          - subnetIdRefs:
+              - name: sample-subnet1
+              - name: sample-subnet2
+
+ClusterAuth:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        clusterNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
 
 FargateProfile:
-  enabled: false
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        clusterNameRef:
+          name: sample-eks-cluster
+        podExecutionRoleArnRef:
+          name: sample-fargate-role
+        selector:
+        - namespace: example
+        subnetIdRefs:
+        - name: private-subnet
+
+IdentityProviderConfig:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        clusterNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        oidc:
+        - clientId: test-audience
+          issuerUrl: https://issuer.url
+
+NodeGroup:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        clusterNameRef:
+          name: sample-eks-cluster
+        nodeRoleArnRef:
+          name: sample-node-role
+        subnetIdRefs:
+          - name: sample-subnet1
+          - name: sample-subnet2
+        scalingConfig:
+          - minSize: 1
+            maxSize: 1
+            desiredSize: 1

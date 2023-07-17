@@ -21,6 +21,8 @@
 | ------------------------ | ------------------- | ----- |
 | `Addon`                  | resource parameters | `{}`  |
 | `Cluster`                | resource parameters | `{}`  |
+| `ClusterAuth`            | resource parameters | `{}`  |
+| `FargateProfile`         | resource parameters | `{}`  |
 | `IdentityProviderConfig` | resource parameters | `{}`  |
 | `NodeGroup`              | resource parameters | `{}`  |
 
