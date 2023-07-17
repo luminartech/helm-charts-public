@@ -7,15 +7,57 @@ Secret:
       labels:
         secretsmanager.aws.crossplane.io/infra-resource: test
       forProvider:
-        region: us-west-2
-        description: "test"
-        # kmsKeyIDRef:
-        #   name: example-key-id
-        forceDeleteWithoutRecovery: true
-        # recoveryWindowInDays: 7
-        stringSecretRef:
-          key: password
-          name: example-secret-manager
-          namespace: infra-crossplane
-        tags:
-          secretTag: secretValue
+        name: example-${Rand.RFC1123Subdomain}
+        region: us-west-1
+
+
+SecretPolicy:
+  items:
+    test:
+      forProvider:
+        policy: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "EnableAnotherAWSAccountToReadTheSecret",
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": "arn:aws:iam::${data.aws_account_id}:root"
+                },
+                "Action": "secretsmanager:GetSecretValue",
+                "Resource": "*"
+              }
+            ]
+          }
+        region: us-west-1
+        secretArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: secretsmanager
+
+SecretRotation:
+  items:
+    test:
+      forProvider:
+        region: us-east-1
+        rotationLambdaArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        rotationRules:
+        - automaticallyAfterDays: 30
+        secretIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+SecretVersion:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        secretIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: secretsmanager
+        secretStringSecretRef:
+          key: mystery
+          name: example-secret-version
+          namespace: upbound-system
