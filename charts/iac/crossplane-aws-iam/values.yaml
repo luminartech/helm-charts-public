@@ -5,17 +5,25 @@
 ##
 AccessKey: {}
 
+## @param AccountAlias resource parameters
+##
+AccountAlias: {}
+
+## @param AccountPasswordPolicy resource parameters
+##
+AccountPasswordPolicy: {}
+
 ## @param Group resource parameters
 ##
 Group: {}
 
+## @param GroupMembership resource parameters
+##
+GroupMembership: {}
+
 ## @param GroupPolicyAttachment resource parameters
 ##
 GroupPolicyAttachment: {}
-
-## @param GroupUserMembership resource parameters
-##
-GroupUserMembership: {}
 
 ## @param InstanceProfile resource parameters
 ##
@@ -37,10 +45,46 @@ Role: {}
 ##
 RolePolicyAttachment: {}
 
+## @param SAMLProvider resource parameters
+##
+SAMLProvider: {}
+
+## @param ServerCertificate resource parameters
+##
+ServerCertificate: {}
+
+## @param ServiceLinkedRole resource parameters
+##
+ServiceLinkedRole: {}
+
+## @param ServiceSpecificCredential resource parameters
+##
+ServiceSpecificCredential: {}
+
+## @param SigningCertificate resource parameters
+##
+SigningCertificate: {}
+
 ## @param User resource parameters
 ##
 User: {}
 
+## @param UserGroupMembership resource parameters
+##
+UserGroupMembership: {}
+
+## @param UserLoginProfile resource parameters
+##
+UserLoginProfile: {}
+
 ## @param UserPolicyAttachment resource parameters
 ##
 UserPolicyAttachment: {}
+
+## @param UserSSHKey resource parameters
+##
+UserSSHKey: {}
+
+## @param VirtualMfaDevice resource parameters
+##
+VirtualMfaDevice: {}

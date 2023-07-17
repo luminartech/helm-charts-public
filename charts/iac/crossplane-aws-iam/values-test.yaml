@@ -1,79 +1,89 @@
 ---
 # Note: Keep an alphabetical order, please
 
-##
-# IAM
-##
 global:
 #   # 64 chars long to test trimming
 #   releaseNameOverride: shah5zieta8cu4ahve9ooy2eix5eeseis6jaecop3nahjae4keizohbeiyoo5sho
   env: team-tier
+
 AccessKey:
   items:
     test:
-      name: supertest
-      tags:
-        access-key-only: test
       forProvider:
-        userNameRef:
-          name: someuser
+        userRef:
+          name: test
+
+AccountAlias:
+  items:
+    test:
+      forProvider: {}
+
+AccountPasswordPolicy:
+  items:
+    test:
+      forProvider:
+        allowUsersToChangePassword: true
+        minimumPasswordLength: 8
+        requireLowercaseCharacters: true
+        requireNumbers: true
+        requireSymbols: true
+        requireUppercaseCharacters: true
+
 Group:
   items:
     test:
-      name: nameoverride
+      forProvider: {}
+
+GroupMembership:
+  items:
+    test:
+      forProvider:
+        groupSelector:
+          matchLabels:
+            testing.upbound.io/example-name: user
+        name: up-group-membership
+        userSelector:
+          matchLabels:
+            testing.upbound.io/example-name: user
 
 GroupPolicyAttachment:
   items:
     test:
       forProvider:
-        policyArnRef:
-          name: somepolicy
-        groupNameRef:
-          name: somegroup
-
-GroupUserMembership:
-  items:
-    test:
-      forProvider:
-        groupNameRef:
-          name: somegroup
-        userNameRef:
-          name: someuser
+        groupSelector:
+          matchLabels:
+            testing.upbound.io/example-name: user
+        policyArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: user
 
 InstanceProfile:
-  tags:
-    instance-profile-only: test
   items:
     test:
-      deletionPolicy: Delete
       forProvider:
-        roleRef:
-          name: crossplane-aws-iam-test-role
+        roleSelector:
+          matchLabels:
+            testing.upbound.io/example-name: role
 
 OpenIDConnectProvider:
-  deletionPolicy: Delete
   items:
     test:
-      labels:
-        crossplane.io/infra-resource: test
       forProvider:
-        clientIDList:
-          - sts.amazonaws.com
+        clientIdList:
+        - <clientID>
         thumbprintList:
-          - "9e99a48a9960b14926bb7f3b02e22da2b0ab7280"
-        url: https://example.com
+        - <thumbprint>
+        url: https://accounts.google.com
 
 Policy:
-  tags:
-    policy-only: test_value
   items:
-    inputAsDictStatementAsDict:
+    input-as-dict-statement-as-dict:
       labels:
         crossplane.io/infra-resource: test
       deletionPolicy: Delete
       forProvider:
         description: "IAM Policy that was defined as a yaml with Statement as a dict (most advanced form)"
-        document:
+        policy:
           Version: "2012-10-17"
           Statement:
             accountRead:
@@ -95,13 +105,13 @@ Policy:
                 - "route53:ListHostedZonesByName"
               Resource: "*"
 
-    inputAsDictStatementAsList:
+    input-as-dict-statement-as-list:
       labels:
         crossplane.io/infra-resource: test
       deletionPolicy: Delete
       forProvider:
         description: "IAM Policy that was defined as a yaml with Statement as a list"
-        document:
+        policy:
           Version: "2012-10-17"
           Statement:
             - Sid: "accountRead"
@@ -123,13 +133,13 @@ Policy:
                 - "route53:ListHostedZonesByName"
               Resource: "*"
 
-    inputAsJsonString:
+    input-as-json-string:
       labels:
         crossplane.io/infra-resource: test
       deletionPolicy: Delete
       forProvider:
         description: "IAM Policy that was defined as a json string"
-        document: |
+        policy: |
           {
             "Version": "2012-10-17",
             "Statement": [
@@ -166,13 +176,10 @@ Policy:
 Role:
   items:
     test:
-      tags:
-        role-only: test
-      deletionPolicy: Delete
       forProvider:
         description: "IAM Role generated using crossplane + helm chart"
         maxSessionDuration: 3600 # 1 to 12 hours
-        assumeRolePolicyDocument:
+        assumeRolePolicy:
           Statement:
             _:
               Effect: "Allow"
@@ -183,28 +190,98 @@ Role:
 RolePolicyAttachment:
   items:
     test:
-      deletionPolicy: Delete
-      labels:
-        rpa-only: test
+      forProvider: {}
+
+SAMLProvider:
+  items:
+    test:
       forProvider:
-        policyArn: arn:aws:iam::XXXXXXXX:policy/crossplane-aws-iam-test-policy
-        roleNameRef:
-          name: crossplane-aws-iam-test-role
+        samlMetadataDocument: |
+          ### This content is issued by your IdP.
+          ### It includes the issuer's name, expiration information and keys.
+          ### This file content needs to be a valid UTF-8 XML.
+
+ServerCertificate:
+  items:
+    test:
+      forProvider:
+        certificateBody: |
+          -----BEGIN CERTIFICATE-----
+          [......] # cert contents
+          -----END CERTIFICATE-----
+        privateKeySecretRef:
+          key: pem
+          name: example-secret
+          namespace: crossplane-system
+
+ServiceLinkedRole:
+  items:
+    test:
+      forProvider:
+        awsServiceName: elasticbeanstalk.amazonaws.com
+
+ServiceSpecificCredential:
+  items:
+    test:
+      forProvider:
+        serviceName: codecommit.amazonaws.com
+        userNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: user
+
+SigningCertificate:
+  items:
+    test:
+      forProvider:
+        certificateBody: |
+          -----BEGIN CERTIFICATE-----
+          [......] # cert contents
+          -----END CERTIFICATE-----
+        userName: some_test_cert
 
 User:
   items:
     test:
-      labels:
-        crossplane.io/infra-module: test
+      forProvider: {}
+
+UserGroupMembership:
+  items:
+    test:
       forProvider:
-        path: test
-        permissionsBoundary: test
+        groupSelector:
+          matchLabels:
+            testing.upbound.io/example-name: group
+        userSelector:
+          matchLabels:
+            testing.upbound.io/example-name: group
+
+UserLoginProfile:
+  items:
+    test:
+      forProvider:
+        pgpKey: keybase:username
+        userRef:
+          name: sample-user
+        passwordResetRequired: false
+        passwordLength: 20
 
 UserPolicyAttachment:
   items:
     test:
+      forProvider: {}
+
+UserSSHKey:
+  items:
+    test:
       forProvider:
-        policyArnRef:
-          name: somepolicy
-        userNameRef:
-          name: someuser
+        encoding: SSH
+        publicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD3F6tyPEFEzV0LX3X8BsXdMsQz1x2cEikKDEY0aIj41qgxMCP/iteneqXSIFZBp5vizPvaoIR3Um9xK7PGoW8giupGn+EPuxIA4cDM4vzOqOkiMPhz5XK0whEjkVzTo4+S0puvDZuwIsdiW9mxhJc7tgBNL0cYlWSYVkz4G/fslNfRPW5mYAM49f4fhtxPb5ok4Q2Lg9dPKVHO/Bgeu5woMc7RY0p1ej6D4CKFE6lymSDJpW0YHX/wqE9+cfEauh7xZcG0q9t2ta6F6fmX0agvpFyZo8aFbXeUBr7osSCJNgvavWbM/06niWrOvYX2xwWdhXmXSrbX8ZbabVohBK41
+          mytest@mydomain.com
+        usernameRef:
+          name: sample-user
+
+VirtualMfaDevice:
+  items:
+    test:
+      forProvider:
+        virtualMfaDeviceName: example
