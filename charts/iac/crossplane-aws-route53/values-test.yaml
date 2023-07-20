@@ -1,35 +1,120 @@
 ---
-## AWS Route 53 resources configurations
 
-HostedZone:
-  labels:
-    route53.aws.crossplane.io/selector-name: test
-  tags: {}
+DelegationSet:
   items:
     test:
-      labels:
-        route53.aws.crossplane.io/infra-resource: test
       forProvider:
-        name: "test.com"
-        config:
-          comment: "Test zone"
+        referenceName: DynDNS
+        region: us-west-1
 
-ResourceRecordSet:
-  labels:
-    route53.aws.crossplane.io/selector-name: test
-  tags: {}
+HealthCheck:
   items:
     test:
-      name: "subdomain"
-      labels:
-        route53.aws.crossplane.io/infra-resource: test
       forProvider:
-        type: NS
-        ttl: 60
-        resourceRecords:
-        - value: "ns-856.awsdns-43.net."
-        - value: "ns-1441.awsdns-52.org."
-        - value: "ns-1988.awsdns-56.co.uk."
-        - value: "ns-244.awsdns-30.com."
+        failureThreshold: 5
+        fqdn: mycompany.test
+        port: 80
+        region: us-west-1
+        requestInterval: 30
+        resourcePath: /
+        tags:
+          Name: crossplane
+        type: HTTP
+
+HostedZoneDNSSEC:
+  items:
+    test:
+      forProvider:
+        hostedZoneIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-1
+
+Record:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        name: www
+        records:
+        - "dev.upbound.io"
+        ttl: 5
+        type: CNAME
         zoneIdRef:
-          name: luminarinfra.com
+          name: example
+
+ResolverConfig:
+  items:
+    test:
+      forProvider:
+        autodefinedReverseFlag: DISABLE
+        region: us-west-1
+        resourceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+TrafficPolicy:
+  items:
+    test:
+      forProvider:
+        comment: example comment
+        document: |
+          {
+            "AWSPolicyFormatVersion": "2015-10-01",
+            "RecordType": "A",
+            "Endpoints": {
+              "endpoint-start-NkPh": {
+                "Type": "value",
+                "Value": "10.0.0.2"
+              }
+            },
+            "StartEndpoint": "endpoint-start-NkPh"
+          }
+        name: example
+        region: us-west-1
+
+TrafficPolicyInstance:
+  items:
+    test:
+      forProvider:
+        hostedZoneIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        name: mycompany.test
+        region: us-west-1
+        trafficPolicyIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        trafficPolicyVersion: 1
+        ttl: 360
+
+VPCAssociationAuthorization:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: alternate
+        zoneIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+Zone:
+  items:
+    test:
+      forProvider:
+        name: mycompany.test
+        region: us-west-1
+
+ZoneAssociation:
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+        vpcIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: secondary
+        zoneIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example

@@ -1,10 +1,42 @@
 ## @section AWS resources
 
 
-## @param HostedZone resource parameters
+## @param DelegationSet resource parameters
 ##
-HostedZone: {}
+DelegationSet: {}
 
-## @param ResourceRecordSet resource parameters
+## @param HealthCheck resource parameters
 ##
-ResourceRecordSet: {}
+HealthCheck: {}
+
+## @param HostedZoneDNSSEC resource parameters
+##
+HostedZoneDNSSEC: {}
+
+## @param Record resource parameters
+##
+Record: {}
+
+## @param ResolverConfig resource parameters
+##
+ResolverConfig: {}
+
+## @param TrafficPolicy resource parameters
+##
+TrafficPolicy: {}
+
+## @param TrafficPolicyInstance resource parameters
+##
+TrafficPolicyInstance: {}
+
+## @param VPCAssociationAuthorization resource parameters
+##
+VPCAssociationAuthorization: {}
+
+## @param Zone resource parameters
+##
+Zone: {}
+
+## @param ZoneAssociation resource parameters
+##
+ZoneAssociation: {}
