@@ -76,10 +76,6 @@ ProxyEndpoint: {}
 ##
 ProxyTarget: {}
 
-## @param SecurityGroup resource parameters
-##
-SecurityGroup: {}
-
 ## @param Snapshot resource parameters
 ##
 Snapshot: {}

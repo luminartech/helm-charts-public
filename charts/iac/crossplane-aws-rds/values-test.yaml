@@ -243,14 +243,6 @@ ProxyTarget:
         dbClusterIdentifier: example
         targetGroupName: default
 
-SecurityGroup:
-  items:
-    _:
-      forProvider:
-        ingress:
-          - cidr: 10.0.0.0/24
-        region: us-west-1
-
 Snapshot:
   items:
     _:

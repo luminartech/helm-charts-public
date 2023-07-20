@@ -38,7 +38,6 @@
 | `ProxyDefaultTargetGroup`               | resource parameters | `{}`  |
 | `ProxyEndpoint`                         | resource parameters | `{}`  |
 | `ProxyTarget`                           | resource parameters | `{}`  |
-| `SecurityGroup`                         | resource parameters | `{}`  |
 | `Snapshot`                              | resource parameters | `{}`  |
 | `SubnetGroup`                           | resource parameters | `{}`  |
 
