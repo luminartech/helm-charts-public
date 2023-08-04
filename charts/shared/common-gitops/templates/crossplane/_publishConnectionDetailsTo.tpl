@@ -25,7 +25,7 @@ publishConnectionDetailsTo:
                  (($root.Values.global).publishConnectionDetailsTo) -}}
     {{- if .enabled -}}
 publishConnectionDetailsTo:
-  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" $.nameOverride) }}
+  name: {{ include "common-gitops.tplvalues.render" (dict "value" .name "context" $root) | default (include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" $.nameOverride)) }}
       {{- with .configRef }}
   configRef:
     name: {{ include "common-gitops.tplvalues.render" (dict "value" .name "context" $root) | default "default" }}
