@@ -537,6 +537,15 @@ SecurityGroup:
       forProvider:
         region: us-west-1
         description: Allow TLS inbound traffic
+        #name: allow_tls
+        tags:
+          Name: allow_tls
+        vpcIdRef:
+          name: sample-vpc
+    test-name-override:
+      forProvider:
+        region: us-west-1
+        description: Allow TLS inbound traffic
         name: allow_tls
         tags:
           Name: allow_tls

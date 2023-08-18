@@ -15,6 +15,7 @@ spec:
     {{- include "common-gitops.crossplane.forProvider" (dict "root" $root "values" (.forProvider) "valuesOverride" (dict
       "tags" (include "common-gitops.tags.dict" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | fromYaml)
       "region" (include "common-gitops.crossplane.awsRegion" (dict "root" $root "name" $name "kind" $kind))
+      "name" (include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" (.forProvider.name)))
       )) | nindent 2 }}
     {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
