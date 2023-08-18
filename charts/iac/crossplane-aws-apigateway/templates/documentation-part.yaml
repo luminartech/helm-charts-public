@@ -1,4 +1,4 @@
-{{- $kind := "Authorizer" -}}
+{{- $kind := "DocumentationPart" -}}
 {{- $root := . -}}
 {{- $kindObj := or (get $root.Values $kind) (dict) -}}
 {{- range $name, $item := $kindObj.items -}}
