@@ -1,13 +1,8 @@
 ---
-## AWS ECR resources configurations
 
 LifecyclePolicy:
-  labels:
-    ecr.aws.crossplane.io/selector-name: test
   items:
     test:
-      labels:
-        ecr.aws.crossplane.io/infra-resource: test
       forProvider:
         region: us-east-1
         policy: |
