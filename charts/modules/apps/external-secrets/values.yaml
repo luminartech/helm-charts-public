@@ -117,9 +117,6 @@ crossplane-aws-iam:
   ## @param crossplane-aws-iam.enabled Toggle for enabling or disabling upstream chart templates.
   ##
   enabled: false
-  ## @param crossplane-aws-iam.deletionPolicy Crossplane will delete or orphan resource when helm chart is uninstalled. Allowed values: `Delete` or `Orphan`.
-  ##
-  deletionPolicy: Delete
   ## AWS IAM Policy resources parameters.
   ## items: Dict of one or more Policy resources.
   ## ref: https://github.com/luminartech/helm-charts-public/blob/main/charts/iac/crossplane-aws-iam/templates/policy.yaml
@@ -129,9 +126,6 @@ crossplane-aws-iam:
   Policy:
     items:
       _:
-        ## @param crossplane-aws-iam.Policy.items._.deletionPolicy Overrides crossplane-aws-iam.deletionPolicy value.
-        ##
-        deletionPolicy: Delete
         ## Resource specific additional annotations.
         ## @param crossplane-aws-iam.Policy.items._.annotations.crossplane.io/external-name AWS resource name to import if exists.
         ##
@@ -143,7 +137,7 @@ crossplane-aws-iam:
         ##
         forProvider:
           description: "IAM Policy for external secrets IAM role to access aws secret manager resources"
-          document:
+          policy:
             Statement:
               secretsManagerRead:
                 Effect: "Allow"
@@ -164,20 +158,12 @@ crossplane-aws-iam:
   Role:
     items:
       _:
-        ## @param crossplane-aws-iam.Role.items._.deletionPolicy Overrides crossplane-aws-iam.deletionPolicy value.
-        ##
-        deletionPolicy: Delete
-        ## Resource specific additional annotations.
-        ## @param crossplane-aws-iam.Role.items._.annotations.crossplane.io/external-name AWS resource name to import if exists.
-        ##
-        annotations:
-          crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}'
         ## AWS Configuration for Role resources.
-        ## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicyDocument
+        ## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy
         ## Default policy grants assume role permission to the service pod running in given eks cluster, namespace and service account.
         ##
         forProvider:
-          assumeRolePolicyDocument:
+          assumeRolePolicy:
             Statement:
               assumeRoleWithWebIdentitiy:
                 Effect: "Allow"
@@ -211,14 +197,6 @@ crossplane-aws-iam:
   RolePolicyAttachment:
     items:
       _:
-        ## @param crossplane-aws-iam.RolePolicyAttachment.items._.deletionPolicy Overrides crossplane-aws-iam.deletionPolicy value.
-        ##
-        deletionPolicy: Delete
-        ## Resource specific additional annotations.
-        ## @param crossplane-aws-iam.RolePolicyAttachment.items._.annotations.crossplane.io/external-name AWS resource name to import if exists.
-        ##
-        annotations:
-          crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}'
         ## AWS Configuration for RolePolicyAttachment resources.
         ## @param crossplane-aws-iam.RolePolicyAttachment.items._.forProvider.policyArnRef.name Reference to the Policy resource created by this helm chart.
         ## @param crossplane-aws-iam.RolePolicyAttachment.items._.forProvider.roleNameRef.name Reference to the Role resource created by this helm chart.
@@ -226,7 +204,7 @@ crossplane-aws-iam:
         forProvider:
           policyArnRef:
             name: '{{ include "common-gitops.names.release" . }}'
-          roleNameRef:
+          roleRef:
             name: '{{ include "common-gitops.names.release" . }}'
 
 ## @section Addons: Addon template parameters
