@@ -114,11 +114,11 @@ ClusterSecretStore:
       provider:
         aws:
           role: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/external-secrets'
-          # auth:
-          #   jwt:
-          #     serviceAccountRef:
-          #       name: 'external-secrets'
-          #       namespace: 'infra-external-secrets'
+          auth:
+            jwt:
+              serviceAccountRef:
+                name: 'external-secrets'
+                namespace: 'infra-external-secrets'
 
 SecretStore:
   enabled: true
