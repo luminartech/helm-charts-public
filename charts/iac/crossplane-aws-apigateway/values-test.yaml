@@ -1,11 +1,18 @@
 ---
-## AWS resources configurations
-APIKey:
+Account:
   enabled: true
   deletionPolicy: Delete
   items:
     _:
       forProvider: {}
+
+APIKey:
+  enabled: true
+  deletionPolicy: Delete
+  items:
+    _:
+      forProvider:
+        name: test
 
 Authorizer:
   enabled: true
@@ -13,9 +20,15 @@ Authorizer:
   items:
     _:
       forProvider:
-        type_: "LAMBDA_TOKEN"
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
+        authorizerCredentialsSelector:
+          matchLabels:
+            testing.upbound.io/example-name: restapi
+        authorizerUri: arn:aws:apigateway:us-west-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-1:609897127049:function:official-providers-noop-test-func/invocations
+        name: demo
+        region: us-west-1
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: restapi
 
 BasePathMapping:
   enabled: true
@@ -23,8 +36,23 @@ BasePathMapping:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
+        apiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: demo
+        domainNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        stageNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+
+ClientCertificate:
+  enabled: true
+  deletionPolicy: Delete
+  items:
+    _:
+      forProvider:
+        description: My client certificate
 
 Deployment:
   enabled: true
@@ -32,8 +60,9 @@ Deployment:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: stage
 
 DocumentationPart:
   enabled: true
@@ -42,12 +71,12 @@ DocumentationPart:
     _:
       forProvider:
         location:
-          path: /
-          statusCode: "200"
-        properties: |-
-          key=value
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
+          - type: API
+        properties: '{"description":"Example"}'
+        region: us-west-1
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: restapi
 
 DocumentationVersion:
   enabled: true
@@ -55,9 +84,12 @@ DocumentationVersion:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
-        documentationVersion: "1.0"
+        description: Example description
+        region: us-west-1
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: restapi
+        version: example_version
 
 DomainName:
   enabled: true
@@ -65,7 +97,14 @@ DomainName:
   items:
     _:
       forProvider:
-        certificateName: '{{ include "common-gitops.names.release" . }}'
+        certificateBody: <content of 'example.crt'>
+        certificateChain: <content of ca.crt>
+        certificateName: example-api
+        certificatePrivateKeySecretRef:
+          key: attribute.example.key
+          name: example-secret
+          namespace: upbound-system
+        domainName: example.com
 
 GatewayResponse:
   enabled: true
@@ -73,7 +112,15 @@ GatewayResponse:
   items:
     _:
       forProvider:
-        responseType: "404"
+        responseParameters:
+          gatewayresponse.header.Authorization: '''Basic'''
+        responseTemplates:
+          application/json: '{"message":$context.error.messageString}'
+        responseType: UNAUTHORIZED
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: restapi
+        statusCode: "401"
 
 IntegrationResponse:
   enabled: true
@@ -81,10 +128,25 @@ IntegrationResponse:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
-        statusCode: "200"
-        httpMethod: "GET"
+        httpMethodSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        resourceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        responseTemplates:
+          application/xml: |
+            #set($inputRoot = $input.path('$'))
+            <?xml version="1.0" encoding="UTF-8"?>
+            <message>
+                $inputRoot.body
+            </message>
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        statusCodeSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
 
 Integration:
   enabled: true
@@ -92,10 +154,17 @@ Integration:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
-        type_: "HTTP"
-        httpMethod: "GET"
+        httpMethodSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        region: us-west-1
+        resourceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        type: MOCK
 
 MethodResponse:
   enabled: true
@@ -103,10 +172,33 @@ MethodResponse:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
+        httpMethodSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        region: us-west-1
+        resourceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
         statusCode: "200"
-        httpMethod: "GET"
+
+MethodSettings:
+  enabled: true
+  deletionPolicy: Delete
+  items:
+    _:
+      forProvider:
+        methodPath: '*/*'
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: stage
+        settings:
+          - metricsEnabled: true
+        stageNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: stage
 
 Method:
   enabled: true
@@ -114,10 +206,15 @@ Method:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
-        authorizationType: AWS_IAM
-        httpMethod: "GET"
+        authorization: NONE
+        httpMethod: GET
+        region: us-west-1
+        resourceIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
 
 Model:
   enabled: true
@@ -125,16 +222,29 @@ Model:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
         contentType: application/json
+        description: a JSON schema
+        name: user
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        schema: |
+          {
+            "type": "object"
+          }
 
 RequestValidator:
   enabled: true
   deletionPolicy: Delete
   items:
     _:
-      forProvider: {}
+      forProvider:
+        name: example
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: stage
+        validateRequestBody: true
+        validateRequestParameters: true
 
 Resource:
   enabled: true
@@ -142,9 +252,44 @@ Resource:
   items:
     _:
       forProvider:
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
-        pathPart: "stack"
+        parentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+        pathPart: mydemoresource
+        region: us-west-1
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: integration
+
+RestAPIPolicy:
+  enabled: true
+  deletionPolicy: Delete
+  items:
+    _:
+      forProvider:
+        policy: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "AWS": "*"
+                },
+                "Action": "execute-api:Invoke",
+                "Resource": "<rest-api-arn>",
+                "Condition": {
+                  "IpAddress": {
+                    "aws:SourceIp": "123.123.123.123/32"
+                  }
+                }
+              }
+            ]
+          }
+        region: us-west-1
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test
 
 RestAPI:
   enabled: true
@@ -152,7 +297,27 @@ RestAPI:
   items:
     _:
       forProvider:
-        version: v1
+        body: |-
+          ${jsonencode({
+              openapi = "3.0.1"
+              info = {
+                title   = "example"
+                version = "1.0"
+              }
+              paths = {
+                "/path1" = {
+                  get = {
+                    x-amazon-apigateway-integration = {
+                      httpMethod           = "GET"
+                      payloadFormatVersion = "1.0"
+                      type                 = "HTTP_PROXY"
+                      uri                  = "https://ip-ranges.amazonaws.com/ip-ranges.json"
+                    }
+                  }
+                }
+              }
+            })}
+        name: test-demo
 
 Stage:
   enabled: true
@@ -160,7 +325,14 @@ Stage:
   items:
     _:
       forProvider:
-        cacheClusterEnabled: true
+        deploymentIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: stage
+        region: us-west-1
+        restApiIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: stage
+        stageName: development
 
 UsagePlanKey:
   enabled: true
@@ -168,10 +340,13 @@ UsagePlanKey:
   items:
     _:
       forProvider:
-        keyID: '{{ include "common-gitops.names.release" . }}'
+        keyIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: stage
         keyType: API_KEY
-        restApiIdRef:
-          name: '{{ include "common-gitops.names.release" . }}'
+        usagePlanIdSelector:
+          matchLabels:
+            testing.upbound.io/example-name: stage
 
 UsagePlan:
   enabled: true
@@ -179,7 +354,30 @@ UsagePlan:
   items:
     _:
       forProvider:
-        description: Usage plan
+        apiStages:
+          - apiIdSelector:
+              matchLabels:
+                testing.upbound.io/example-name: stage
+            stageSelector:
+              matchLabels:
+                testing.upbound.io/example-name: stage
+          - apiIdSelector:
+              matchLabels:
+                testing.upbound.io/example-name: stage
+            stageSelector:
+              matchLabels:
+                testing.upbound.io/example-name: stage
+        description: my description
+        name: my-usage-plan
+        productCode: MYCODE
+        quotaSettings:
+          - limit: 20
+            offset: 2
+            period: WEEK
+        region: us-west-1
+        throttleSettings:
+          - burstLimit: 5
+            rateLimit: 10
 
 VPCLink:
   enabled: true
@@ -187,5 +385,9 @@ VPCLink:
   items:
     _:
       forProvider:
-        targetARNs:
-          - aws:arn:xxxx:xxx:xxxx
+        description: example description
+        name: example-${Rand.RFC1123Subdomain}
+        region: us-west-1
+        targetArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: vpclink

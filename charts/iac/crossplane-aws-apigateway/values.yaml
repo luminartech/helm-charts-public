@@ -1,5 +1,9 @@
 ## @section AWS resources
 
+## @param Account resource parameters
+##
+Account: {}
+
 ## @param APIKey resource parameters
 ##
 APIKey: {}
@@ -11,6 +15,10 @@ Authorizer: {}
 ## @param BasePathMapping resource parameters
 ##
 BasePathMapping: {}
+
+## @param ClientCertificate resource parameters
+##
+ClientCertificate: {}
 
 ## @param Deployment resource parameters
 ##
@@ -48,6 +56,10 @@ Method: {}
 ##
 MethodResponse: {}
 
+## @param MethodSettings resource parameters
+##
+MethodSettings: {}
+
 ## @param Model resource parameters
 ##
 Model: {}
@@ -63,6 +75,10 @@ Resource: {}
 ## @param RestAPI resource parameters
 ##
 RestAPI: {}
+
+## @param RestAPIPolicy resource parameters
+##
+RestAPIPolicy: {}
 
 ## @param Stage resource parameters
 ##
