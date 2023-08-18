@@ -2,6 +2,7 @@
 ## AWS EKS resources configurations
 
 global:
+  clusterAuthName: test
   tags:
     globaltag: globalvalue
 
@@ -30,6 +31,10 @@ Cluster:
 ClusterAuth:
   items:
     test:
+      writeConnectionSecretToRef:
+        enabled: true
+        name: '{{ .Values.global.clusterAuthName }}'
+        namespace: '{{ .Release.Namespace }}'
       forProvider:
         region: us-west-1
         clusterNameSelector:
