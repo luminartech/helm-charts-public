@@ -1,0 +1,21 @@
+---
+ControllerConfig:
+  enabled: true
+
+ProviderConfig:
+  enabled: true
+
+StoreConfig:
+  enabled: true
+
+Provider:
+  enabled: true
+
+crossplane:
+  enabled: false
+
+prometheus-service-discovery:
+  enabled: true
+
+crossplane-aws-iam:
+  enabled: true
