@@ -60,6 +60,7 @@ ControllerConfig:
     ## @skip ControllerConfig.items.controller-config-aws-l ControllerConfig with large resource allocation for provider pod
     ##
     controller-config-aws-l:
+      enabled: false
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
@@ -82,6 +83,7 @@ ControllerConfig:
     ## @skip ControllerConfig.items.controller-config-aws-m ControllerConfig with medium resource allocation for provider pod
     ##
     controller-config-aws-m:
+      enabled: false
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
@@ -104,6 +106,7 @@ ControllerConfig:
     ## @skip ControllerConfig.items.controller-config-aws-s ControllerConfig with small resource allocation for provider pod
     ##
     controller-config-aws-s:
+      enabled: false
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
