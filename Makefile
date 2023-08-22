@@ -1,4 +1,4 @@
-ENVIRONMENT?=infra
+ENVIRONMENT?=dev
 GIT_REPO?=$(shell git remote get-url origin)
 GIT_REPO_NAME?=$(shell git remote get-url origin|awk -F '[/.]' '{print $$(NF-1)}')
 
