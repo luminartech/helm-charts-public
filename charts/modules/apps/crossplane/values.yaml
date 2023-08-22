@@ -219,7 +219,6 @@ Provider:
         skipDependencyResolution: true
     provider-aws-eks:
       enabled: false
-      name: aws-eks
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -233,7 +232,6 @@ Provider:
         skipDependencyResolution: true
     provider-aws-ecr:
       enabled: false
-      name: aws-ecr
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -247,7 +245,6 @@ Provider:
         skipDependencyResolution: true
     provider-aws-kms:
       enabled: false
-      name: aws-kms
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -259,9 +256,8 @@ Provider:
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    controller-config-aws-s3:
+    provider-aws-s3:
       enabled: false
-      name: aws-s3
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -275,7 +271,6 @@ Provider:
         skipDependencyResolution: true
     provider-aws-route53:
       enabled: false
-      name: aws-route53
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -287,9 +282,8 @@ Provider:
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    controller-config-aws-secretsmanager:
+    provider-aws-secretsmanager:
       enabled: false
-      name: aws-secretsmanager
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -303,7 +297,6 @@ Provider:
         skipDependencyResolution: true
     provider-aws-rds:
       enabled: false
-      name: aws-rds
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
