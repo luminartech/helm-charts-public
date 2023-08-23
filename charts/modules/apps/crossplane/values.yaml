@@ -78,7 +78,7 @@ ControllerConfig:
           - --enable-external-secret-stores
           - --provider-ttl=250
           - --terraform-native-provider-path
-          - '""'
+          - ""
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -102,7 +102,7 @@ ControllerConfig:
           - --enable-external-secret-stores
           - --provider-ttl=250
           - --terraform-native-provider-path
-          - '""'
+          - ""
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -126,7 +126,7 @@ ControllerConfig:
           - --enable-external-secret-stores
           - --provider-ttl=250
           - --terraform-native-provider-path
-          - '""'
+          - ""
         podSecurityContext:
           fsGroup: 2000
         resources:
