@@ -282,7 +282,7 @@ Provider:
         controllerConfigRef:
           name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-s'
         ignoreCrossplaneConstraints: false
-        package: "xpkg.upbound.io/upbound/controller-config-aws-s3:{{ .Values.global.awsProviderVersion }}"
+        package: "xpkg.upbound.io/upbound/provider-aws-s3:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
@@ -308,7 +308,7 @@ Provider:
         controllerConfigRef:
           name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-s'
         ignoreCrossplaneConstraints: false
-        package: "xpkg.upbound.io/upbound/controller-config-aws-secretsmanager:{{ .Values.global.awsProviderVersion }}"
+        package: "xpkg.upbound.io/upbound/provider-aws-secretsmanager:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
