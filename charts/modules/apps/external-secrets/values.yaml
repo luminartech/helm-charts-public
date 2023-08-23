@@ -126,11 +126,6 @@ crossplane-aws-iam:
   Policy:
     items:
       _:
-        ## Resource specific additional annotations.
-        ## @param crossplane-aws-iam.Policy.items._.annotations.crossplane.io/external-name AWS resource name to import if exists.
-        ##
-        annotations:
-          crossplane.io/external-name: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:policy/{{ include "common-gitops.names.release" . }}'
         ## AWS Configuration for Policy resources.
         ## @param crossplane-aws-iam.Policy.items._.forProvider.description AWS resource description.
         ## @skip crossplane-aws-iam.Policy.items._.forProvider.document
