@@ -153,7 +153,7 @@ ProviderConfig:
           source: IRSA
     provider-config-kubernetes:
       enabled: false
-      apiVersion: secrets.crossplane.io/v1alpha1
+      apiVersion: kubernetes.crossplane.io/v1alpha1
       spec:
         credentials:
           secretRef:
