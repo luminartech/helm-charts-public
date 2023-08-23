@@ -419,5 +419,5 @@ crossplane-aws-iam:
         ##
         forProvider:
           policyArn: "arn:aws:iam::aws:policy/AdministratorAccess"
-          roleNameRef:
+          roleRef:
             name: '{{ include "common-gitops.names.release" . }}-provider-aws'
