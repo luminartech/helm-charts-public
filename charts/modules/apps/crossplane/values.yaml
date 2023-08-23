@@ -361,7 +361,7 @@ crossplane-aws-iam:
   ##
   Role:
     items:
-      _:
+      provider-aws:
         ## Resource specific additional annotations.
         ## @param crossplane-aws-iam.Role.items._.annotations.crossplane.io/external-name AWS resource name to import if exists.
         ## import existing IAM role
@@ -409,7 +409,7 @@ crossplane-aws-iam:
   ##
   RolePolicyAttachment:
     items:
-      _:
+      provider-aws-adminaccess:
         ## @param crossplane-aws-iam.RolePolicyAttachment.items._.deletionPolicy Deletion policy for the role.
         ## Orphan is recommended to avoid accidental removal of policy attachment to crossplane IAM role
         deletionPolicy: Orphan
@@ -420,4 +420,4 @@ crossplane-aws-iam:
         forProvider:
           policyArn: "arn:aws:iam::aws:policy/AdministratorAccess"
           roleNameRef:
-            name: '{{ include "common-gitops.names.release" . }}'
+            name: '{{ include "common-gitops.names.release" . }}-provider-aws'

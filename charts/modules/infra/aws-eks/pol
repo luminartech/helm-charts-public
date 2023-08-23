@@ -1,0 +1,111 @@
+{
+          "Version": "2012-10-17",
+          "Statement": [
+              {
+                  "Action": "kms:*",
+                  "Effect": "Allow",
+                  "Principal": {
+                      "AWS": "arn:aws:iam::550094566655:role/infra-admins"
+                  },
+                  "Resource": "*",
+                  "Sid": "allowAdminKeyAccess"
+              },
+              {
+                  "Action": [
+                      "kms:ReEncrypt*",
+                      "kms:GenerateDataKey*",
+                      "kms:Encrypt",
+                      "kms:DescribeKey",
+                      "kms:Decrypt",
+                      "kms:CreateGrant"
+                  ],
+                  "Condition": {
+                      "StringEquals": {
+                          "kms:CallerAccount": "550094566655",
+                          "kms:ViaService": "eks.us-east-2.amazonaws.com"
+                      }
+                  },
+                  "Effect": "Allow",
+                  "Principal": {
+                      "AWS": "arn:aws:iam::550094566655:root"
+                  },
+                  "Resource": "*",
+                  "Sid": "allowAllPrincipalAccess"
+              },
+              {
+                  "Action": [
+                      "kms:Create*",
+                      "kms:Describe*",
+                      "kms:Enable*",
+                      "kms:List*",
+                      "kms:Put*",
+                      "kms:Update*",
+                      "kms:Revoke*",
+                      "kms:Disable*",
+                      "kms:Get*",
+                      "kms:Delete*",
+                      "kms:ScheduleKeyDeletion",
+                      "kms:CancelKeyDeletion",
+                      "kms:TagResource"
+                  ],
+                  "Effect": "Allow",
+                  "Principal": {
+                      "AWS": [
+                          "arn:aws:iam::550094566655:role/crossplane-provider-aws"
+                      ]
+                  },
+                  "Resource": "*",
+                  "Sid": "allowKeyAdministration"
+              },
+              {
+                  "Action": [
+                      "kms:RevokeGrant",
+                      "kms:List*",
+                      "kms:Get*",
+                      "kms:Describe*"
+                  ],
+                  "Effect": "Allow",
+                  "Principal": {
+                      "AWS": "arn:aws:iam::550094566655:root"
+                  },
+                  "Resource": "*",
+                  "Sid": "allowKeyMetaRootAccess"
+              },
+              {
+                  "Action": [
+                      "kms:ReEncrypt*",
+                      "kms:GenerateDataKey*",
+                      "kms:Encrypt",
+                      "kms:DescribeKey",
+                      "kms:Decrypt"
+                  ],
+                  "Effect": "Allow",
+                  "Principal": {
+                      "AWS": [
+                          "arn:aws:iam::550094566655:role/crossplane-provider-aws",
+                          "arn:aws:iam::550094566655:role/infra-aws-eks-cluster"
+                      ]
+                  },
+                  "Resource": "*",
+                  "Sid": "allowKeyUsage"
+              },
+              {
+                  "Action": [
+                      "kms:RevokeGrant",
+                      "kms:ListGrants",
+                      "kms:CreateGrant"
+                  ],
+                  "Condition": {
+                      "Bool": {
+                          "kms:GrantIsForAWSResource": "true"
+                      }
+                  },
+                  "Effect": "Allow",
+                  "Principal": {
+                      "AWS": "arn:aws:iam::550094566655:role/infra-aws-eks-cluster"
+                  },
+                  "Resource": "*",
+                  "Sid": "allowPersistentAttach"
+              }
+          ]
+      }
