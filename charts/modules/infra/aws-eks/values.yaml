@@ -581,6 +581,11 @@ external-secrets:
   ##
   enabled: false
 
+  ## @skip external-secrets.external-secrets
+  ## Keep this disabled, we are not expected to deploy the external secrets application as part of the eks Helm chart
+  ##
+  external-secrets:
+    enabled: false
 
   ## @skip external-secrets.EksClusterExternalSecret
   ##

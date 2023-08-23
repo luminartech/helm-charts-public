@@ -13,3 +13,5 @@ crossplane-aws-eks:
 
 external-secrets:
   enabled: true
+  external-secrets:
+    enabled: false
