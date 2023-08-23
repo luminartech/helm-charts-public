@@ -358,7 +358,8 @@ crossplane-aws-kms:
                   - kms:CreateGrant
                 Resource: "*"
                 Principal:
-                  AWS: arn:aws:iam::{{ .Values.global.awsAccountId }}:root
+                  AWS:
+                    - arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}
                 Condition:
                   StringEquals:
                     kms:CallerAccount: "{{ .Values.global.awsAccountId }}"
@@ -372,13 +373,16 @@ crossplane-aws-kms:
                   - kms:Describe*
                 Resource: "*"
                 Principal:
-                  AWS: arn:aws:iam::{{ .Values.global.awsAccountId }}:root
+                  AWS:
+                  - arn:aws:iam::{{ .Values.global.awsAccountId }}:root
               allowAdminKeyAccess:
                 Effect: Allow
                 Action: kms:*
                 Resource: "*"
                 Principal:
-                  AWS: arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.teamAdminIAMRole }}
+                  AWS:
+                    - arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.teamAdminIAMRole }}
+                    - arn:aws:iam::{{ .Values.global.awsAccountId }}:root
               allowKeyAdministration:
                 Effect: Allow
                 Principal:
@@ -398,6 +402,7 @@ crossplane-aws-kms:
                   - kms:ScheduleKeyDeletion
                   - kms:CancelKeyDeletion
                   - kms:TagResource
+                  - kms:UntagResource
                 Resource: "*"
               allowKeyUsage:
                 Effect: Allow
@@ -420,7 +425,8 @@ crossplane-aws-kms:
                   - kms:CreateGrant
                 Resource: "*"
                 Principal:
-                  AWS: arn:aws:iam::{{.Values.global.awsAccountId}}:role/{{ include "common-gitops.names.release" . }}-cluster
+                  AWS:
+                  - arn:aws:iam::{{.Values.global.awsAccountId}}:role/{{ include "common-gitops.names.release" . }}-cluster
                 Condition:
                   Bool:
                     kms:GrantIsForAWSResource: 'true'
