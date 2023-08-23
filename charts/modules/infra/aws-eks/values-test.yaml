@@ -1,0 +1,15 @@
+---
+crossplane-aws-iam:
+  enabled: true
+
+crossplane-aws-ec2:
+  enabled: true
+
+crossplane-aws-kms:
+  enabled: true
+
+crossplane-aws-eks:
+  enabled: true
+
+external-secrets:
+  enabled: true
