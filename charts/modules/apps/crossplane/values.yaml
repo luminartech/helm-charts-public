@@ -71,13 +71,13 @@ ControllerConfig:
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
+        argocd.argoproj.io/sync-options: 'Validate=false'
       spec:
         args:
           - --debug
           - --enable-external-secret-stores
           - --provider-ttl=250
-          - --terraform-native-provider-path
-          - ""
+          - '--terraform-native-provider-path=""'
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -94,13 +94,13 @@ ControllerConfig:
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
+        argocd.argoproj.io/sync-options: 'Validate=false'
       spec:
         args:
           - --debug
           - --enable-external-secret-stores
           - --provider-ttl=250
-          - --terraform-native-provider-path
-          - ""
+          - '--terraform-native-provider-path=""'
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -117,13 +117,13 @@ ControllerConfig:
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
+        argocd.argoproj.io/sync-options: 'Validate=false'
       spec:
         args:
           - --debug
           - --enable-external-secret-stores
           - --provider-ttl=250
-          - --terraform-native-provider-path
-          - ""
+          - '--terraform-native-provider-path=""'
         podSecurityContext:
           fsGroup: 2000
         resources:
