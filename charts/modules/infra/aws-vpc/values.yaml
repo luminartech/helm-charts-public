@@ -29,9 +29,6 @@ global:
   ## @param global.transitGatewayId Transit gateway ID for internal network routing.
   ##
   transitGatewayId: tgw-set-me
-  ## @param global.eksHash Default EKS cluster hash for relevant crossplane resources such as IAM Role.
-  ##
-  eksHash: "XXXXX"
   ## @param global.providerConfigRef.name Default crossplane provider all resources generated for crossplane.
   ##
   providerConfigRef:
