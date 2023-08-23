@@ -44,7 +44,7 @@ global:
   awsProviderVersion: v0.38.0
   ## @param global.kubernetesProviderVersion Crossplane Kubernetes provider version: https://marketplace.upbound.io/providers/crossplane-contrib/provider-kubernetes/
   ##
-  kubernetesProviderVersion: v0.9.0
+  kubernetesProviderVersion: v0.4.0
   ## @param global.crossplaneIAMRole Crossplane AWS IAM role with administrative permissions to create cloud resources
   ##
   crossplaneIAMRole: "crossplane-provider-aws"
