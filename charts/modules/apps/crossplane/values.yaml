@@ -32,6 +32,10 @@ global:
   ## @param global.eksHash Default EKS cluster hash for relevant crossplane resources such as IAM Role.
   ##
   eksHash: "XXXXX"
+  ## @param global.providerConfigRef.name Default crossplane provider all resources generated for crossplane.
+  ##
+  providerConfigRef:
+    name: crossplane-provider-config-aws
   ## @param global.awsProviderVersion Crossplane official AWS provider version: https://marketplace.upbound.io/providers/upbound/provider-aws/
   ##
   awsProviderVersion: v0.38.0

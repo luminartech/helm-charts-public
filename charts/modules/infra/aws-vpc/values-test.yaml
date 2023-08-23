@@ -1,0 +1,127 @@
+---
+crossplane-aws-ec2:
+  enabled: true
+
+  EIP:
+    enabled: true
+
+  VPC:
+    enabled: true
+
+  Subnet:
+    enabled: true
+    items:
+      public-a:
+        enabled: true
+      public-b:
+        enabled: true
+      public-c:
+        enabled: true
+      public-d:
+        enabled: true
+      private-a:
+        enabled: true
+      private-b:
+        enabled: true
+      private-c:
+        enabled: true
+      private-d:
+        enabled: true
+
+  NATGateway:
+    enabled: true
+
+  InternetGateway:
+    enabled: true
+
+  RouteTable:
+    enabled: true
+
+  RouteTableAssociation:
+    enabled: true
+    items:
+      private-a:
+        enabled: true
+      private-b:
+        enabled: true
+      private-c:
+        enabled: true
+      private-d:
+        enabled: true
+      public-a:
+        enabled: true
+      public-b:
+        enabled: true
+      public-c:
+        enabled: true
+      public-d:
+        enabled: true
+
+  Route:
+    enabled: true
+
+  VPCEndpoint:
+    enabled: true
+    items:
+      s3:
+        enabled: true
+      ecr-dkr:
+        enabled: true
+      ecr-api:
+        enabled: true
+
+  VPCEndpointSecurityGroupAssociation:
+    enabled: true
+    items:
+      ecr-dkr:
+        enabled: true
+      ecr-api:
+        enabled: true
+
+  VPCEndpointSubnetAssociation:
+    enabled: true
+    items:
+      ecr-dkr-private-a:
+        enabled: true
+      ecr-dkr-private-b:
+        enabled: true
+      ecr-dkr-private-c:
+        enabled: true
+      ecr-dkr-private-d:
+        enabled: true
+      ecr-api-private-a:
+        enabled: true
+      ecr-api-private-b:
+        enabled: true
+      ecr-api-private-c:
+        enabled: true
+      ecr-api-private-d:
+        enabled: true
+
+  VPCEndpointRouteTableAssociation:
+    enabled: true
+    items:
+      s3-private:
+        enabled: true
+      s3-public:
+        enabled: true
+
+  SecurityGroup:
+    enabled: true
+    items:
+      ecr-endpoint:
+        enabled: true
+
+  SecurityGroupRule:
+    enabled: true
+    items:
+      ecr-endpoint-in:
+        enabled: true
+      ecr-endpoint-out:
+        enabled: true
+
+  TransitGatewayVPCAttachment:
+    enabled: true
+
+  TransitGatewayVPCAttachmentAccepter:
+    enabled: true
