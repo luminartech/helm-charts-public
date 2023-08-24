@@ -77,6 +77,7 @@ ControllerConfig:
           - --debug
           - --enable-external-secret-stores
           - --provider-ttl=250
+          - --max-reconcile-rate=10
           - --terraform-native-provider-path
           - ""
         podSecurityContext:
@@ -101,17 +102,18 @@ ControllerConfig:
           - --debug
           - --enable-external-secret-stores
           - --provider-ttl=250
+          - --max-reconcile-rate=10
           - --terraform-native-provider-path
           - ""
         podSecurityContext:
           fsGroup: 2000
         resources:
           limits:
-            memory: "3000Mi"
+            memory: "6000Mi"
             cpu: "4000m"
           requests:
-            memory: "1000Mi"
-            cpu: "2000m"
+            memory: "6000Mi"
+            cpu: "6000m"
     ## @skip ControllerConfig.items.controller-config-aws-s ControllerConfig with small resource allocation for provider pod
     ##
     controller-config-aws-s:
@@ -125,6 +127,7 @@ ControllerConfig:
           - --debug
           - --enable-external-secret-stores
           - --provider-ttl=250
+          - --max-reconcile-rate=10
           - --terraform-native-provider-path
           - ""
         podSecurityContext:
@@ -134,7 +137,7 @@ ControllerConfig:
             memory: "1000Mi"
             cpu: "2000m"
           requests:
-            memory: "500Mi"
+            memory: "1000Mi"
             cpu: "500m"
 
 # Default aws provider config for current aws account. Crossplane IAM role will be used
