@@ -30,106 +30,74 @@ Endpoints: {}
 
 ## @section Kubernetes Service.
 ## @param Service List of kubernetes services
-## items: Dict of one or more endpoint resources.
-## ref: https://kubernetes.io/docs/concepts/services-networking/service/
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 Service: {}
 
 ## @section Kubernetes Ingress.
 ## @param Ingress List of kubernetes ingresses
-## items: Dict of one or more endpoint resources.
-## ref: https://kubernetes.io/docs/concepts/services-networking/ingress/
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
-##
 Ingress: {}
 
 ## @section Kubernetes Service Account.
 ## @param ServiceAccount for pods
-## items: Dict of one or more endpoint resources.
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 ServiceAccount: {}
 
 ## @section Kubernetes Role.
 ## @param Role K8s Role with permissions
-## items: Dict of one or more endpoint resources.
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 Role: {}
 
 ## @section Kubernetes RoleBinding object.
 ## @param RoleBinding for binding service account and role with permissions
-## items: Dict of one or more endpoint resources.
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 RoleBinding: {}
 
 ## @section Kubernetes ClusterRole.
 ## @param ClusterRole K8s Role with permissions
-## items: Dict of one or more endpoint resources.
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 ClusterRole: {}
 
 ## @section Kubernetes ClusterRoleBinding object.
 ## @param ClusterRoleBinding for binding service account and role with permissions
-## items: Dict of one or more endpoint resources.
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 ClusterRoleBinding: {}
 
 ## @section Kubernetes Job object.
 ## @param Job
-## items: Dict of one or more endpoint resources.
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 Job: {}
 
 ## @section Kubernetes Secret object.
 ## @param Secret
-## items: Dict of one or more endpoint resources.
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 Secret: {}
 
 ## @section Kubernetes ConfigMap object.
 ## @param ConfigMap
-## items: Dict of one or more endpoint resources.
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 ConfigMap: {}
 
 ## @section Kubernetes PersistentVolumeClaim object.
 ## @param PersistentVolumeClaim
-## items: Dict of one or more PVC resources
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 PersistentVolumeClaim: {}
 
 ## @section Kubernetes PersistentVolume object.
 ## @param PersistentVolume
-## items: Dict of one or more PV resources
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 PersistentVolume: {}
 
 ## @section Kubernetes Pod object.
 ## @param Pod
-## items: Dict of one or more POD resources
-## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-objectName
-## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
 ##
 Pod: {}
+
+## @section Kubernetes Deployment object.
+## @param Deployment
+##
+Deployment: {}
+
+## @section Kubernetes HorizontalPodAutoscaler object.
+## @param HorizontalPodAutoscaler
+##
+HorizontalPodAutoscaler: {}

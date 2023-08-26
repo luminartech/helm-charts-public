@@ -8,19 +8,16 @@
                            ($kindObj.podSpec)
                            ($item.podSpec) }}
 metadata:
-  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
-    {{- with .labels }}
-  labels:
-      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+    {{- with .name }}
+  name: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
     {{- end -}}
-    {{- with .annotations }}
-  annotations:
-      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-    {{- end -}}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
     {{- with .spec }}
 spec:
-      {{- with .serviceAccountName }}
-  serviceAccountName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+  serviceAccountName: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .serviceAccountName) }}
+      {{- with .automountServiceAccountToken }}
+  automountServiceAccountToken: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
       {{- end -}}
       {{- with .hostIPC }}
   hostIPC: {{ . }}
