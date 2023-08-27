@@ -8,13 +8,6 @@ version: "0.1.0"
 kubeVersion: ">=1.16.0-0"
 annotations:
   category: Application
-  truecharts.org/catagories: |
-    - application
-    - ai
-    - chatgpt
-    - chatbot
-  truecharts.org/SCALE-support: "true"
-  truecharts.org/grade: U
 keywords:
   - chatgpt
   - chatbot
