@@ -1,0 +1,44 @@
+apiVersion: v2
+name: chabot-ui
+description: A Helm chart for Crossplane
+type: application
+appVersion: "main" # Chatbot-ui does not have gold version yet
+# Ref: https://github.com/mckaywrigley/chatbot-ui/tree/main
+version: "0.1.0"
+kubeVersion: ">=1.16.0-0"
+annotations:
+  category: Application
+  truecharts.org/catagories: |
+    - application
+    - ai
+    - chatgpt
+    - chatbot
+  truecharts.org/SCALE-support: "true"
+  truecharts.org/grade: U
+keywords:
+  - chatgpt
+  - chatbot
+  - chatbot-ui
+  - openai
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/chatbot-ui
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: common-gitops
+    version: "1.1.2"
+    repository: https://helm-repo-public.luminarinfra.com/
+  - name: common-res
+    repository: https://helm-repo-public.luminarinfra.com/
+    version: "1.0.11"
+    condition: common-res.enabled
+  - name: crossplane-aws-secretsmanager
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-secretsmanager.enabled
+  - name: external-secrets
+    version: "0.7.1-15"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: external-secrets.enabled
