@@ -1,5 +1,5 @@
 apiVersion: v2
-name: chabot-ui
+name: chatbot-ui
 description: A Helm chart for Crossplane
 type: application
 appVersion: "main" # Chatbot-ui does not have gold version yet
