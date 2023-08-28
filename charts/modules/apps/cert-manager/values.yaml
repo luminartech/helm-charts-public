@@ -40,6 +40,7 @@ global:
 
 ## @section cert-manager configurations
 ##
+## @skip cert-manager
 cert-manager:
   enabled: false
   fullnameOverride: cert-manager
@@ -71,26 +72,31 @@ cert-manager:
 
 ## @section Certificate configurations
 ##
+## @skip Certificate
 Certificate:
   enabled: false
 
 ## @section CertificateRequest configurations
 ##
+## @skip CertificateRequest
 CertificateRequest:
   enabled: false
 
 ## @section ClusterIssuer configurations
 ##
+## @skip ClusterIssuer
 ClusterIssuer:
   enabled: false
 
 ## @section Issuer configurations
 ##
+## @skip Issuer
 Issuer:
   enabled: false
 
 ## @section AWS IAM configurations
 ##
+## @skip crossplane-aws-iam
 crossplane-aws-iam:
   enabled: false
   Policy:
@@ -150,46 +156,3 @@ crossplane-aws-iam:
             name: '{{ include "common-gitops.names.release" . }}'
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}'
-
-## @skip crossplane-aws-iam.enabled
-## @skip cert-manager.enabled
-## @skip cert-manager.fullnameOverride
-## @skip cert-manager.ingressShim.defaultIssuerName
-## @skip cert-manager.ingressShim.defaultIssuerKind
-## @skip cert-manager.installCRDs
-## @skip cert-manager.replicaCount
-## @skip cert-manager.containerSecurityContext.allowPrivilegeEscalation
-## @skip cert-manager.containerSecurityContext.capabilities.drop
-## @skip cert-manager.containerSecurityContext.readOnlyRootFilesystem
-## @skip cert-manager.containerSecurityContext.runAsNonRoot
-## @skip cert-manager.prometheus.enabled
-## @skip cert-manager.prometheus.servicemonitor.enabled
-## @skip cert-manager.prometheus.servicemonitor.labels.release
-## @skip Certificate.enabled
-## @skip CertificateRequest.enabled
-## @skip ClusterIssuer.enabled
-## @skip Issuer.enabled
-## @skip crossplane-aws-iam.Policy.items._.forProvider.description
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowR53getChange.Effect
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowR53getChange.Action
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowR53getChange.Resource
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowRecordSets.Effect
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowRecordSets.Action
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowRecordSets.Resource
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowR53ListHostedZones.Effect
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowR53ListHostedZones.Action
-## @skip crossplane-aws-iam.Policy.items._.forProvider.policy.Statement.allowR53ListHostedZones.Resource
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowAssumeRoleWebIdentity.Effect
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowAssumeRoleWebIdentity.Action
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowAssumeRoleWebIdentity.Principal.Federated
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowAssumeRoleWebIdentity.Condition.StringEquals.oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowAssumeRoleWebIdentity.Condition.StringEquals.oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowEC2AssumeRole.Effect
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowEC2AssumeRole.Principal.Service
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowEC2AssumeRole.Action
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowSelfAssumeRole.Effect
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowSelfAssumeRole.Principal.AWS
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowSelfAssumeRole.Action
-## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy.Statement.allowSelfAssumeRole.Condition.ArnLike.aws:PrincipalArn
-## @skip crossplane-aws-iam.RolePolicyAttachment.items._.forProvider.policyArnRef.name
-## @skip crossplane-aws-iam.RolePolicyAttachment.items._.forProvider.roleRef.name
