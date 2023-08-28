@@ -7,7 +7,18 @@ ResourceShare:
       deletionPolicy: Delete
       forProvider:
         allowExternalPrincipals: true
-        principals:
-          - "123456789012"
-        resourceARNs:
-          - arn:aws:ec2:us-west-2:123456789012:transit-gateway/tgw-a1234c56f7890c12
+        name: example
+        region: us-west-1
+        tags:
+          Environment: Production
+
+ResourceAssociation:
+  items:
+    _:
+      deletionPolicy: Delete
+      forProvider:
+        region: us-west-1
+        resourceArn: ${arn}
+        resourceShareArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example

@@ -1,6 +1,10 @@
 ## @section AWS resources
 
 
+## @param ResourceAssociation resource parameters
+##
+ResourceAssociation: {}
+
 ## @param ResourceShare resource parameters
 ##
 ResourceShare: {}
