@@ -1,0 +1,102 @@
+---
+cert-manager:
+  enabled: true
+  ingressShim:
+    defaultIssuerName: default-cluster-issuer
+    defaultIssuerKind: ClusterIssuer
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::{{ .Values.global.awsAccountId }}:role/cert-manager
+  prometheus:
+    enabled: true
+    servicemonitor:
+      enabled: true
+      labels:
+        release: monitoring
+
+Certificate:
+  enabled: true
+  items:
+    test:
+      name: example.com
+      spec:
+        secretName: example-com-tls
+        issuerRef:
+          name: letsencrypt-staging
+        dnsNames:
+        - '*.example.com'
+        - example.com
+        - example.org
+
+CertificateRequest:
+  enabled: true
+  items:
+    test:
+      name: example.com
+      spec:
+        request: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURSBSRVFVRVNULS0tLS0KTUlJQzNqQ0NBY1lDQVFBd2daZ3hDekFKQmdOVkJBWVRBbHBhTVE4d0RRWURWUVFJREFaQmNHOXNiRzh4RFRBTApCZ05WQkFjTUJFMXZiMjR4RVRBUEJnTlZCQW9NQ0VwbGRITjBZV05yTVJVd0V3WURWUVFMREF4alpYSjBMVzFoCmJtRm5aWEl4RVRBUEJnTlZCQU1NQ0dwdmMyaDJZVzVzTVN3d0tnWUpLb1pJaHZjTkFRa0JGaDFxYjNOb2RXRXUKZG1GdWJHVmxkWGRsYmtCcVpYUnpkR0ZqYXk1cGJ6Q0NBU0l3RFFZSktvWklodmNOQVFFQkJRQURnZ0VQQURDQwpBUW9DZ2dFQkFLd01tTFhuQkNiRStZdTIvMlFtRGsxalRWQ3BvbHU3TlZmQlVFUWl1bDhFMHI2NFBLcDRZQ0c5Cmx2N2kwOHdFMEdJQUgydnJRQmxVd3p6ZW1SUWZ4YmQvYVNybzRHNUFBYTJsY2NMaFpqUlh2NEVMaER0aVg4N3IKaTQ0MWJ2Y01OM0ZPTlRuczJhRkJYcllLWGxpNG4rc0RzTEVuZmpWdXRiV01Zeis3M3ptaGZzclRJUjRzTXo3cQpmSzM2WFM4UkRjNW5oVVcyYU9BZ3lnbFZSOVVXRkxXNjNXYXVhcHg2QUpBR1RoZnJYdVVHZXlZUUVBSENxZmZmCjhyOEt3YTFYK1NwYm9YK1ppSVE0Nk5jQ043OFZnL2dQVHNLZmphZURoNWcyNlk1dEVidHd3MWdRbWlhK0MyRHIKWHpYNU13RzJGNHN0cG5kUnRQckZrU1VnMW1zd0xuc0NBd0VBQWFBQU1BMEdDU3FHU0liM0RRRUJDd1VBQTRJQgpBUUFXR0JuRnhaZ0gzd0N3TG5IQ0xjb0l5RHJrMUVvYkRjN3BJK1VVWEJIS2JBWk9IWEFhaGJ5RFFLL2RuTHN3CjJkZ0J3bmlJR3kxNElwQlNxaDBJUE03eHk5WjI4VW9oR3piN0FVakRJWHlNdmkvYTJyTVhjWjI1d1NVQmxGc28Kd005dE1QU2JwcEVvRERsa3NsOUIwT1BPdkFyQ0NKNnZGaU1UbS9wMUJIUWJSOExNQW53U0lUYVVNSFByRzJVMgpjTjEvRGNMWjZ2enEyeENjYVoxemh2bzBpY1VIUm9UWmV1ZEp6MkxmR0VHM1VOb2ppbXpBNUZHd0RhS3BySWp3ClVkd1JmZWZ1T29MT1dNVnFNbGRBcTlyT24wNHJaT3Jnak1HSE9tTWxleVdPS1AySllhaDNrVDdKU01zTHhYcFYKV0ExQjRsLzFFQkhWeGlKQi9Zby9JQWVsCi0tLS0tRU5EIENFUlRJRklDQVRFIFJFUVVFU1QtLS0tLQo=
+        isCA: false
+        usages:
+        - signing
+        - digital signature
+        - server auth
+        # 90 days
+        duration: 2160h
+        issuerRef:
+          name: ca-issuer
+          # We can reference ClusterIssuers by changing the kind here.
+          # The default value is Issuer (i.e. a locally namespaced Issuer)
+          kind: Issuer
+          group: cert-manager.io
+
+ClusterIssuer:
+  enabled: true
+  items:
+    _:
+      name: infra-cluster-issuer-example-com
+      spec:
+        acme:
+          # The ACME server URL
+          server: "https://acme-v02.api.letsencrypt.org/directory"
+          # server: "https://acme-staging-v02.api.letsencrypt.org/directory"
+          # Email address used for ACME registration
+          email: '{{ .Values.global.adminEmail }}'
+          privateKeySecretRef:
+            name: '{{ include "common-gitops.names.release" . }}-example-com-private-key-cert'
+          solvers:
+          - selector:
+              dnsZones:
+              - "example.com"
+            dns01:
+              route53:
+                region: '{{ .Values.global.awsRegion }}'
+                role: arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}
+Issuer:
+  enabled: true
+  items:
+    _:
+      spec:
+        acme:
+          server: https://acme-staging-v02.api.letsencrypt.org/directory
+          email: user@example.com
+
+          # Name of a secret used to store the ACME account private key
+          privateKeySecretRef:
+            name: letsencrypt-staging
+
+          # ACME DNS-01 provider configurations
+          solvers:
+          # An empty 'selector' means that this solver matches all domains
+          - selector: {}
+            dns01:
+              cloudDNS:
+                # The ID of the GCP project
+                # reference: https://cert-manager.io/docs/tutorials/acme/dns-validation/
+                project: $PROJECT_ID
+                # This is the secret used to access the service account
+                serviceAccountSecretRef:
+                  name: clouddns-dns01-solver-svc-acct
+                  key: key.json
+
+crossplane-aws-iam:
+  enabled: true
