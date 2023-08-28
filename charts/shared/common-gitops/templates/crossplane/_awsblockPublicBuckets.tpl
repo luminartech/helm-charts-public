@@ -1,11 +1,11 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
-Render the restrictPublicBuckets value for AWS resource:
+Render the restrictPublicBuckets, blockPublicAcls, blockPublicPolicy value for AWS resource:
 Accepts dict:
 {
   root: [map] - root context
   kind: [string] - resource kind name, e.g. "BucketPublicAccessBlock"
-  name: [string] - item id, e.g. "bucket"
+  name: [string] - item id, e.g. "<bucket_alias>"
 }
 Sample return boolean:
 true
