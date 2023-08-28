@@ -1,0 +1,111 @@
+ArgoCDExtension:
+  enabled: true
+  items:
+    extension-argo-rollouts:
+      spec:
+        sources:
+        - web:
+            url: https://github.com/argoproj-labs/rollout-extension/releases/download/v0.3.0/extension.tar
+
+crossplane-aws-iam:
+  enabled: true
+
+argo-cd:
+  enabled: true
+  server:
+    autoscaling:
+      enabled: true
+    ingress:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/server-snippet: |
+          proxy_ssl_verify off;
+          proxy_set_header X-Forwarded-Proto https;
+        kubernetes.io/ingress.allow-http: "false"
+        kubernetes.io/tls-acme: "true"
+        cert-manager.io/acme-challenge-type: dns01
+        cert-manager.io/acme-dns01-provider: route53
+        cert-manager.io/cluster-issuer: infra-cluster-issuer-dev-satishweb-com
+      hosts:
+      - argo-cd.dev.satishweb.com
+      tls:
+      - secretName: tls-argo-cd.dev.satishweb.com
+        hosts:
+        - argo-cd.dev.satishweb.com
+      ingressClassName: "nginx-ingress-external"
+      https: true
+    ingressGrpc:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/server-snippet: |
+          grpc_read_timeout "300s";
+          grpc_send_timeout "300s";
+          client_body_timeout "300s";
+        kubernetes.io/ingress.allow-http: "false"
+        kubernetes.io/tls-acme: "true"
+        cert-manager.io/acme-challenge-type: dns01
+        cert-manager.io/acme-dns01-provider: route53
+        cert-manager.io/cluster-issuer: infra-cluster-issuer-satishweb-com
+      hosts:
+      - api-argo-cd.dev.satishweb.com
+      tls:
+      - secretName: tls-api-argo-cd.dev.satishweb.com
+        hosts:
+        - api-argo-cd.dev.satishweb.com
+      ingressClassName: "nginx-ingress-external"
+      https: true
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: 'arn:aws:iam::00000000000:role/argo-cd'
+    logLevel: debug
+    logFormat: json
+    config:
+      url: "https://argo-cd.dev.satishweb.com"
+
+  configs:
+    cm:
+      url: "https://argo-cd.dev.satishweb.com"
+  controller:
+    serviceAccount:
+      annotations:
+        eks.amazonaws.com/role-arn: 'arn:aws:iam::00000000000:role/argo-cd'
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  repoServer:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  dex:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  applicationSet:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+  notifications:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+
+external-secrets:
+  enabled: true
+  AWSExternalSecret:
+    enabled: true
+
+common-res:
+  enabled: true
