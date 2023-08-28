@@ -49,7 +49,7 @@ global:
   argocdNamespace: "infra-argo-cd"
   ## @param global.argocdIAMRole Argo CD IAM role to grant cross account assume role permissions
   ##
-  argocdIAMRole: "infra-argo-cd"
+  argocdIAMRole: "argo-cd"
   ## @param global.crossplaneNamespace Crossplane namespace for storing the EKS cluster config
   ##
   crossplaneNamespace: "infra-crossplane"
