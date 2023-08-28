@@ -12,8 +12,8 @@ kubeVersion: ">=1.20.0-0"
 sources:
   - https://github.com/luminartech/helm-charts-public
 maintainers:
-  - name: "Luminar SRE Team"
-    email: "sre@luminartech.com"
+  - name: "Luminar IPE Team"
+    email: "ipe@luminartech.com"
   - name: "Satish Gaikwad"
     email: "satish.gaikwad@luminartech.com"
   - name: "Hennadii Mykhailiuta"

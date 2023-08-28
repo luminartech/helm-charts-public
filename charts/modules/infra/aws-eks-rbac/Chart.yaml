@@ -10,8 +10,8 @@ home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/infra/aws-eks-rbac
 maintainers:
-  - name: Luminar SRE Team
-    email: sre@luminartech.com
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
 dependencies:
   - name: crossplane-aws-iam
     version: "0.37.0-1"

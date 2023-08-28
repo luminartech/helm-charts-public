@@ -58,6 +58,6 @@ jobs:
           cd luminartech/helm-charts-public
           if git status -s | grep charts; then
             git config user.name "CI Bot"
-            git config user.email "sre@luminartech.com"
+            git config user.email "ipe@luminartech.com"
             git add . && git commit -am "Update README.md with readme-generator-for-helm" --signoff && git push
           fi

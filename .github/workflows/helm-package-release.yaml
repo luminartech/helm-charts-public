@@ -60,7 +60,7 @@ jobs:
           workspace_dir=$(pwd)
           cd luminartech/helm-charts-public
           git config user.name "CI Bot"
-          git config user.email "sre@luminartech.com"
+          git config user.email "ipe@luminartech.com"
           chart_paths=(${{ inputs.chart-path }})
           mv_cmd_flags=""
           if [ ${#chart_paths[@]} -gt 0 ]; then
@@ -105,7 +105,7 @@ jobs:
           cd luminartech/helm-repo-public
           if git status --untracked-files=all | grep -e '.*-.*\..*\.tgz'; then
             git config user.name "CI Bot"
-            git config user.email "sre@luminartech.com"
+            git config user.email "ipe@luminartech.com"
             git add **/*.tgz
             git status
             git commit -am "[ CI Bot ] Generated helm packages" --signoff

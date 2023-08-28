@@ -16,7 +16,7 @@ sources:
   - https://github.com/luminartech/helm-charts-public/charts/crossplane-aws-ec2
 maintainers:
   - name: SRE
-    email: sre@luminartech.com
+    email: ipe@luminartech.com
   - name: Satish Gaikwad
     email: satish.gaikwad@luminartech.com
   - name: Hennadii Mykhailiuta
