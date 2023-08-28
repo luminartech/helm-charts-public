@@ -112,8 +112,11 @@ crossplane-aws-iam:
               allowSelfAssumeRole:
                 Effect: Allow
                 Principal:
-                  AWS: arn:aws:iam::{{ .Values.global.awsMgmtAccountId }}:role/{{ .Values.global.argocdIAMRole }}
-                Action: sts:AssumeRole
+                  AWS: "*"
+                Action: "sts:AssumeRole"
+                Condition:
+                  ArnLike:
+                    "aws:PrincipalArn": "arn:aws:iam::{{ .Values.global.awsMgmtAccountId }}:role/{{ .Values.global.argocdIAMRole }}"
 
   ## @skip crossplane-aws-iam.OpenIDConnectProvider
   OpenIDConnectProvider:
