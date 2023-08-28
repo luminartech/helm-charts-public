@@ -20,10 +20,6 @@ awsBlockBucketPublic: false
   {{- /* Take the first non-empty argument */ -}}
   {{- coalesce ($item.forProvider).restrictPublicBuckets
                $kindObj.restrictPublicBuckets
-               ($item.forProvider).blockPublicAcls
-               $kindObj.blockPublicAcls
-               ($item.forProvider).blockPublicPolicy
-               $kindObj.blockPublicPolicy
                (.root.Values.global).awsBlockBucketPublic
                "true" }}
 {{- end -}}
