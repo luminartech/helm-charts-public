@@ -51,7 +51,7 @@ global:
 crossplane-aws-ec2:
   ## @param crossplane-aws-ec2.enabled Toggle for enabling or disabling upstream chart templates.
   ##
-  enabled: false
+  enabled: true
 
   ## AWS resources parameters.
   ## items: Dict of one or more resources of its kind.
@@ -60,7 +60,7 @@ crossplane-aws-ec2:
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
   ##
   EIP:
-    enabled: false
+    enabled: true
     items:
       nat-gateway:
         ## AWS Configuration for given resource.
@@ -72,7 +72,7 @@ crossplane-aws-ec2:
   ## @skip crossplane-aws-ec2.VPC
   ##
   VPC:
-    enabled: false
+    enabled: true
     items:
       _:
         forProvider:
@@ -83,10 +83,10 @@ crossplane-aws-ec2:
   ## @skip crossplane-aws-ec2.Subnet
   ##
   Subnet:
-    enabled: false
+    enabled: true
     items:
       public-a:
-        enabled: false
+        enabled: true
         labels:
           subnetType: public
         forProvider:
@@ -98,7 +98,7 @@ crossplane-aws-ec2:
           tags:
             kubernetes.io/role/elb: "1"
       public-b:
-        enabled: false
+        enabled: true
         labels:
           subnetType: public
         forProvider:
@@ -110,7 +110,7 @@ crossplane-aws-ec2:
           tags:
             kubernetes.io/role/elb: "1"
       public-c:
-        enabled: false
+        enabled: true
         labels:
           subnetType: public
         forProvider:
@@ -122,7 +122,7 @@ crossplane-aws-ec2:
           tags:
             kubernetes.io/role/elb: "1"
       public-d:
-        enabled: false
+        enabled: true
         labels:
           subnetType: public
         forProvider:
@@ -134,7 +134,7 @@ crossplane-aws-ec2:
           tags:
             kubernetes.io/role/elb: "1"
       private-a:
-        enabled: false
+        enabled: true
         labels:
           app.kubernetes.io/private: "true"
           subnetType: private
@@ -147,7 +147,7 @@ crossplane-aws-ec2:
           tags:
             kubernetes.io/role/internal-elb: "1"
       private-b:
-        enabled: false
+        enabled: true
         labels:
           app.kubernetes.io/private: "true"
           subnetType: private
@@ -160,7 +160,7 @@ crossplane-aws-ec2:
           tags:
             kubernetes.io/role/internal-elb: "1"
       private-c:
-        enabled: false
+        enabled: true
         labels:
           app.kubernetes.io/private: "true"
           subnetType: private
@@ -173,7 +173,7 @@ crossplane-aws-ec2:
           tags:
             kubernetes.io/role/internal-elb: "1"
       private-d:
-        enabled: false
+        enabled: true
         labels:
           app.kubernetes.io/private: "true"
           subnetType: private
@@ -189,7 +189,7 @@ crossplane-aws-ec2:
   ## @skip crossplane-aws-ec2.NATGateway
   ##
   NATGateway:
-    enabled: false
+    enabled: true
     items:
       _:
         forProvider:
@@ -201,7 +201,7 @@ crossplane-aws-ec2:
   ## @skip crossplane-aws-ec2.InternetGateway
   ##
   InternetGateway:
-    enabled: false
+    enabled: true
     items:
       _:
         forProvider:
@@ -211,7 +211,7 @@ crossplane-aws-ec2:
   ## @skip crossplane-aws-ec2.RouteTable
   ##
   RouteTable:
-    enabled: false
+    enabled: true
     items:
       private:
         forProvider:
@@ -225,59 +225,59 @@ crossplane-aws-ec2:
   ## @skip crossplane-aws-ec2.RouteTableAssociation
   ##
   RouteTableAssociation:
-    enabled: false
+    enabled: true
     items:
       private-a:
-        enabled: false
+        enabled: true
         forProvider:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private'
           subnetIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private-a'
       private-b:
-        enabled: false
+        enabled: true
         forProvider:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private'
           subnetIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private-b'
       private-c:
-        enabled: false
+        enabled: true
         forProvider:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private'
           subnetIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private-c'
       private-d:
-        enabled: false
+        enabled: true
         forProvider:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private'
           subnetIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private-d'
       public-a:
-        enabled: false
+        enabled: true
         forProvider:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-public'
           subnetIdRef:
             name: '{{ include "common-gitops.names.release" . }}-public-a'
       public-b:
-        enabled: false
+        enabled: true
         forProvider:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-public'
           subnetIdRef:
             name: '{{ include "common-gitops.names.release" . }}-public-b'
       public-c:
-        enabled: false
+        enabled: true
         forProvider:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-public'
           subnetIdRef:
             name: '{{ include "common-gitops.names.release" . }}-public-c'
       public-d:
-        enabled: false
+        enabled: true
         forProvider:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-public'
@@ -287,7 +287,7 @@ crossplane-aws-ec2:
   ## @skip crossplane-aws-ec2.Route
   ##
   Route:
-    enabled: false
+    enabled: true
     items:
       private-default:
         forProvider:
