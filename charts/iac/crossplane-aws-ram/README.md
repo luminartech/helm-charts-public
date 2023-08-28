@@ -17,9 +17,10 @@
 
 ### AWS resources
 
-| Name            | Description         | Value |
-| --------------- | ------------------- | ----- |
-| `ResourceShare` | resource parameters | `{}`  |
+| Name                  | Description         | Value |
+| --------------------- | ------------------- | ----- |
+| `ResourceAssociation` | resource parameters | `{}`  |
+| `ResourceShare`       | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
