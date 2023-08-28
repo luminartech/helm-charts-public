@@ -26,13 +26,16 @@ global:
   ## @param global.awsRegion Default aws region for crossplane aws provider resources.
   ##
   awsRegion: us-east-2
-  ## @param global.transitGatewayId Transit gateway ID for internal network routing.
-  ##
-  transitGatewayId: tgw-set-me
   ## @param global.providerConfigRef.name Default crossplane provider all resources generated for crossplane.
   ##
   providerConfigRef:
     name: crossplane-provider-config-aws
+  ## @param global.transitGatewayIdRef Transit gateway ID ref name for internal network routing.
+  ##
+  transitGatewayIdRef: transit-gateway-id-name-known-to-crossplane
+  ## @param global.transitGatewayProviderConfigRef Transit gateway aws provider for crossplane
+  ##
+  transitGatewayProviderConfigRef: transit-gateway-aws-provider-name
   ## @param global.awsDeletionPolicy Default crossplane deletion policy for all resources deployed by this helm chart..
   ## This can be overriden for each resource in its section
   awsDeletionPolicy: Orphan
@@ -300,6 +303,14 @@ crossplane-aws-ec2:
             name: '{{ include "common-gitops.names.release" . }}'
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-public'
+      # # TGW Routing: us-east-2
+      # us-east-2:
+      #   forProvider:
+      #     destinationCidrBlock: "10.x.x.x/xx"
+      #     transitGatewayIdRef:
+      #       name: '{{ .Values.global.transitGatewayIdRef }}'
+      #     routeTableIdRef:
+      #       name: '{{ `{{ include "common-gitops.names.release" . }}` }}-private'
 
   ## @skip crossplane-aws-ec2.VPCEndpoint
   ##
@@ -482,7 +493,8 @@ crossplane-aws-ec2:
     items:
       _:
         forProvider:
-          transitGatewayId: "{{ .Values.global.transitGatewayId }}"
+          transitGatewayRef:
+            name: "{{ .Values.global.transitGatewayIdRef }}"
           applianceModeSupport: disable
           dnsSupport: enable
           ipv6Support: disable
@@ -500,7 +512,7 @@ crossplane-aws-ec2:
     items:
       _:
         providerConfigRef:
-          name: "crossplane-provider-aws-it"
+          name: "{{ .Values.global.transitGatewayProviderConfigRef }}"
         forProvider:
           transitGatewayAttachmentIdRef:
             name: '{{ include "common-gitops.names.release" . }}'
