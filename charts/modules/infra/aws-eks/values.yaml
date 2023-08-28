@@ -23,6 +23,10 @@ global:
   ## @param global.awsAccountId Default aws account id for crossplane aws provider resources. Quotes are important, value must be a string.
   ##
   awsAccountId: "0123456789"
+  ## @param global.awsMgmtAccountId Management AWS account that runs the main mgmt cluster + argocd + crossplane.
+  ## Crossplane and argocd IAM roles will be allowed to access this cluster and manage resources in the AWS account.
+  ##
+  awsMgmtAccountId: "0123456789"
   ## @param global.awsRegion Default aws region for crossplane aws provider resources.
   ##
   awsRegion: us-east-2
@@ -33,24 +37,34 @@ global:
   ## @param global.awsDeletionPolicy Default crossplane deletion policy for all resources deployed by this helm chart..
   ## This can be overriden for each resource in its section
   awsDeletionPolicy: Orphan
-  ## @param global.vpcFullname VPC name
+  ## @param global.environment Environment name for the eks cluster
+  ##
+  environment: dev
+  ## @param global.vpcFullname VPC to use for this EKS cluster
   ##
   vpcFullname: infra-aws-vpc
-  ## @param global.secretStoreNamespace Target namespace for storing EKS secrets
-  ## This is used by external secrets
-  secretStoreNamespace: "infra-argo-cd"
+  ## @param global.argocdNamespace Target namespace for storing EKS secrets
+  ## This is used by external secrets to generate cluster secret for ArgoCD
+  ##
+  argocdNamespace: "infra-argo-cd"
+  ## @param global.argocdIAMRole Argo CD IAM role to grant cross account assume role permissions
+  ##
+  argocdIAMRole: "argo-cd"
   ## @param global.crossplaneNamespace Crossplane namespace for storing the EKS cluster config
   ##
   crossplaneNamespace: "infra-crossplane"
   ## @param global.crossplaneIAMRole Crossplane IAM Role
   ##
   crossplaneIAMRole: crossplane-provider-aws
+  ## @param global.providerConfigRefName AWS Provider config ref name of the local crossplane instance
+  ## This is used by EKS apps to generate specs for local crossplane instance
+  providerConfigRefName: crossplane-provider-aws
   ## @param global.eksVersion Default EKS Version to use
   ## https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
-  eksVersion: "1.24"
+  eksVersion: "1.25"
   ## @param global.eksNodeVersion EKS node version
   ## https://github.com/awslabs/amazon-eks-ami/blob/master/CHANGELOG.md
-  eksNodeVersion: "1.24.15-20230816"
+  eksNodeVersion: "1.25.11-20230816"
   ## @param global.teamAdminIAMRole Grant EKS admin permissions to this IAM Role
   ##
   teamAdminIAMRole: infra-admins
@@ -601,11 +615,22 @@ external-secrets:
       _:
         namespace: '{{ .Values.global.crossplaneNamespace }}'
         annotations:
-          # Kubed reflects metadata, which we use, so can't use reflector here
-          kubed.appscode.com/sync: "kubernetes.io/metadata.name={{ .Values.global.secretStoreNamespace }}"
+          eksClusterName: '{{ include "common-gitops.names.release" . }}'
+          vpcFullname: "{{ .Values.global.vpcFullname }}"
+          # AWS vars
+          awsMgmtAccountId: '{{ .Values.global.awsMgmtAccountId }}'
           awsAccountId: '{{ .Values.global.awsAccountId }}'
           awsRegion: '{{ .Values.global.awsRegion }}'
-          vpcFullname: '{{ .Values.global.vpcFullname }}'
+          # Crossplane vars
+          crossplaneNamespace: '{{ .Values.global.crossplaneNamespace }}'
+          crossplaneIAMRole: '{{ .Values.global.crossplaneIAMRole }}'
+          infraProviderConfigRefName: '{{ .Values.global.providerConfigRef.name }}'
+          providerConfigRefName: '{{ .Values.global.providerConfigRefName }}'
+          # ArgoCD vars
+          argocdNamespace: "{{ .Values.global.argocdNamespace }}"
+          argocdIAMRole: "{{ .Values.global.argocdIAMRole }}"
+          # Kubed reflects metadata, which we use, so can't use reflector here
+          kubed.appscode.com/sync: "kubernetes.io/metadata.name={{ .Values.global.argocdNamespace }}"
         labels:
           argocd.argoproj.io/secret-type: cluster
 
