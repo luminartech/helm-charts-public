@@ -61,6 +61,9 @@ global:
   ## @skip global.imagePullSecrets[0].name
   ##
   imagePullSecrets: [{name: "infra-dockerhub-creds"}]
+  ## @param global.team Team name
+  ##
+  team: infra
   ## @param global.environment VCluster environment
   ##
   environment: dev
@@ -206,9 +209,13 @@ external-secrets:
           reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "{{ .Values.global.argocdNamespace }}"
           reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
           reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "{{ .Values.global.argocdNamespace }}"
+          providerConfigRefName:  "{{ .Values.global.providerConfigRef.name }}"
           eksClusterName: '{{ .Values.global.githubRepoName }}-pr-{{ .Values.global.githubPrNumber }}'
-          clusterType: '{{.Values.global.clusterType}}'
-          team: '{{.Values.global.team}}'
+          clusterType: '{{ .Values.global.clusterType }}'
+          team: '{{ .Values.global.team }}'
+          environment: 'test'
+          awsAccountId: "{{ .Values.global.awsAccountId }}"
+          awsRegion: "{{ .Values.global.awsRegion }}"
           githubRepoName: '{{ .Values.global.githubRepoName }}'
           githubOrg: '{{ .Values.global.githubOrg }}'
           githubPrNumber: '{{ .Values.global.githubPrNumber }}'
@@ -218,7 +225,6 @@ external-secrets:
           podMonitor: "false"
           metrics: "false"
           ingressClassNameInternal: "nginx-ingress-internal"
-          environment: '{{ .Values.global.githubRepoName }}-pr-{{ .Values.global.githubPrNumber }}'
         targetLabels:
           argocd.argoproj.io/secret-type: cluster
           vcluster: "true"
