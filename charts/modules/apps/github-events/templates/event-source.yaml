@@ -45,12 +45,14 @@ spec:
         - owner: {{ $root.Values.global.githubOrg }}
           names:
             - {{ $root.Values.global.githubRepoName }}
-      # githubApp:
-      #   privateKey:
-      #     name: github-app-pem
-      #     key: privateKey.pem
-      #   appID: <app id>
-      #   installationID: <app installation id>
+        {{- if (.githubApp).enabled }}
+      githubApp:
+        privateKey:
+          name: "{{ .Values.global.team }}-{{ .Values.global.environment }}-gh-{{ .Values.global.githubOrg }}"
+          key: githubAppPrivateKey
+        appID: "{{ .Values.global.githubAppID }}"
+        installationID: "{{ .Values.global.githubAppInstallationID }}"
+        {{- end }}
       webhook:
         endpoint: '/{{ $eventSourceName }}'
         {{- with .port }}

@@ -36,6 +36,12 @@ global:
   ## @param global.githubOrg Github Org name
   ##
   githubOrg: satish-labs
+  ## @param global.githubOrg Github App ID
+  ##
+  githubAppID:
+  ## @param global.githubOrg Github Installation ID
+  ##
+  githubAppInstallationID:
   ## @param global.clusterOwner Vcluster owner
   ##
   clusterOwner: "engineer.name"
