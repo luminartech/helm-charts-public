@@ -18,8 +18,8 @@ awsBlockBucketPublic: false
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
   {{- /* Take the first non-empty argument */ -}}
-  {{- coalesce ($item.forProvider).restrictPublicBuckets
-               $kindObj.restrictPublicBuckets
+  {{- coalesce (index $item.forProvider .blockType)
+               (index $kindObj .blockType)
                (.root.Values.global).awsBlockBucketPublic
                "true" }}
 {{- end -}}
