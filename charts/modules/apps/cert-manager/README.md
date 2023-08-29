@@ -1,4 +1,4 @@
-# Chatbot-ui Module Chart
+# Cert Manager Module Chart
 
 ## TL;DR
 

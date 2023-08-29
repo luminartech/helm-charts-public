@@ -1,6 +1,10 @@
 argo-events:
   enabled: true
   controller:
+    metricsConfig:
+      enabled: true
+    telemetryConfig:
+      enabled: true
     metrics:
       enabled: true
       serviceMonitor:
