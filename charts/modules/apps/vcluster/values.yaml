@@ -207,11 +207,7 @@ external-secrets:
         # keep this false when insecure is enabled
         caDataEnabled: false
         targetAnnotations:
-          # This secret is being synced to github-ci namespace until argo-cd can consume this secret directly
-          reflector.v1.k8s.emberstack.com/reflection-allowed: "true"
-          reflector.v1.k8s.emberstack.com/reflection-allowed-namespaces: "{{ .Values.global.argocdNamespace }}"
-          reflector.v1.k8s.emberstack.com/reflection-auto-enabled: "true"
-          reflector.v1.k8s.emberstack.com/reflection-auto-namespaces: "{{ .Values.global.argocdNamespace }}"
+          kubed.appscode.com/sync: "kubernetes.io/metadata.name={{ .Values.global.argocdNamespace }}"
           providerConfigRefName:  "{{ .Values.global.providerConfigRef.name }}"
           eksClusterName: '{{ .Values.global.githubRepoName }}-pr-{{ .Values.global.githubPrNumber }}'
           clusterType: '{{ .Values.global.clusterType }}'
