@@ -3,7 +3,6 @@
 ## TL;DR
 
 ## Introduction
-Github: https://github.com/mckaywrigley/chatbot-ui/tree/main
 
 ## Prerequisites
 
