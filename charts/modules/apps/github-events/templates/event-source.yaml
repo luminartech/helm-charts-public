@@ -48,10 +48,10 @@ spec:
         {{- if (.githubApp).enabled }}
       githubApp:
         privateKey:
-          name: "{{ .Values.global.team }}-{{ .Values.global.environment }}-gh-{{ .Values.global.githubOrg }}"
+          name: "{{ $root.Values.global.team }}-{{ $root.Values.global.environment }}-gh-{{ $root.Values.global.githubOrg }}"
           key: githubAppPrivateKey
-        appID: "{{ .Values.global.githubAppID }}"
-        installationID: "{{ .Values.global.githubAppInstallationID }}"
+        appID: "{{ $root.Values.global.githubAppID }}"
+        installationID: "{{ $root.Values.global.githubAppInstallationID }}"
         {{- end }}
       webhook:
         endpoint: '/{{ $eventSourceName }}'

@@ -1,4 +1,25 @@
----
+global:
+  providerConfigRef:
+    name: 'crossplane-provider-config-aws-infra-dev'
+  awsAccountId: '550094566655'
+  awsRegion: 'us-east-2'
+  githubPatKeyName: 'pat'
+  githubPatSecretName: 'infra-dev-gh-satish-labs'
+  baseDomain: 'satishweb.com'
+  secretStoreRef: 'cluster-secret-store-aws'
+  environment: 'infra-dev'
+  team: 'infra'
+  eventSourceServicePort: '11000'
+  githubRepoName: 'gitops-infra-demo'
+  githubOrg: 'satish-labs'
+  ingressClassNameExternal: 'nginx-ingress-external'
+  imagePullSecrets: [{name: "infra-dev-dockerhub-creds"}]
+  githubAppID: "379709"
+  githubAppInstallationID: "41004866"
+external-secrets:
+  enabled: true
+  AWSExternalSecret:
+    enabled: true
 Events:
   items:
     pull-requests:
@@ -8,8 +29,10 @@ Events:
           eventFilter:
             - 'pull_request'
             - 'ping'
-          apiToken:
+          githubApp:
             enabled: true
+          apiToken:
+            enabled: false
           payloadFilters:
             # Name of the event that triggered the delivery: [pull_request, push, yadayadayada]
             # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads
@@ -37,8 +60,10 @@ Events:
           eventFilter:
             - 'pull_request_review'
             - 'ping'
-          apiToken:
+          githubApp:
             enabled: true
+          apiToken:
+            enabled: false
           payloadFilters:
             - path: headers.X-Github-Event
               type: string
@@ -66,27 +91,57 @@ Events:
         default:
           templateType: k8s
           source:
+            namespace: 'test-gitops-infra-demo-pr-{{ "{{" }} .Input.body.number {{ "}}" }}'
+            volumes:
+              - name: vcluster-secret
+                secret:
+                  secretName: "vc-vcluster"
+                  items:
+                    - key: config
+                      path: kubeconfig
             workflowArgumentParameters:
               - name: giturl
-              - name: prid
+              - name: pullRequestNo
+              - name: pullRequestBranch
+              - name: githubRepoName
+              - name: githubOrg
+              - name: author
+              - name: target
+                value: cwt-add-vcluster-to-argo-cd
+              - name: argocd-version
+                value: "v2.5.5"
             workflowTemplateRef:
               enabled: true
+              clusterScope: true
           parameters:
             - dataTemplate: '.Input.body.repository.ssh_url'
+              # Example: git@github.com:satish-labs/gitops-infra-demo.git
               dest: 'spec.arguments.parameters.0.value'
-            - dataTemplate: '.Input.body.pull_request.id'
+            - dataTemplate: '.Input.body.number'
+              # Example: 50
               dest: 'spec.arguments.parameters.1.value'
-            - dataTemplate: '.Input.body.after'
-              dest: 'metadata.name'
-              operation: 'append'
+            - dataTemplate: '.Input.body.pull_request.head.ref'
+              # Example: gitops/branch-name
+              dest: 'spec.arguments.parameters.2.value'
+            - dataTemplate: '.Input.body.repository.name'
+              # Example: gitops-infra-demo
+              dest: 'spec.arguments.parameters.3.value'
+            - dataTemplate: '.Input.body.organization.login'
+              # Example: luminartech
+              dest: 'spec.arguments.parameters.4.value'
+            - dataTemplate: '.Input.body.pull_request.user.login'
+              # Example: author
+              dest: 'spec.arguments.parameters.5.value'
         reviews:
           templateType: k8s
           source:
+            namespace: 'test-gitops-infra-demo-pr-{{ "{{" }} .Input.body.number {{ "}}" }}'
             workflowArgumentParameters:
               - name: giturl
               - name: prid
             workflowTemplateRef:
               enabled: true
+              clusterScope: true
           parameters:
             - dataTemplate: '.Input.body.repository.ssh_url'
               dest: 'spec.arguments.parameters.0.value'
@@ -95,79 +150,16 @@ Events:
             - dataTemplate: '.Input.body.after'
               dest: 'metadata.name'
               operation: 'append'
-    push:
-      eventSources:
-        default:
-          port: 13000
-          webhookSecret:
-            name: custom_webhook_secret_name
-            key: custom_webhoot_secret_key
-          payloadFilters:
-            # Name of the event that triggered the delivery: [pull_request, push, yadayadayada]
-            # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads
-            - path: headers.X-Github-Event
-              type: string
-              value:
-                - push
-            - path: body.forced
-              type: bool
-              value:
-                - "false"
-        forced:
-          name: custom-push-event-name
-          eventSourceName: custom-even-source-name
-          eventWebhookName: custom-event-source-webhook-name
-          payloadFilters:
-            # Name of the event that triggered the delivery: [pull_request, push, yadayadayada]
-            # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads
-            - path: headers.X-Github-Event
-              type: string
-              value:
-                - push
-            - path: body.forced
-              type: bool
-              value:
-                - "true"
-      triggers:
-        default:
-          templateType: http
-          http:
-            url: http://http-server.argo-events.svc:8090/hello
-            payload:
-              - src:
-                  dataKey: notification.0.s3.bucket.name
-                dest: bucket
-              - src:
-                  contextKey: type
-                dest: type
-            method: POST
-        forced:
-          templateType: k8s
-          name: go-nuts-trigger-name
-          eventSourceName: custom-push-event-name
-          source:
-            generateName: nice-workflow-job-prefix-
-            workflowArgumentParameters:
-              - name: something
-            workflowTemplateRef:
-              enabled: true
-              name: go_nuts_workflow
-          parameters:
-            - dataTemplate: '.Input.body.repository.something'
-              dest: 'spec.arguments.parameters.0.value'
-
 EventSource:
   enabled: true
   items:
     _:
       enabled: true
-
 EventBus:
   enabled: true
   items:
     _:
       enabled: true
-
 Sensor:
   enabled: true
   items:
@@ -177,7 +169,6 @@ Sensor:
         env:
         - name: DEBUG_LOG
           value: 'true'
-
 Ingress:
   enabled: true
   items:
@@ -193,7 +184,7 @@ Ingress:
         kubernetes.io/tls-acme: "true"
         cert-manager.io/acme-challenge-type: dns01
         cert-manager.io/acme-dns01-provider: route53
-        cert-manager.io/cluster-issuer: 'defaultCertIssuer'
+        cert-manager.io/cluster-issuer: 'dev-satishweb-com'
 
 common-res:
   enabled: true
@@ -208,12 +199,6 @@ Secret:
   items:
     _:
       enabled: true
-
-external-secrets:
-  enabled: true
-  AWSExternalSecret:
-    enabled: true
-
 crossplane-aws-secretsmanager:
   enabled: true
   Secret:
