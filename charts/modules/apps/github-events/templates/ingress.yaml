@@ -5,7 +5,7 @@
 {{- $eventObj := or $root.Values.Events (dict) -}}
   {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) -}}
     {{- $itemName := (kindIs "invalid" .name | ternary (include "common-gitops.names.itemFullname" (dict "root" $root "name" $name)) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) -}}
-    {{- $hostUrl := (print "github-" ($root.Values.global.githubOrg) "-" ($root.Values.global.githubRepoName) "." ($root.Values.global.team) "." ($root.Values.global.baseDomain)) }}
+    {{- $hostUrl := (print "github-" ($root.Values.global.githubOrg) "-" ($root.Values.global.githubRepoName) "." ($root.Values.global.baseDomain)) }}
 ---
 apiVersion: networking.k8s.io/v1
 kind: {{ $kind }}

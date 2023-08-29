@@ -64,9 +64,9 @@ global:
   ## @param global.environment VCluster environment
   ##
   environment: dev
-  ## @param global.ingressClassName Ingress class name for events ingresses
+  ## @param global.ingressClassNameExternal Ingress class name for events ingresses
   ##
-  ingressClassName: nginx-ingress-external
+  ingressClassNameExternal: nginx-ingress-external
   ## @param global.eventSourceServicePort Event Source port number to use
   ##
   eventSourceServicePort: 11000
@@ -76,6 +76,9 @@ global:
   ## @param global.secretStoreNamespace Namespace to store the the AWS Secrets
   ##
   secretStoreNamespace: github-events-gitops-infra-demo
+  ## @param global.baseDomain Based omain for the ingress vhost
+  ##
+  baseDomain: dev.domain.com
 
 # Note: argo-events hits a bug when there are two triggers configured for the same event source.
 #       until that bug is fixed, lets have 1-1 mappings between event source and triggers
