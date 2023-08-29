@@ -1,0 +1,184 @@
+{{- $kind := "Sensor" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- $eventObj := or $root.Values.Events (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) -}}
+    {{- $itemName := (kindIs "invalid" .name | ternary (include "common-gitops.names.itemFullname" (dict "root" $root "name" $name)) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: {{ $kind }}
+metadata:
+  name: {{ $itemName | quote }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- /*
+
+      Generate sensor container specs
+      These specs will configure the sensor container deployment
+      This is not related to the workflow container
+
+    */ -}}
+    {{- with .sensorContainerTemplate }}
+  template:
+      {{- with ($root.Values.global).imagePullSecrets }}
+    imagePullSecrets:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+    container:
+      {{- with .env }}
+      env:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 8 }}
+      {{- end -}}
+      {{- with .serviceAccountName }}
+    serviceAccountName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+      {{- else }}
+    serviceAccountName: {{ $itemName | quote }}
+      {{- end -}}
+    {{- end -}}
+    {{- /*
+
+      Generate sensor template for each event.
+      Idea is to allow one or more events to be defined with its own triggers as part of the same sensor.
+      This is a one to many mapping between event and triggers
+
+    */}}
+  dependencies:
+    {{- range $event, $eventItem := $eventObj.items -}}
+      {{- $eventName := (kindIs "invalid" .name | ternary (include "common-gitops.tplvalues.render" (dict "value" $event "context" $root)) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) -}}
+      {{- /* list of event sources */ -}}
+      {{- range $eventSource, $eventSourceItem := .eventSources -}}
+        {{- /* TODO: Create tpl function for this (in github-events chart) */ -}}
+        {{- $eventSourceName := (kindIs "invalid" .name | ternary (print "event-" $eventName "-" (include "common-gitops.tplvalues.render" (dict "value" $eventSource "context" $root))) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) }}
+    - name: {{ $eventSourceName | quote }}
+        {{- /* TODO: Add eventItem level support for specifying eventSourceName and eventName. This will allow use of multiple event sources */ -}}
+        {{- /* Set custom event source if defined at item level, or else use name of the item as default */ -}}
+        {{- with $item.eventSourceName }}
+      eventSourceName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+        {{- else -}}
+        {{- /* Defaults to the default event source name same as "item name" */}}
+      eventSourceName: {{ $itemName | quote }}
+        {{- end -}}
+        {{- /* Set custom event name if defined at item level, or else use name of the item as default */ -}}
+        {{- with $item.eventWebhookName }}
+      eventName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+        {{- else -}}
+        {{- /* Defaults to the default name same as "event source name" */}}
+      eventName: {{ $eventSourceName | quote }}
+        {{- end -}}
+        {{- with .payloadFilters }}
+      filters:
+        data:
+          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 10 }}
+        {{- end -}}
+      {{- end -}}
+    {{- end }}
+  triggers:
+    {{- range $event, $eventItem := $eventObj.items -}}
+      {{- $eventName := (kindIs "invalid" .name | ternary (include "common-gitops.tplvalues.render" (dict "value" $event "context" $root)) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) -}}
+      {{- /* list of event triggers */ -}}
+      {{- range $trigger, $triggerItem := .triggers -}}
+        {{- $eventSourceName := (kindIs "invalid" .name | ternary (print "event-" $eventName "-" (include "common-gitops.tplvalues.render" (dict "value" $trigger "context" $root))) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) }}
+        {{- $triggerName := (kindIs "invalid" .name | ternary (print "trigger-" $eventName "-" (include "common-gitops.tplvalues.render" (dict "value" $trigger "context" $root))) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) }}
+    - template:
+        name: {{ $triggerName | quote }}
+        {{- /* Allow use of custom event name as condition to allow multiple triggers for same event */ -}}
+        {{- with .eventSourceName }}
+        conditions: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+        {{- else -}}
+        {{- /* Defaults to the name same as "trigger name" */}}
+        conditions: {{ $eventSourceName | quote }}
+        {{- end -}}
+        {{- if eq (.templateType) "http" }}
+          {{- with .http }}
+        http:
+            {{- with .url }}
+          url: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+            {{- end }}
+          payload:
+            {{- range $payload := .payload }}
+          - src:
+              {{- with $eventItem.eventSourceName }}
+              dependencyName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+              {{- else }}
+              dependencyName: {{ $eventSourceName | quote }}
+              {{- end -}}
+              {{- with (.src).dataKey }}
+              dataKey: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+              {{- end -}}
+              {{- with (.src).contextKey }}
+              contextKey: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+              {{- end -}}
+              {{- with .dest }}
+            dest: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+              {{- end -}}
+            {{- end -}}
+            {{- with .method }}
+          method: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+            {{- else }}
+          method: POST
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+        {{- if eq (.templateType) "k8s" }}
+        k8s:
+          operation: create
+          {{- with .source }}
+          source:
+            resource:
+              apiVersion: argoproj.io/v1alpha1
+              kind: Workflow
+              metadata:
+            {{- with .generateName }}
+                generateName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+            {{- else -}}
+            {{- /* Defaults to the name same as "trigger name" */}}
+                generateName: '{{ $triggerName }}-'
+            {{- end }}
+            {{- with .namespace }}
+                namespace: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+            {{- end }}
+              spec:
+                entrypoint: {{ $triggerName | quote }}
+            {{- with .volumes }}
+                volumes:
+              {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 20 }}
+            {{- end }}
+            {{- with .workflowArgumentParameters }}
+                arguments:
+                  parameters:
+              {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 20 }}
+            {{- end }}
+            {{- if (.workflowTemplateRef).enabled }}
+                workflowTemplateRef:
+              {{- with (.workflowTemplateRef).name }}
+                  name: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+              {{- else }}
+                  name: {{ print $root.Values.global.githubRepoName "-" $triggerName | quote }}
+              {{- end -}}
+              {{- with (.workflowTemplateRef).clusterScope }}
+                  clusterScope: {{ . }}
+              {{- end -}}
+            {{- end -}}
+          {{- end }}
+          parameters:
+          {{- range .parameters }}
+            - src:
+            {{- with $triggerItem.eventSourceName }}
+                dependencyName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+            {{- else -}}
+              {{- /* Defaults to the name same as "trigger name" */}}
+                dependencyName: {{ $eventSourceName | quote }}
+            {{- end }}
+                dataTemplate: '{{ "{{" }} {{ .dataTemplate }} {{ "}}" }}'
+              dest: '{{ .dest }}'
+            {{- with .operation }}
+              operation: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end }}

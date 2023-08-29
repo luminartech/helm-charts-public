@@ -1,0 +1,62 @@
+{{- $kind := "EventBus" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: {{ $kind }}
+metadata:
+    {{- with .name }}
+  name: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+    {{- else }}
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name) }}
+    {{- end }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- with .nats }}
+  nats:
+      {{- with .native }}
+    native:
+        {{- with ($root.Values.global).replicas }}
+      replicas: {{ . }}
+        {{- else }}
+      replicas: 3
+        {{- end -}}
+        {{- with .containerTemplate }}
+      containerTemplate:
+          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 8 }}
+        {{- end -}}
+        {{- with ($root.Values.global).imagePullSecrets }}
+      imagePullSecrets:
+          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 8 }}
+        {{- end }}
+    #    resources:
+    #      requests:
+    #        cpu: "10m"
+    #  metricsContainerTemplate:
+    #    resources:
+    #      requests:
+    #        cpu: "10m"
+    #  antiAffinity: false
+    #  persistence:
+    #    storageClassName: standard
+    #    accessMode: ReadWriteOnce
+    #    volumeSize: 10Gi
+      {{- end -}}
+      {{- with .exotic }}
+    exotic:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end -}}
+    {{- end -}}
+    {{- with .jetstream }}
+  jetstream:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+      {{- with ($root.Values.global).imagePullSecrets }}
+    imagePullSecrets:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end }}
+    {{- end -}}
+  {{- end -}}
+{{- end }}

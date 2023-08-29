@@ -1,0 +1,116 @@
+{{- $kind := "EventSource" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- $eventObj := or $root.Values.Events (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) -}}
+    {{- $itemName := (kindIs "invalid" .name | ternary (include "common-gitops.names.itemFullname" (dict "root" $root "name" $name)) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) }}
+    {{- $hostUrl := (print "github-" ($root.Values.global.githubOrg) "-" ($root.Values.global.githubRepoName) "." ($root.Values.global.team) "." ($root.Values.global.baseDomain)) }}
+---
+apiVersion: argoproj.io/v1alpha1
+kind: {{ $kind }}
+metadata:
+  name: {{ $itemName | quote }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+  service:
+    ports:
+    - port: {{ $root.Values.global.eventSourceServicePort }}
+      targetPort: {{ $root.Values.global.eventSourceServicePort }}
+    {{- range $event, $eventItem := $eventObj.items -}}
+      {{- range $eventSource, $eventSourceItem := .eventSources -}}
+        {{- with .port -}}
+        {{- $port := (include "common-gitops.tplvalues.render" (dict "value" . "context" $root)) }}
+    - port: {{ $port }}
+      targetPort: {{ $port }}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+    {{- with .template }}
+  template:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+      {{- with ($root.Values.global).imagePullSecrets }}
+    imagePullSecrets:
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+      {{- end -}}
+    {{- end }}
+  github:
+    {{- range $event, $eventItem := $eventObj.items -}}
+      {{- $eventName := (kindIs "invalid" .name | ternary (include "common-gitops.tplvalues.render" (dict "value" $event "context" $root)) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) -}}
+      {{- range $eventSource, $eventSourceItem := .eventSources -}}
+        {{- $eventSourceName := (kindIs "invalid" .name | ternary (print "event-" $eventName "-" (include "common-gitops.tplvalues.render" (dict "value" $eventSource "context" $root))) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) }}
+        {{- print ($eventSourceName) ":" | nindent 4 }}
+      repositories:
+        - owner: {{ $root.Values.global.githubOrg }}
+          names:
+            - {{ $root.Values.global.githubRepoName }}
+      # githubApp:
+      #   privateKey:
+      #     name: github-app-pem
+      #     key: privateKey.pem
+      #   appID: <app id>
+      #   installationID: <app installation id>
+      webhook:
+        endpoint: '/{{ $eventSourceName }}'
+        {{- with .port }}
+        port: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+        {{- else }}
+        port: {{ $root.Values.global.eventSourceServicePort | quote }}
+        {{- end }}
+        method: POST
+        url: https://{{ $hostUrl }}
+        {{- with .eventFilter }}
+      events:
+          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 8 }}
+        {{- else }}
+      events:
+        - "push"
+        - "ping"
+        {{- end -}}
+        {{- if (.apiToken).enabled }}
+          {{- with .apiToken }}
+      apiToken:
+            {{- with .name }}
+        name: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+            {{- else }}
+        name: {{ $root.Values.global.githubPatSecretName | quote }}
+            {{- end -}}
+            {{- with .key }}
+        key: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+            {{- else }}
+        key: {{ $root.Values.global.githubPatKeyName | quote }}
+            {{- end -}}
+          {{- end -}}
+        {{- end }}
+      webhookSecret:
+        # Must for security. We want only github talking to our endpoint
+        {{- with (.webhookSecret).name }}
+        name: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+        {{- else }}
+        name: {{ $eventSourceName | quote }}
+        {{- end -}}
+        {{- with (.webhookSecret).key }}
+        key: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+        {{- else }}
+        key: webhook_secret
+        {{- end -}}
+        {{- with .insecure }}
+      insecure: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+        {{- else }}
+      insecure: false
+        {{- end -}}
+        {{- with .active }}
+      active: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+        {{- else }}
+      active: true
+        {{- end -}}
+        {{- with .contentType }}
+      contentType: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+        {{- else }}
+      contentType: json
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end }}

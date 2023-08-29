@@ -1,0 +1,220 @@
+---
+Events:
+  items:
+    pull-requests:
+      eventSources:
+        # dict of one or more event sources
+        default:
+          eventFilter:
+            - 'pull_request'
+            - 'ping'
+          apiToken:
+            enabled: true
+          payloadFilters:
+            # Name of the event that triggered the delivery: [pull_request, push, yadayadayada]
+            # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads
+            - path: headers.X-Github-Event
+              type: string
+              value:
+                - pull_request
+            - path: body.action
+              type: string
+              value:
+                - opened
+                - labeled
+                - reopened
+                - edited
+                - synchronize
+            - path: body.pull_request.state
+              type: string
+              value:
+                - open
+            - path: body.pull_request.base.ref
+              type: string
+              value:
+                - main
+        reviews:
+          eventFilter:
+            - 'pull_request_review'
+            - 'ping'
+          apiToken:
+            enabled: true
+          payloadFilters:
+            - path: headers.X-Github-Event
+              type: string
+              value:
+                - pull_request_review
+            - path: body.action
+              type: string
+              value:
+                - submitted
+                - edited
+            - path: body.pull_request.state
+              type: string
+              value:
+                - open
+            - path: body.review.state
+              type: string
+              value:
+                - APPROVED
+            - path: body.pull_request.base.ref
+              type: string
+              value:
+                - main
+      triggers:
+        # dict of one or more triggers in the eventgroup
+        default:
+          templateType: k8s
+          source:
+            workflowArgumentParameters:
+              - name: giturl
+              - name: prid
+            workflowTemplateRef:
+              enabled: true
+          parameters:
+            - dataTemplate: '.Input.body.repository.ssh_url'
+              dest: 'spec.arguments.parameters.0.value'
+            - dataTemplate: '.Input.body.pull_request.id'
+              dest: 'spec.arguments.parameters.1.value'
+            - dataTemplate: '.Input.body.after'
+              dest: 'metadata.name'
+              operation: 'append'
+        reviews:
+          templateType: k8s
+          source:
+            workflowArgumentParameters:
+              - name: giturl
+              - name: prid
+            workflowTemplateRef:
+              enabled: true
+          parameters:
+            - dataTemplate: '.Input.body.repository.ssh_url'
+              dest: 'spec.arguments.parameters.0.value'
+            - dataTemplate: '.Input.body.pull_request.id'
+              dest: 'spec.arguments.parameters.1.value'
+            - dataTemplate: '.Input.body.after'
+              dest: 'metadata.name'
+              operation: 'append'
+    push:
+      eventSources:
+        default:
+          port: 13000
+          webhookSecret:
+            name: custom_webhook_secret_name
+            key: custom_webhoot_secret_key
+          payloadFilters:
+            # Name of the event that triggered the delivery: [pull_request, push, yadayadayada]
+            # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads
+            - path: headers.X-Github-Event
+              type: string
+              value:
+                - push
+            - path: body.forced
+              type: bool
+              value:
+                - "false"
+        forced:
+          name: custom-push-event-name
+          eventSourceName: custom-even-source-name
+          eventWebhookName: custom-event-source-webhook-name
+          payloadFilters:
+            # Name of the event that triggered the delivery: [pull_request, push, yadayadayada]
+            # https://docs.github.com/en/developers/webhooks-and-events/webhook-events-and-payloads
+            - path: headers.X-Github-Event
+              type: string
+              value:
+                - push
+            - path: body.forced
+              type: bool
+              value:
+                - "true"
+      triggers:
+        default:
+          templateType: http
+          http:
+            url: http://http-server.argo-events.svc:8090/hello
+            payload:
+              - src:
+                  dataKey: notification.0.s3.bucket.name
+                dest: bucket
+              - src:
+                  contextKey: type
+                dest: type
+            method: POST
+        forced:
+          templateType: k8s
+          name: go-nuts-trigger-name
+          eventSourceName: custom-push-event-name
+          source:
+            generateName: nice-workflow-job-prefix-
+            workflowArgumentParameters:
+              - name: something
+            workflowTemplateRef:
+              enabled: true
+              name: go_nuts_workflow
+          parameters:
+            - dataTemplate: '.Input.body.repository.something'
+              dest: 'spec.arguments.parameters.0.value'
+
+EventSource:
+  enabled: true
+  items:
+    _:
+      enabled: true
+
+EventBus:
+  enabled: true
+  items:
+    _:
+      enabled: true
+
+Sensor:
+  enabled: true
+  items:
+    _:
+      enabled: true
+      sensorContainerTemplate:
+        env:
+        - name: DEBUG_LOG
+          value: 'true'
+
+Ingress:
+  enabled: true
+  items:
+    _:
+      enabled: true
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/server-snippet: |
+          proxy_ssl_verify off;
+          proxy_set_header X-Forwarded-Proto https;
+        kubernetes.io/ingress.allow-http: "false"
+        kubernetes.io/tls-acme: "true"
+        cert-manager.io/acme-challenge-type: dns01
+        cert-manager.io/acme-dns01-provider: route53
+        cert-manager.io/cluster-issuer: 'defaultCertIssuer'
+
+common-res:
+  enabled: true
+  ServiceAccount:
+    enabled: true
+
+  ClusterRole:
+    enabled: true
+
+Secret:
+  enabled: true
+  items:
+    _:
+      enabled: true
+
+external-secrets:
+  enabled: true
+  AWSExternalSecret:
+    enabled: true
+
+crossplane-aws-secretsmanager:
+  enabled: true
+  Secret:
+    enabled: true

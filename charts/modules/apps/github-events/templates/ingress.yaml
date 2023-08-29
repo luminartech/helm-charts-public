@@ -1,0 +1,44 @@
+{{- $kind := "Ingress" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+{{- $eventObj := or $root.Values.Events (dict) -}}
+  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) -}}
+    {{- $itemName := (kindIs "invalid" .name | ternary (include "common-gitops.names.itemFullname" (dict "root" $root "name" $name)) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) -}}
+    {{- $hostUrl := (print "github-" ($root.Values.global.githubOrg) "-" ($root.Values.global.githubRepoName) "." ($root.Values.global.team) "." ($root.Values.global.baseDomain)) }}
+---
+apiVersion: networking.k8s.io/v1
+kind: {{ $kind }}
+metadata:
+  name: {{ $itemName | quote }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+  ingressClassName: '{{ $root.Values.global.ingressClassNameExternal }}'
+  rules:
+    - host: {{ $hostUrl | quote }}
+      http:
+        paths:
+    {{- range $event, $eventItem := $eventObj.items -}}
+      {{- $eventName := (kindIs "invalid" .name | ternary (include "common-gitops.tplvalues.render" (dict "value" $event "context" $root)) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) -}}
+      {{- range $eventSource, $eventSourceItem := .eventSources -}}
+        {{- $eventSourceName := (kindIs "invalid" .name | ternary (print "event-" $eventName "-" (include "common-gitops.tplvalues.render" (dict "value" $eventSource "context" $root))) (include "common-gitops.tplvalues.render" (dict "value" .name "context" $root))) }}
+          - pathType: 'ImplementationSpecific'
+            backend:
+              service:
+                name: '{{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name) }}-eventsource-svc'
+                port:
+                  {{- with .port }}
+                  number: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+                  {{- else }}
+                  number: {{ $root.Values.global.eventSourceServicePort }}
+                  {{- end }}
+            path: '/{{ $eventSourceName }}'
+      {{- end -}}
+    {{- end }}
+  tls:
+    - secretName: 'tls-{{ $hostUrl }}'
+      hosts:
+        - {{ $hostUrl | quote }}
+  {{- end -}}
+{{- end }}
