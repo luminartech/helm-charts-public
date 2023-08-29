@@ -1,0 +1,22 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "0.20.11"
+description: A Helm chart for argo-workflows
+name: argo-workflows
+version: "0.20.11"
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/argo-workflows
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: argo-workflows
+    version: "0.20.11"
+    repository: https://argoproj.github.io/argo-helm
+    condition: argo-workflows.enabled
+  - name: crossplane-aws-iam
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-iam.enabled

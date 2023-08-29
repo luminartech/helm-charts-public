@@ -1,0 +1,67 @@
+global:
+  # chartNameOverride: "infra"
+  # releaseNameOverride: "infra"
+  # tags: {}
+  # labels: {}
+  # annotations: {}
+  imagePullSecrets: [{name: "infra-dockerhub-creds"}]
+  environment: infra
+  secretStoreRef: cluster-aws-secret-store
+  providerConfigRef:
+    name: aws-provider
+  awsAccountId: "0123456789" # Quotes are important, this must be a string
+  awsRegion: us-west-2
+  eksHash: "EKSHASH"
+  securityContext:
+    runAsUser: 999
+    runAsGroup: 999
+    fsGroup: 999
+  logging:
+    format: json
+    level: debug
+
+argo-workflows:
+  enabled: true
+  images:
+    pullSecrets: [{name: "infra-dockerhub-creds"}]
+  createAggregateRoles: true
+  crds:
+    install: true
+    keep: true
+  controller:
+    replicas: 2
+    metricsConfig:
+      enabled: true
+    telemetryConfig:
+      enabled: true
+    serviceMonitor:
+      enabled: false
+    workflowNamespaces:
+      - "infra-argo-workflows"
+  logging:
+    level: debug
+  server:
+    ingress:
+      enabled: false
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/server-snippet: |
+          proxy_ssl_verify off;
+          proxy_set_header X-Forwarded-Proto https;
+        kubernetes.io/ingress.allow-http: "false"
+        kubernetes.io/tls-acme: "true"
+        cert-manager.io/acme-challenge-type: dns01
+        cert-manager.io/acme-dns01-provider: route53
+        cert-manager.io/cluster-issuer: cluster-issuer
+      hosts:
+      - argo-workflows.domain.com
+      tls:
+      - secretName: tls-argo-workflows.domain.com
+        hosts:
+        - argo-workflows.domain.com
+      ingressClassName: ingress
+      https: true
+
+crossplane-aws-iam:
+  enabled: true
