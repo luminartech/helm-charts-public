@@ -1,0 +1,29 @@
+annotations:
+  category: Infrastructure
+apiVersion: v2
+appVersion: "0.28.0"
+description: A Helm chart for karpenter + related resources
+name: karpenter
+version: "0.28.0"
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/crossplane
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: common-gitops
+    version: "1.1.2"
+    repository: https://helm-repo-public.luminarinfra.com/
+  - name: crossplane-aws-iam
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-iam.enabled
+  - name: crossplane-aws-ec2
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-ec2.enabled
+  - name: karpenter
+    version: "v0.28.0"
+    repository: "oci://public.ecr.aws/karpenter"
+    condition: karpenter.enabled

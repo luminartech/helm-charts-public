@@ -1,2 +1,2 @@
-RELEASE_NAME?=iac-infra-eks-external-secrets
+RELEASE_NAME?=infra-aws-eks-external-secrets
 include ../../../../Makefile
