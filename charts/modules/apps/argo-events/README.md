@@ -1,4 +1,4 @@
-# Chatbot-ui Module Chart
+# Argo Events Module Chart
 
 ## TL;DR
 
