@@ -1,0 +1,25 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "6.12.1"
+description: A Helm chart for external-dns
+name: external-dns
+version: "6.12.1"
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/external-dns
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: external-dns
+    version: "6.12.1"
+    repository: https://charts.bitnami.com/bitnami
+    condition: external-dns.enabled
+  - name: crossplane-aws-iam
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-iam.enabled
+  - name: common-gitops
+    version: "1.1.2"
+    repository: https://helm-repo-public.luminarinfra.com/
