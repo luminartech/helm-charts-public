@@ -4,10 +4,10 @@ apiVersion: v2
 appVersion: "0.28.0"
 description: A Helm chart for karpenter + related resources
 name: karpenter
-version: "0.28.0"
+version: "0.28.0-1"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
-  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/crossplane
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/karpenter
 maintainers:
   - name: Luminar IPE Team
     email: ipe@luminartech.com
