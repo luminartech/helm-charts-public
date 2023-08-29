@@ -67,6 +67,9 @@ global:
   ## @param global.environment VCluster environment
   ##
   environment: dev
+  ## @param global.ingressClassName Ingress class name for the vcluster ingresses
+  ##
+  ingressClassName: nginx-ingress-internal
   ## @param global.vclusterVersion VCluster version
   ##
   vclusterVersion: "v0.13.0"
@@ -224,7 +227,7 @@ external-secrets:
           serviceMonitor: "false"
           podMonitor: "false"
           metrics: "false"
-          ingressClassNameInternal: "nginx-ingress-internal"
+          ingressClassNameInternal: "{{ .Values.global.ingressClassName }}"
         targetLabels:
           argocd.argoproj.io/secret-type: cluster
           vcluster: "true"
