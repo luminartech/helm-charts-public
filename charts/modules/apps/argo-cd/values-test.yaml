@@ -29,11 +29,11 @@ argo-cd:
         cert-manager.io/acme-dns01-provider: route53
         cert-manager.io/cluster-issuer: infra-cluster-issuer-dev-satishweb-com
       hosts:
-      - argo-cd.dev.satishweb.com
+      - argo-cd.dev.domain.com
       tls:
-      - secretName: tls-argo-cd.dev.satishweb.com
+      - secretName: tls-argo-cd.dev.domain.com
         hosts:
-        - argo-cd.dev.satishweb.com
+        - argo-cd.dev.domain.com
       ingressClassName: "nginx-ingress-external"
       https: true
     ingressGrpc:
@@ -51,11 +51,11 @@ argo-cd:
         cert-manager.io/acme-dns01-provider: route53
         cert-manager.io/cluster-issuer: infra-cluster-issuer-satishweb-com
       hosts:
-      - api-argo-cd.dev.satishweb.com
+      - api-argo-cd.dev.domain.com
       tls:
-      - secretName: tls-api-argo-cd.dev.satishweb.com
+      - secretName: tls-api-argo-cd.dev.domain.com
         hosts:
-        - api-argo-cd.dev.satishweb.com
+        - api-argo-cd.dev.domain.com
       ingressClassName: "nginx-ingress-external"
       https: true
     metrics:
@@ -68,11 +68,11 @@ argo-cd:
     logLevel: debug
     logFormat: json
     config:
-      url: "https://argo-cd.dev.satishweb.com"
+      url: "https://argo-cd.dev.domain.com"
 
   configs:
     cm:
-      url: "https://argo-cd.dev.satishweb.com"
+      url: "https://argo-cd.dev.domain.com"
   controller:
     serviceAccount:
       annotations:

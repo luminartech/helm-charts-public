@@ -57,7 +57,7 @@ global:
   ## @param global.ingressUrl Ingress URL to use for additional ingress.
   ## Note: Internal ingress object supplied by upstream argocd helm chart do not use this variable
   ##
-  ingressUrl: argo-cd.dev.satishweb.com
+  ingressUrl: argo-cd.dev.domain.com
   ## @param global.ingressClassNameExternal External facing ingress class name, used for webhooks
   ##
   ingressClassNameExternal: 'nginx-ingress-external'
@@ -516,7 +516,7 @@ argo-cd:
       scopes: '[email,groups]'
     cm:
       create: true
-      url: "https://argo-cd.dev.satishweb.com"
+      url: "https://argo-cd.dev.domain.com"
       server.rbac.log.enforce.enable: true
     # TODO: All of these repositories needs to be reviewed and moved as secrets
     repositories:
