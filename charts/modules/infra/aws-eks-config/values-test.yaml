@@ -1,0 +1,29 @@
+---
+##############
+# Global
+##############
+global:
+  # chartNameOverride: "infra"
+  # releaseNameOverride: "infra"
+  # tags: {}
+  # labels: {}
+  # annotations: {}
+  # providerConfigRef:
+  #   name: aws-provider
+  # AWS Account ID
+  awsAccountId: "XXX" # Quotes are important, this must be a string
+  awsRegion: us-west-2
+  environment: prod
+  team: infra
+
+##############
+# Dependencies
+##############
+
+StorageClass:
+  enabled: true
+
+crossplane-aws-secretsmanager:
+  enabled: true
+  Secret:
+    enabled: true
