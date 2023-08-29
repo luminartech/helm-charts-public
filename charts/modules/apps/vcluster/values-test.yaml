@@ -1,0 +1,46 @@
+global:
+  # chartNameOverride: "infra"
+  # releaseNameOverride: "infra"
+  tags: {}
+  labels: {}
+  annotations: {}
+  githubRepoName: 'gitops-infra-demo'
+  githubOrg: 'satish-labs'
+  githubPrNumber: '10'
+  clusterOwner: 'engineer.name'
+  secretStoreNamespace: test-gitops-infra-demo-pr-1
+  clusterType: vcluster
+  team: infra
+  clusterExternalDomain: domain.com
+  argocdNamespace: infra-argo-cd
+  secretStoreRef: cluster-secret-store-aws
+  ingressClassName: "nginx-ingress-internal"
+  environment: infra
+  vclusterVersion: "v0.13.0"
+
+vcluster:
+  enabled: true
+  vcluster:
+    extraArgs:
+      - --tls-san=gitops-infra-demo-pr-1.dev.domain.com
+  syncer:
+    kubeConfigContextName: gitops-infra-demo-pr-1
+    extraArgs:
+      - --tls-san=gitops-infra-demo-pr-1.dev.domain.com
+      - --out-kube-config-server=https://gitops-infra-demo-pr-1.dev.domain.com
+  ingress:
+    enabled: true
+    ingressClassName: nginx-ingress-external
+    host: "gitops-infra-demo-pr-1.dev.domain.com"
+  serviceAccount:
+    create: true
+    imagePullSecrets: [{name: "infra-dockerhub-creds"}]
+
+external-secrets:
+  enabled: true
+  VclusterExternalSecret:
+    enabled: true
+common-res:
+  enabled: true
+  Ingress:
+    enabled: true

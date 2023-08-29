@@ -1,0 +1,28 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "0.13.0"
+description: A Helm chart for vcluster
+name: vcluster
+version: "0.13.0"
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/vcluster
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: vcluster
+    version: "0.13.0"
+    repository: https://charts.loft.sh
+    condition: vcluster.enabled
+  - name: common-gitops
+    version: "1.1.2"
+    repository: https://helm-repo-public.luminarinfra.com/
+  - name: common-res
+    version: "1.0.12"
+    repository: https://helm-repo-public.luminarinfra.com/
+  - name: external-secrets
+    version: "0.7.1-15"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: external-secrets.enabled
