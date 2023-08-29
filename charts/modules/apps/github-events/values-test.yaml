@@ -1,25 +1,3 @@
-global:
-  providerConfigRef:
-    name: 'crossplane-provider-config-aws-infra-dev'
-  awsAccountId: '550094566655'
-  awsRegion: 'us-east-2'
-  githubPatKeyName: 'pat'
-  githubPatSecretName: 'infra-dev-gh-satish-labs'
-  baseDomain: 'satishweb.com'
-  secretStoreRef: 'cluster-secret-store-aws'
-  environment: 'infra-dev'
-  team: 'infra'
-  eventSourceServicePort: '11000'
-  githubRepoName: 'gitops-infra-demo'
-  githubOrg: 'satish-labs'
-  ingressClassNameExternal: 'nginx-ingress-external'
-  imagePullSecrets: [{name: "infra-dev-dockerhub-creds"}]
-  githubAppID: "379709"
-  githubAppInstallationID: "41004866"
-external-secrets:
-  enabled: true
-  AWSExternalSecret:
-    enabled: true
 Events:
   items:
     pull-requests:
@@ -199,7 +177,8 @@ Secret:
   items:
     _:
       enabled: true
-crossplane-aws-secretsmanager:
+
+external-secrets:
   enabled: true
-  Secret:
+  AWSExternalSecret:
     enabled: true

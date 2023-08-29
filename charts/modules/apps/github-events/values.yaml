@@ -36,10 +36,10 @@ global:
   ## @param global.githubOrg Github Org name
   ##
   githubOrg: satish-labs
-  ## @param global.githubOrg Github App ID
+  ## @param global.githubAppID Github App ID
   ##
   githubAppID:
-  ## @param global.githubOrg Github Installation ID
+  ## @param global.githubAppInstallationID Github Installation ID
   ##
   githubAppInstallationID:
   ## @param global.clusterOwner Vcluster owner
@@ -73,6 +73,9 @@ global:
   ## @param global.secretStoreRef External secrets cluster secret store name
   ##
   secretStoreRef: cluster-secret-store-aws
+  ## @param global.secretStoreNamespace Namespace to store the the AWS Secrets
+  ##
+  secretStoreNamespace: github-events-gitops-infra-demo
 
 # Note: argo-events hits a bug when there are two triggers configured for the same event source.
 #       until that bug is fixed, lets have 1-1 mappings between event source and triggers
@@ -215,8 +218,6 @@ external-secrets:
     items:
       _:
         name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-gh-{{ .Values.global.githubOrg }}'
-        labels:
-          argocd.argoproj.io/secret-type: repo-creds
         source:
           secretStoreRef:
             name: '{{ .Values.global.secretStoreRef }}'
@@ -241,18 +242,3 @@ external-secrets:
               awsSecretKey: githubAppPrivateKey
               # encode secret using command: base64 -w 0 /path/to/pem-key-file
               decodingStrategy: Base64
-
-## @skip crossplane-aws-secretsmanager
-crossplane-aws-secretsmanager:
-  enabled: false
-  Secret:
-    enabled: false
-    items:
-      _:
-        annotations:
-          crossplane.io/external-name: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
-        apiVersion: secretsmanager.aws.upbound.io/v1beta1
-        name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-gh-{{ .Values.global.githubOrg }}'
-        forProvider:
-          name: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
-          description: "Github App Credentials for {{ .Values.global.team }}-{{ .Values.global.environment }} team"
