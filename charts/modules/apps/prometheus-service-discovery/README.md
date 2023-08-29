@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # Prometheus Service Discovery Chart
 
 ## TL;DR

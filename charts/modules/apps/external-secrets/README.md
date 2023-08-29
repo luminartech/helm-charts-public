@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # External Secrets Module Chart
 
 ## TL;DR

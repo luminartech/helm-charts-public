@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # Kubernetes Resources Chart for Crossplane Kubernetes Provider
 
 ## TL;DR

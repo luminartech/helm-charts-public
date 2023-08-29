@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # S3 AWS Resources Chart for Crossplane AWS Provider
 
 ## TL;DR

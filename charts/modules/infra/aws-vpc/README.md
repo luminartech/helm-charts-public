@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # AWS VPC Module Chart
 
 ## TL;DR

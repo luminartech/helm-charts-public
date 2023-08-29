@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # AWS EKS Module Chart
 
 ## TL;DR

@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # Resource Access Manager AWS Resources Chart for Crossplane AWS Provider
 
 ## TL;DR

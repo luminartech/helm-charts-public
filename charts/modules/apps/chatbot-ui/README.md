@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # Chatbot-ui Module Chart
 
 ## TL;DR

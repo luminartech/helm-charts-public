@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # AWS EKS RBAC Module Chart
 
 ## TL;DR

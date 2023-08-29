@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # EC2 AWS Resources Chart for Crossplane AWS Provider
 
 ## TL;DR

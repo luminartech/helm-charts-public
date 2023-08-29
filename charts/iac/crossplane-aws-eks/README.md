@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # EKS AWS Resources Chart for Crossplane AWS Provider
 
 ## TL;DR

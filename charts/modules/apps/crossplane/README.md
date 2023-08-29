@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # Crossplane Module Chart
 
 ## TL;DR

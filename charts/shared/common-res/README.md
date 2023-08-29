@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # Common Resources Library Chart
 
 ## TL;DR

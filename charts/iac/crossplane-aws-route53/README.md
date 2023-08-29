@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # Route53 AWS Resources Chart for Crossplane AWS Provider
 
 ## TL;DR

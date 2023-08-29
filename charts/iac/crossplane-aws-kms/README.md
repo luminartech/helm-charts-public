@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # KMS AWS Resources Chart for Crossplane AWS Provider
 
 ## TL;DR

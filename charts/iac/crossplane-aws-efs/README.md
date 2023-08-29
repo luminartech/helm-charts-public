@@ -1,5 +1,3 @@
-<!--- app-name: Apache -->
-
 # EFS AWS Resources Chart for Crossplane AWS Provider
 
 ## TL;DR
