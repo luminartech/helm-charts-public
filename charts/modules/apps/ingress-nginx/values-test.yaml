@@ -1,0 +1,44 @@
+---
+ingress-nginx:
+  enabled: true
+  imagePullSecrets: [{name: "infra-dockerhub-creds"}]
+  defaultBackend:
+    enabled: true
+  controller:
+    nodeSelector:
+      # Default is to use any node.
+      # In case of deploying into an eks cluster that has public and private nodes, add node selector labels for public nodes
+      kubernetes.io/os: linux
+      # eks.amazonaws.com/nodegroup: 'infra-aws-eks-public'
+      nodeType: 'public'
+    service:
+      annotations:
+        service.beta.kubernetes.io/aws-load-balancer-backend-protocol: tcp
+        service.beta.kubernetes.io/aws-load-balancer-name: 'infra-nginx-ingress'
+        service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+        service.beta.kubernetes.io/aws-load-balancer-type: nlb
+        service.beta.kubernetes.io/aws-load-balancer-target-node-labels: 'nodeType=public'
+        service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: ip
+    ingressClassResource:
+      name: 'nginx-ingress-external'
+      enabled: true
+      default: false
+      controllerValue: 'k8s.io/inginx-ingress-external'
+    ingressClass: 'nginx-ingress-external'
+    replicaCount: 1
+    minAvailable: 1
+    autoscaling:
+      enabled: true
+      minReplicas: 1
+      maxReplicas: 2
+    resources:
+      limits:
+        cpu: 100m
+        memory: 100Mi
+      requests:
+        cpu: 200m
+        memory: 200Mi
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
