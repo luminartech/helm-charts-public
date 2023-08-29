@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "2.0.10"
 description: A Helm chart for argo-events
 name: argo-events
-version: "2.0.10"
+version: "2.4.0"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/argo-events
@@ -13,6 +13,6 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: argo-events
-    version: "2.0.10"
+    version: "2.4.0"
     repository: https://argoproj.github.io/argo-helm
     condition: argo-events.enabled

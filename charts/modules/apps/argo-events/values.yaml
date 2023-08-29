@@ -65,8 +65,4 @@ argo-events:
   webhook:
     enabled: true
     replicas: 2
-    # need to fix webhook deployment to not use 443 port.
-    # until then we keep this value as false
-    # This is happening on 1.24+ k8s version
-    containerSecurityContext:
-      runAsNonRoot: false
+    port: 8443
