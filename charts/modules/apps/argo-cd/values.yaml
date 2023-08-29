@@ -739,42 +739,6 @@ argo-cd:
         additionalLabels:
           release: monitoring
 
-## @section external-secrets
-## @skip external-secrets
-external-secrets:
-  enabled: false
-  AWSExternalSecret:
-    enabled: false
-    items:
-      _:
-        name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-gh-{{ .Values.global.githubOrg }}'
-        labels:
-          argocd.argoproj.io/secret-type: repo-creds
-        source:
-          secretStoreRef:
-            name: '{{ .Values.global.secretStoreRef }}'
-          data:
-            url:
-              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
-              awsSecretKey: url
-            githubAppID:
-              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
-              awsSecretKey: githubAppID
-            githubAppInstallationID:
-              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
-              awsSecretKey: githubAppInstallationID
-            app-client-secret:
-              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
-              awsSecretKey: app-client-secret
-            app-client-id:
-              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
-              awsSecretKey: app-client-id
-            githubAppPrivateKey:
-              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
-              awsSecretKey: githubAppPrivateKey
-              # encode secret using command: base64 -w 0 /path/to/pem-key-file
-              decodingStrategy: Base64
-
 ## @section common-res
 ## @skip common-res
 common-res:
@@ -818,3 +782,54 @@ common-res:
             - secretName: 'tls-webhook-{{ .Values.global.ingressUrl }}'
               hosts:
                 - 'webhook-{{ .Values.global.ingressUrl }}'
+
+## @section external-secrets
+## @skip external-secrets
+external-secrets:
+  enabled: false
+  AWSExternalSecret:
+    enabled: false
+    items:
+      _:
+        name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-gh-{{ .Values.global.githubOrg }}'
+        labels:
+          argocd.argoproj.io/secret-type: repo-creds
+        source:
+          secretStoreRef:
+            name: '{{ .Values.global.secretStoreRef }}'
+          data:
+            url:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+              awsSecretKey: url
+            githubAppID:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+              awsSecretKey: githubAppID
+            githubAppInstallationID:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+              awsSecretKey: githubAppInstallationID
+            app-client-secret:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+              awsSecretKey: app-client-secret
+            app-client-id:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+              awsSecretKey: app-client-id
+            githubAppPrivateKey:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+              awsSecretKey: githubAppPrivateKey
+              # encode secret using command: base64 -w 0 /path/to/pem-key-file
+              decodingStrategy: Base64
+
+## @skip crossplane-aws-secretsmanager
+crossplane-aws-secretsmanager:
+  enabled: false
+  Secret:
+    enabled: false
+    items:
+      _:
+        annotations:
+          crossplane.io/external-name: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+        apiVersion: secretsmanager.aws.upbound.io/v1beta1
+        name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-gh-{{ .Values.global.githubOrg }}'
+        forProvider:
+          name: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+          description: "Github App Credentials for {{ .Values.global.team }}-{{ .Values.global.environment }} team"
