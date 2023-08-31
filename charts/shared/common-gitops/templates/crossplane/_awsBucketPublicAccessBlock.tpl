@@ -11,7 +11,10 @@ Sample return boolean:
 true
 
 Global Override:
-awsBlockBucketPublic: false
+awsBlockBucketPublic: "false"
+
+Sample Local Override: (Enclose value in double quotes)
+restrictPublicBuckets: "false"
 
 */}}
 {{- define "common-gitops.crossplane.blockPublicBuckets" -}}
