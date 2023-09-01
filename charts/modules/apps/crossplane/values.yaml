@@ -280,7 +280,7 @@ Provider:
         skipDependencyResolution: true
     aws-s3:
       enabled: false
-      nameaws-s3:
+      name: aws-s3
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
