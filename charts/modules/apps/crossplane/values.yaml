@@ -65,6 +65,7 @@ ControllerConfig:
     ##
     aws-l:
       enabled: false
+      name: aws-l
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
@@ -90,6 +91,7 @@ ControllerConfig:
     ##
     aws-m:
       enabled: false
+      name: aws-m
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
@@ -115,6 +117,7 @@ ControllerConfig:
     ##
     aws-s:
       enabled: false
+      name: aws-s
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
         argocd.argoproj.io/sync-wave: "-1"
@@ -150,6 +153,7 @@ ProviderConfig:
   items:
     aws:
       enabled: false
+      name: aws
       apiVersion: aws.upbound.io/v1beta1
       spec:
         credentials:
@@ -167,12 +171,14 @@ StoreConfig:
   items:
     aws:
       enabled: false
+      name: aws
       apiVersion: aws.upbound.io/v1alpha1
       spec:
         defaultScope: '{{ .Values.global.crossplaneNamespace }}'
         type: Kubernetes
     kubernetes:
       enabled: false
+      name: kubernetes
       apiVersion: secrets.crossplane.io/v1alpha1
       spec:
         defaultScope: '{{ .Values.global.crossplaneNamespace }}'
@@ -190,6 +196,7 @@ Provider:
   items:
     aws-family:
       enabled: false
+      name: aws-family
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -203,6 +210,7 @@ Provider:
         skipDependencyResolution: true
     aws-iam:
       enabled: false
+      name: aws-iam
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -216,6 +224,7 @@ Provider:
         skipDependencyResolution: true
     aws-ec2:
       enabled: false
+      name: aws-ec2
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -229,6 +238,7 @@ Provider:
         skipDependencyResolution: true
     aws-eks:
       enabled: false
+      name: aws-eks
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -242,6 +252,7 @@ Provider:
         skipDependencyResolution: true
     aws-ecr:
       enabled: false
+      name: aws-ecr
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -255,6 +266,7 @@ Provider:
         skipDependencyResolution: true
     aws-kms:
       enabled: false
+      name: aws-kms
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -268,6 +280,7 @@ Provider:
         skipDependencyResolution: true
     aws-s3:
       enabled: false
+      nameaws-s3:
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -281,6 +294,7 @@ Provider:
         skipDependencyResolution: true
     aws-route53:
       enabled: false
+      name: aws-route53
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -294,6 +308,7 @@ Provider:
         skipDependencyResolution: true
     aws-secretsmanager:
       enabled: false
+      name: aws-secretsmanager
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -307,6 +322,7 @@ Provider:
         skipDependencyResolution: true
     aws-rds:
       enabled: false
+      name: aws-rds
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
@@ -320,6 +336,7 @@ Provider:
         skipDependencyResolution: true
     kubernetes:
       enabled: false
+      name: kubernetes
       spec:
         ignoreCrossplaneConstraints: false
         package: "crossplane/provider-kubernetes:{{ .Values.global.kubernetesProviderVersion }}"
