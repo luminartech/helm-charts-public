@@ -30,9 +30,9 @@ global:
   ##
   providerConfigRef:
     name: crossplane-provider-config-aws
-  ## @param global.transitGatewayIdRef Transit gateway ID ref name for internal network routing.
+  ## @param global.transitGatewayIdRefName Transit gateway ID ref name for internal network routing.
   ##
-  transitGatewayIdRef: transit-gateway-id-name-known-to-crossplane
+  transitGatewayIdRefName: transit-gateway-id-name-known-to-crossplane
   ## @param global.transitGatewayProviderConfigRef Transit gateway aws provider for crossplane
   ##
   transitGatewayProviderConfigRef: transit-gateway-aws-provider-name
@@ -308,7 +308,7 @@ crossplane-aws-ec2:
       #   forProvider:
       #     destinationCidrBlock: "10.x.x.x/xx"
       #     transitGatewayIdRef:
-      #       name: '{{ .Values.global.transitGatewayIdRef }}'
+      #       name: '{{ .Values.global.transitGatewayIdRefName }}'
       #     routeTableIdRef:
       #       name: '{{ `{{ include "common-gitops.names.release" . }}` }}-private'
 
@@ -493,8 +493,8 @@ crossplane-aws-ec2:
     items:
       _:
         forProvider:
-          transitGatewayRef:
-            name: "{{ .Values.global.transitGatewayIdRef }}"
+          transitGatewayIdRef:
+            name: "{{ .Values.global.transitGatewayIdRefName }}"
           applianceModeSupport: disable
           dnsSupport: enable
           ipv6Support: disable

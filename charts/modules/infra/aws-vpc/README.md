@@ -25,7 +25,7 @@
 | `global.awsAccountId`                    | Default aws account id for crossplane aws provider resources. Quotes are important, value must be a string. | `0123456789`                                  |
 | `global.awsRegion`                       | Default aws region for crossplane aws provider resources.                                                   | `us-east-2`                                   |
 | `global.providerConfigRef.name`          | Default crossplane provider all resources generated for crossplane.                                         | `crossplane-provider-config-aws`              |
-| `global.transitGatewayIdRef`             | Transit gateway ID ref name for internal network routing.                                                   | `transit-gateway-id-name-known-to-crossplane` |
+| `global.transitGatewayIdRefName`         | Transit gateway ID ref name for internal network routing.                                                   | `transit-gateway-id-name-known-to-crossplane` |
 | `global.transitGatewayProviderConfigRef` | Transit gateway aws provider for crossplane                                                                 | `transit-gateway-aws-provider-name`           |
 | `global.awsDeletionPolicy`               | Default crossplane deletion policy for all resources deployed by this helm chart..                          | `Orphan`                                      |
 | `global.vpcCidr`                         | VPC CIDR. Using 10.0.0.0/16 or default CIDR provided by AWS is a bad idea.                                  | `0.0.0.0/20`                                  |
@@ -33,9 +33,9 @@
 
 ### Dependency: crossplane-aws-ec2 upstream helm chart parameters for creating VPC resources
 
-| Name                         | Description                                                | Value   |
-| ---------------------------- | ---------------------------------------------------------- | ------- |
-| `crossplane-aws-ec2.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
+| Name                         | Description                                                | Value  |
+| ---------------------------- | ---------------------------------------------------------- | ------ |
+| `crossplane-aws-ec2.enabled` | Toggle for enabling or disabling upstream chart templates. | `true` |
 
 
 ## Configuration and installation details
