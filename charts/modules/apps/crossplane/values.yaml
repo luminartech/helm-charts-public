@@ -438,6 +438,7 @@ crossplane-aws-iam:
         ## @param crossplane-aws-iam.RolePolicyAttachment.items.provider-aws-adminaccess.forProvider.roleRef.name Reference to the Role resource created by this helm chart.
         ##
         forProvider:
+          ## TODO: We could create a custom policy that automatically adds statements for each provider family.
           policyArn: "arn:aws:iam::aws:policy/AdministratorAccess"
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}-provider-aws'
