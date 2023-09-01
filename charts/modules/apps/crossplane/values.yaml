@@ -64,9 +64,9 @@ ControllerConfig:
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
   items:
-    ## @skip ControllerConfig.items.controller-config-aws-l ControllerConfig with large resource allocation for provider pod
+    ## @skip ControllerConfig.items.aws-l ControllerConfig with large resource allocation for provider pod
     ##
-    controller-config-aws-l:
+    aws-l:
       enabled: false
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
@@ -89,9 +89,9 @@ ControllerConfig:
           requests:
             memory: "8000Mi"
             cpu: "8000m"
-    ## @skip ControllerConfig.items.controller-config-aws-m ControllerConfig with medium resource allocation for provider pod
+    ## @skip ControllerConfig.items.aws-m ControllerConfig with medium resource allocation for provider pod
     ##
-    controller-config-aws-m:
+    aws-m:
       enabled: false
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
@@ -114,9 +114,9 @@ ControllerConfig:
           requests:
             memory: "6000Mi"
             cpu: "6000m"
-    ## @skip ControllerConfig.items.controller-config-aws-s ControllerConfig with small resource allocation for provider pod
+    ## @skip ControllerConfig.items.aws-s ControllerConfig with small resource allocation for provider pod
     ##
-    controller-config-aws-s:
+    aws-s:
       enabled: false
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
@@ -151,13 +151,13 @@ ProviderConfig:
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
   items:
-    provider-config-aws:
+    aws:
       enabled: false
       apiVersion: aws.upbound.io/v1beta1
       spec:
         credentials:
           source: IRSA
-    provider-config-kubernetes:
+    kubernetes:
       enabled: false
       apiVersion: kubernetes.crossplane.io/v1alpha1
       spec:
@@ -179,13 +179,13 @@ StoreConfig:
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
   items:
-    store-aws:
+    aws:
       enabled: false
       apiVersion: aws.upbound.io/v1alpha1
       spec:
         defaultScope: '{{ .Values.global.crossplaneNamespace }}'
         type: Kubernetes
-    store-kubernetes:
+    kubernetes:
       enabled: false
       apiVersion: secrets.crossplane.io/v1alpha1
       spec:
@@ -202,137 +202,137 @@ Provider:
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
   items:
-    provider-aws-family:
+    aws-family:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-s'
+          name: '{{ include "common-gitops.names.release" . }}-aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-family-aws:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-iam:
+    aws-iam:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-m'
+          name: '{{ include "common-gitops.names.release" . }}-aws-m'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-iam:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-ec2:
+    aws-ec2:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-l'
+          name: '{{ include "common-gitops.names.release" . }}-aws-l'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-ec2:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-eks:
+    aws-eks:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-m'
+          name: '{{ include "common-gitops.names.release" . }}-aws-m'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-eks:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-ecr:
+    aws-ecr:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-s'
+          name: '{{ include "common-gitops.names.release" . }}-aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-ecr:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-kms:
+    aws-kms:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-m'
+          name: '{{ include "common-gitops.names.release" . }}-aws-m'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-kms:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-s3:
+    aws-s3:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-s'
+          name: '{{ include "common-gitops.names.release" . }}-aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-s3:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-route53:
+    aws-route53:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-s'
+          name: '{{ include "common-gitops.names.release" . }}-aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-route53:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-secretsmanager:
+    aws-secretsmanager:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-s'
+          name: '{{ include "common-gitops.names.release" . }}-aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-secretsmanager:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-aws-rds:
+    aws-rds:
       enabled: false
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-controller-config-aws-s'
+          name: '{{ include "common-gitops.names.release" . }}-aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-rds:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    provider-kubernetes:
+    kubernetes:
       enabled: false
       spec:
         ignoreCrossplaneConstraints: false
@@ -383,17 +383,17 @@ crossplane-aws-iam:
     items:
       provider-aws:
         ## Resource specific additional annotations.
-        ## @param crossplane-aws-iam.Role.items._.annotations.crossplane.io/external-name AWS resource name to import if exists.
+        ## @param crossplane-aws-iam.Role.items.provider-aws.annotations.crossplane.io/external-name AWS resource name to import if exists.
         ## import existing IAM role
         ## crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}'
         ## NOTE: Please do not change name value. It will be same across all the clusters
         annotations:
           crossplane.io/external-name: 'crossplane-provider-aws'
-        ## @param crossplane-aws-iam.Role.items._.deletionPolicy Deletion policy for the role.
+        ## @param crossplane-aws-iam.Role.items.provider-aws.deletionPolicy Deletion policy for the role.
         ## Orphan is recommended to avoid accidental removal of crossplane IAM role
         deletionPolicy: Orphan
         ## AWS Configuration for Role resources.
-        ## @skip crossplane-aws-iam.Role.items._.forProvider.assumeRolePolicy
+        ## @skip crossplane-aws-iam.Role.items.provider-aws.forProvider.assumeRolePolicy
         ## Default policy grants assume role permission to the service pod running in given eks cluster, namespace and service account.
         ## sts:AssumeRole cross account ArnLike principal values look similar
         ## however, to avoid duplication error on the infra cluster, wildcard is placed uniquely
@@ -430,12 +430,12 @@ crossplane-aws-iam:
   RolePolicyAttachment:
     items:
       provider-aws-adminaccess:
-        ## @param crossplane-aws-iam.RolePolicyAttachment.items._.deletionPolicy Deletion policy for the role.
+        ## @param crossplane-aws-iam.RolePolicyAttachment.items.provider-aws-adminaccess.deletionPolicy Deletion policy for the role.
         ## Orphan is recommended to avoid accidental removal of policy attachment to crossplane IAM role
         deletionPolicy: Orphan
         ## AWS Configuration for RolePolicyAttachment resources.
-        ## @param crossplane-aws-iam.RolePolicyAttachment.items._.forProvider.policyArn Default administratorAccess Policy resource ARN name.
-        ## @param crossplane-aws-iam.RolePolicyAttachment.items._.forProvider.roleNameRef.name Reference to the Role resource created by this helm chart.
+        ## @param crossplane-aws-iam.RolePolicyAttachment.items.provider-aws-adminaccess.forProvider.policyArn Default administratorAccess Policy resource ARN name.
+        ## @param crossplane-aws-iam.RolePolicyAttachment.items.provider-aws-adminaccess.forProvider.roleRef.name Reference to the Role resource created by this helm chart.
         ##
         forProvider:
           policyArn: "arn:aws:iam::aws:policy/AdministratorAccess"
