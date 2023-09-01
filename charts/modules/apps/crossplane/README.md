@@ -33,6 +33,7 @@
 | `global.crossplaneIAMRole`         | Crossplane AWS IAM role with administrative permissions to create cloud resources                                        | `crossplane-provider-aws`        |
 | `global.crossplaneNamespace`       | Crossplane namespace                                                                                                     | `infra-crossplane`               |
 
+
 ### Crossplane configurations
 
 | Name                       | Description                                | Value   |
@@ -42,17 +43,20 @@
 | `StoreConfig.enabled`      | Toggle for enabling or disabling template. | `false` |
 | `Provider.enabled`         | Toggle for enabling or disabling template. | `false` |
 
+
 ### Dependency: crossplane upstream helm chart parameters.
 
 | Name                 | Description                                                | Value   |
 | -------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
 
+
 ### Dependency: prometheus-service-discovery upstream helm chart parameters for creating serviceMonitors and podMonitors.
 
 | Name                                   | Description                                                | Value   |
 | -------------------------------------- | ---------------------------------------------------------- | ------- |
 | `prometheus-service-discovery.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
+
 
 ### Dependency: crossplane-aws-iam upstream helm chart parameters for creating and self managing crossplane IAM role
 
