@@ -32,9 +32,6 @@ global:
   ## @param global.eksHash Default EKS cluster hash for relevant crossplane resources such as IAM Role.
   ##
   eksHash: "XXXXX"
-  ## @param global.eksClusterName Default EKS cluster hash for relevant crossplane resources such as IAM Role.
-  ##
-  eksClusterName: "infra-aws-eks"
   ## @param global.providerConfigRef.name Default crossplane provider all resources generated for crossplane.
   ##
   providerConfigRef:
@@ -157,17 +154,6 @@ ProviderConfig:
       spec:
         credentials:
           source: IRSA
-    kubernetes:
-      enabled: false
-      apiVersion: kubernetes.crossplane.io/v1alpha1
-      spec:
-        credentials:
-          secretRef:
-            key: "kubeconfig"
-            # EKS Cluster name
-            name: "{{ .Values.global.eksClusterName }}"
-            namespace: "{{ .Values.global.crossplaneNamespace }}"
-          source: Secret
 
 StoreConfig:
   ## @param StoreConfig.enabled Toggle for enabling or disabling template.
