@@ -30,6 +30,7 @@
 | `global.awsDeletionPolicy`               | Default crossplane deletion policy for all resources deployed by this helm chart..                          | `Orphan`                                      |
 | `global.vpcCidr`                         | VPC CIDR. Using 10.0.0.0/16 or default CIDR provided by AWS is a bad idea.                                  | `0.0.0.0/20`                                  |
 
+
 ### Dependency: crossplane-aws-ec2 upstream helm chart parameters for creating VPC resources
 
 | Name                         | Description                                                | Value  |
