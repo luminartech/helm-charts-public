@@ -56,9 +56,9 @@ global:
   ## @param global.crossplaneIAMRole Crossplane IAM Role
   ##
   crossplaneIAMRole: crossplane-provider-aws
-  ## @param global.providerConfigRefName AWS Provider config ref name of the local crossplane instance
-  ## This is used by EKS apps to generate specs for local crossplane instance
-  providerConfigRefName: crossplane-provider-aws
+  ## @param global.infraProviderConfigRefName AWS Provider config name of the infra mgmt crossplane instance
+  ##
+  infraProviderConfigRefName: crossplane-provider-aws
   ## @param global.eksVersion Default EKS Version to use
   ## https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
   eksVersion: "1.25"
@@ -624,8 +624,8 @@ external-secrets:
           # Crossplane vars
           crossplaneNamespace: '{{ .Values.global.crossplaneNamespace }}'
           crossplaneIAMRole: '{{ .Values.global.crossplaneIAMRole }}'
-          infraProviderConfigRefName: '{{ .Values.global.providerConfigRef.name }}'
-          providerConfigRefName: '{{ .Values.global.providerConfigRefName }}'
+          infraProviderConfigRefName: '{{ .Values.global.infraProviderConfigRefName }}'
+          providerConfigRefName: '{{ .Values.global.providerConfigRef.name }}'
           # ArgoCD vars
           argocdNamespace: "{{ .Values.global.argocdNamespace }}"
           argocdIAMRole: "{{ .Values.global.argocdIAMRole }}"
