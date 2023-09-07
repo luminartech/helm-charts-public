@@ -3,3 +3,7 @@
 ## @param Object resource parameters
 ##
 Object: {}
+
+## @param ProviderConfig resource parameters
+##
+ProviderConfig: {}

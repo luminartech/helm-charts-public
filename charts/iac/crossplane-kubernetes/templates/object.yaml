@@ -11,17 +11,26 @@ metadata:
     {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
     {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
 spec:
-    {{- include "common-gitops.crossplane.awsDeletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
-  forProvider:
-    manifest:
-      {{- include "common-gitops.tplvalues.render" (dict "value" .forProvider.manifest "context" $root) | nindent 6 }}
+    {{- with .connectionDetails }}
+  connectionDetails:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+    {{- end }}
+    {{- include "common-gitops.crossplane.deletionPolicy" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
+    {{- include "common-gitops.crossplane.forProvider" (dict "root" $root "values" (.forProvider) "valuesOverride" (dict
+      )) | nindent 2 }}
     {{- with .managementPolicy }}
   managementPolicy: "{{ . }}"
+    {{- end }}
+    {{- with .readiness }}
+  readiness:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
     {{- end }}
     {{- with .references }}
   references:
       {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
     {{- end }}
+    {{- include "common-gitops.crossplane.publishConnectionDetailsTo" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
+    {{- include "common-gitops.crossplane.writeConnectionSecretToRef" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 2 }}
     {{- include "common-gitops.crossplane.providerConfigRef" (dict "root" $root "name" $name "kind" $kind) | nindent 2 }}
   {{- end }}
 {{- end }}

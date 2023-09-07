@@ -7,7 +7,7 @@ description: A Helm chart for crossplane Kubernetes resources
 name: crossplane-kubernetes
 # Below version must match the app version for the consistency.
 # Update minor bit if new tag is needed. e.g. 0.3.0-1
-version: "0.4.0-4"
+version: "0.4.0-5"
 home: https://helm-repo-public.luminarinfra.com
 sources:
   - https://github.com/luminartech/helm-charts-public/
