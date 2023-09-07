@@ -2,10 +2,8 @@
 ## Kubernetes resources configurations
 ## Note: Default values are used. This file should be used as a documentation/reference for your actual configuration
 
-##
-# Kubernetes - Object
-##
 Object:
+  enabled: true
   items:
     aws-auth-configmap:
       labels:
@@ -38,3 +36,14 @@ Object:
             namespace: kube-system
       managementPolicy: ""
       references: []
+
+ProviderConfig:
+  enabled: true
+  items:
+    k8s-provider:
+      credentials:
+        source: Secret
+        secretRef:
+          namespace: crossplane-system
+          name: cluster-config
+          key: kubeconfig

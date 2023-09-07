@@ -15,9 +15,10 @@
 
 ### Kubernetes object resources for crossplane kubernetes provider
 
-| Name     | Description         | Value |
-| -------- | ------------------- | ----- |
-| `Object` | resource parameters | `{}`  |
+| Name             | Description         | Value |
+| ---------------- | ------------------- | ----- |
+| `Object`         | resource parameters | `{}`  |
+| `ProviderConfig` | resource parameters | `{}`  |
 
 
 ## Configuration and installation details

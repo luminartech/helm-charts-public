@@ -18,10 +18,10 @@ dependencies:
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-iam.enabled
   - name: crossplane-kubernetes
-    version: "0.4.0-4"
+    version: "0.4.0-5"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-kubernetes.enabled
   - name: crossplane
-    version: "1.13.2-15"
+    version: "1.13.2-17"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane.enabled
