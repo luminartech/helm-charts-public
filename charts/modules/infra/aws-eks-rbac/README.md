@@ -34,18 +34,11 @@
 | `global.karpenterNodeRoleName`  | Karpenter IAM Role                                                                                          | `infra-aws-eks-karpenter-node`   |
 | `global.teamAdminIAMRole`       | Grant EKS admin permissions to this IAM Role                                                                | `infra-admins`                   |
 
-
 ### Dependency: crossplane-aws-iam upstream helm chart parameters
 
 
-
-
-### Dependency: crossplane upstream helm chart parameters
-
-
-
-
 ### Dependency: crossplane-kubernetes upstream helm chart parameters
+
 
 
 

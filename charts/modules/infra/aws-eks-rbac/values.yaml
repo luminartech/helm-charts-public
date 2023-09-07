@@ -135,12 +135,12 @@ crossplane-aws-iam:
             - "9e99a48a9960b14926bb7f3b02e22da2b0ab7280"
           url: https://oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}
 
-## @section Dependency: crossplane upstream helm chart parameters
+## @section Dependency: crossplane-kubernetes upstream helm chart parameters
 ##
-crossplane:
-  ## @skip crossplane.enabled
+crossplane-kubernetes:
+  ## @skip crossplane-kubernetes.enabled
   enabled: false
-  ## @skip crossplane.ProviderConfig
+  ## @skip crossplane-kubernetes.ProviderConfig
   ProviderConfig:
     enabled: false
     items:
@@ -154,12 +154,6 @@ crossplane:
               name: '{{ include "common-gitops.names.release" . }}'
               namespace: '{{ .Values.global.crossplaneNamespace }}'
             source: Secret
-
-## @section Dependency: crossplane-kubernetes upstream helm chart parameters
-##
-crossplane-kubernetes:
-  ## @skip crossplane-kubernetes.enabled
-  enabled: false
   ## @skip crossplane-kubernetes.Object
   Object:
     items:
