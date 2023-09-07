@@ -40,12 +40,10 @@
 
 
 
-### Dependency: crossplane upstream helm chart parameters
-
-
-
-
 ### Dependency: crossplane-kubernetes upstream helm chart parameters
+
+
+
 
 
 

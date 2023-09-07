@@ -2,10 +2,10 @@ annotations:
   category: Infrastructure
 apiVersion: v2
 # App version follows crossplane AWS provider version.
-appVersion: "0.37.0-3"
+appVersion: "0.37.0"
 description: A Helm chart for IAC resources needed to access EKS cluster
 name: aws-eks-rbac
-version: "0.37.0-5"
+version: "0.37.0-6"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/infra/aws-eks-rbac
@@ -21,7 +21,3 @@ dependencies:
     version: "0.4.0-5"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-kubernetes.enabled
-  - name: crossplane
-    version: "1.13.2-17"
-    repository: https://helm-repo-public.luminarinfra.com/
-    condition: crossplane.enabled

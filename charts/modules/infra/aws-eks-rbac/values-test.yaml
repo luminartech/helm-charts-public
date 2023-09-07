@@ -1,10 +1,5 @@
 crossplane-aws-iam:
   enabled: true
 
-crossplane:
-  enabled: true
-  ProviderConfig:
-    enabled: true
-
 crossplane-kubernetes:
   enabled: true
