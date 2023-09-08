@@ -142,18 +142,15 @@ crossplane-kubernetes:
   enabled: false
   ## @skip crossplane-kubernetes.ProviderConfig
   ProviderConfig:
-    enabled: false
     items:
       # Can not move it to crossplane-provider because it depends on particular secret
       _:
-        apiVersion: kubernetes.crossplane.io/v1alpha1
-        spec:
-          credentials:
-            secretRef:
-              key: "kubeconfig"
-              name: '{{ include "common-gitops.names.release" . }}'
-              namespace: '{{ .Values.global.crossplaneNamespace }}'
-            source: Secret
+        credentials:
+          secretRef:
+            key: "kubeconfig"
+            name: '{{ include "common-gitops.names.release" . }}'
+            namespace: '{{ .Values.global.crossplaneNamespace }}'
+          source: Secret
   ## @skip crossplane-kubernetes.Object
   Object:
     items:
