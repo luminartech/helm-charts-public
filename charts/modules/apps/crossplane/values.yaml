@@ -292,6 +292,20 @@ Provider:
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
+    aws-ram:
+      enabled: false
+      name: aws-ram
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
+      spec:
+        controllerConfigRef:
+          name: '{{ include "common-gitops.names.release" . }}-aws-s'
+        ignoreCrossplaneConstraints: false
+        package: "xpkg.upbound.io/upbound/provider-aws-ram:{{ .Values.global.awsProviderVersion }}"
+        packagePullPolicy: IfNotPresent
+        revisionActivationPolicy: Automatic
+        revisionHistoryLimit: 1
+        skipDependencyResolution: true
     aws-route53:
       enabled: false
       name: aws-route53
