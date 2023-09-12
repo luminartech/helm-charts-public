@@ -1,0 +1,35 @@
+apiVersion: v2
+name: buildbuddy
+description: A Helm chart for Crossplane
+type: application
+appVersion: "main" # buildbuddy does not have gold version yet
+# Ref: https://github.com/mckaywrigley/buildbuddy/tree/main
+version: "0.1.0"
+kubeVersion: ">=1.16.0-0"
+annotations:
+  category: Application
+keywords:
+  - buildbuddy
+  - bazel
+  - build
+  - test
+  - remote-cache
+  - rbe
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/buildbuddy
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: common-gitops
+    version: "1.1.2"
+    repository: https://helm-repo-public.luminarinfra.com/
+  - name: common-res
+    repository: https://helm-repo-public.luminarinfra.com/
+    version: "1.0.11"
+    condition: common-res.enabled
+  - name: buildbuddy
+    version: "0.0.180"
+    repository: https://helm.buildbuddy.io
+    condition: buildbuddy.enabled

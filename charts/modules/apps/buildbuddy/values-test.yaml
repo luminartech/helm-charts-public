@@ -1,0 +1,10 @@
+---
+common-res:
+  HorizontalPodAutoscaler:
+    enabled: true
+
+external-secrets:
+  enabled: true
+
+crossplane-aws-secretsmanager:
+  enabled: true
