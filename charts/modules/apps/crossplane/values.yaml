@@ -64,7 +64,7 @@ ControllerConfig:
     ## @skip ControllerConfig.items.aws-xl ControllerConfig with extra large resource allocation for provider pod
     ##
     aws-xl:
-      enabled: true
+      enabled: false
       name: aws-xl
       annotations:
         eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
