@@ -61,6 +61,32 @@ ControllerConfig:
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
   items:
+    ## @skip ControllerConfig.items.aws-xl ControllerConfig with extra large resource allocation for provider pod
+    ##
+    aws-xl:
+      enabled: true
+      name: aws-xl
+      annotations:
+        eks.amazonaws.com/role-arn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}"
+        argocd.argoproj.io/sync-wave: "-1"
+        argocd.argoproj.io/sync-options: 'Validate=false'
+      spec:
+        args:
+          - --debug
+          - --enable-external-secret-stores
+          - --provider-ttl=250
+          - --max-reconcile-rate=10
+          - --sync=48h
+          - --poll=48h
+        podSecurityContext:
+          fsGroup: 2000
+        resources:
+          limits:
+            memory: "20000Mi"
+            cpu: "10000m"
+          requests:
+            memory: "18000Mi"
+            cpu: "8000m"
     ## @skip ControllerConfig.items.aws-l ControllerConfig with large resource allocation for provider pod
     ##
     aws-l:
@@ -76,8 +102,8 @@ ControllerConfig:
           - --enable-external-secret-stores
           - --provider-ttl=250
           - --max-reconcile-rate=10
-          - --terraform-native-provider-path
-          - ""
+          - --sync=48h
+          - --poll=48h
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -101,9 +127,9 @@ ControllerConfig:
           - --debug
           - --enable-external-secret-stores
           - --provider-ttl=250
-          - --max-reconcile-rate=10
-          - --terraform-native-provider-path
-          - ""
+          - --max-reconcile-rate=5
+          - --sync=48h
+          - --poll=48h
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -127,9 +153,9 @@ ControllerConfig:
           - --debug
           - --enable-external-secret-stores
           - --provider-ttl=250
-          - --max-reconcile-rate=10
-          - --terraform-native-provider-path
-          - ""
+          - --max-reconcile-rate=3
+          - --sync=48h
+          - --poll=48h
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -367,10 +393,33 @@ crossplane:
   ## @param crossplane.enabled Toggle for enabling or disabling upstream chart templates.
   ##
   enabled: false
-  ## @skip crossplane.packageCache
   ## See https://github.com/crossplane/crossplane/issues/2877
+  ## @skip crossplane.packageCache
   packageCache:
     sizeLimit: '100Mi'
+  ## @skip crossplane.enable-external-secret-stores
+  enable-external-secret-stores: true
+  ## @skip crossplane.installCRDs
+  installCRDs: true
+  ## @skip crossplane.args
+  args:
+    - --enable-external-secret-stores
+  ## @skip crossplane.resourcesCrossplane
+  resourcesCrossplane:
+    limits:
+      memory: "1Gi"
+      cpu: "2"
+    requests:
+      memory: "512Mi"
+      cpu: "1"
+  ## @skip crossplane.resourcesRBACManager
+  resourcesRBACManager:
+    limits:
+      memory: "200Mi"
+      cpu: "300m"
+    requests:
+      memory: "100Mi"
+      cpu: "100m"
 
 ## @section Dependency: prometheus-service-discovery upstream helm chart parameters for creating serviceMonitors and podMonitors.
 ## ref: https://artifacthub.io/packages/helm/crossplane/crossplane
