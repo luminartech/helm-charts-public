@@ -227,7 +227,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-s'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-family-aws:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -241,7 +241,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-m'
+          name: 'aws-m'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-iam:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -255,7 +255,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-l'
+          name: 'aws-l'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-ec2:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -269,7 +269,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-m'
+          name: 'aws-m'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-eks:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -283,7 +283,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-s'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-ecr:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -297,7 +297,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-m'
+          name: 'aws-m'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-kms:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -311,7 +311,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-s'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-s3:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -325,7 +325,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-s'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-ram:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -339,7 +339,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-s'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-route53:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -353,7 +353,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-s'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-secretsmanager:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -367,7 +367,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: '{{ include "common-gitops.names.release" . }}-aws-s'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-rds:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
