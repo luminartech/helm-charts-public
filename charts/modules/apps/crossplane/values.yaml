@@ -135,10 +135,10 @@ ControllerConfig:
         resources:
           limits:
             memory: "6000Mi"
-            cpu: "4000m"
+            cpu: "6000m"
           requests:
             memory: "6000Mi"
-            cpu: "6000m"
+            cpu: "4000m"
     ## @skip ControllerConfig.items.aws-s ControllerConfig with small resource allocation for provider pod
     ##
     aws-s:
