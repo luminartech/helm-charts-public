@@ -211,7 +211,7 @@ crossplane-aws-ec2:
 ## @skip karpenter-crd
 ##
 karpenter-crd:
-  enabled: true
+  enabled: false
 
 ## @skip karpenter
 ##
