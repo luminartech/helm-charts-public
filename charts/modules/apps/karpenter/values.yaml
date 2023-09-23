@@ -208,6 +208,11 @@ crossplane-aws-iam:
 crossplane-aws-ec2:
   enabled: false
 
+## @skip karpenter-crd
+##
+karpenter-crd:
+  enabled: false
+
 ## @skip karpenter
 ##
 karpenter:
