@@ -234,16 +234,16 @@ Provider:
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    aws-iam:
+    aws-cloudwatchevents:
       enabled: false
-      name: aws-iam
+      name: aws-cloudwatchevents
       annotations:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: 'aws-m'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
-        package: "xpkg.upbound.io/upbound/provider-aws-iam:{{ .Values.global.awsProviderVersion }}"
+        package: "xpkg.upbound.io/upbound/provider-aws-cloudwatchevents:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
@@ -290,6 +290,20 @@ Provider:
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
+    aws-iam:
+      enabled: false
+      name: aws-iam
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
+      spec:
+        controllerConfigRef:
+          name: 'aws-m'
+        ignoreCrossplaneConstraints: false
+        package: "xpkg.upbound.io/upbound/provider-aws-iam:{{ .Values.global.awsProviderVersion }}"
+        packagePullPolicy: IfNotPresent
+        revisionActivationPolicy: Automatic
+        revisionHistoryLimit: 1
+        skipDependencyResolution: true
     aws-kms:
       enabled: false
       name: aws-kms
@@ -314,6 +328,20 @@ Provider:
           name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-s3:{{ .Values.global.awsProviderVersion }}"
+        packagePullPolicy: IfNotPresent
+        revisionActivationPolicy: Automatic
+        revisionHistoryLimit: 1
+        skipDependencyResolution: true
+    aws-sqs:
+      enabled: false
+      name: aws-sqs
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
+      spec:
+        controllerConfigRef:
+          name: 'aws-s'
+        ignoreCrossplaneConstraints: false
+        package: "xpkg.upbound.io/upbound/provider-aws-sqs:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
