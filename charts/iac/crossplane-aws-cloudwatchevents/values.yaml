@@ -1,0 +1,34 @@
+## @section AWS resources
+
+
+## @param APIDestination resource parameters
+##
+APIDestination: {}
+
+## @param Archive resource parameters
+##
+Archive: {}
+
+## @param Bus resource parameters
+##
+Bus: {}
+
+## @param BusPolicy resource parameters
+##
+BusPolicy: {}
+
+## @param Connection resource parameters
+##
+Connection: {}
+
+## @param Permission resource parameters
+##
+Permission: {}
+
+## @param Rule resource parameters
+##
+Rule: {}
+
+## @param Target resource parameters
+##
+Target: {}
