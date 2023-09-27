@@ -1,6 +1,4 @@
 ---
-## AWS SQS resources configurations
-
 Queue:
   items:
     example:
@@ -18,25 +16,16 @@ QueuePolicy:
   items:
     example:
       forProvider:
-        policy: |
-          {
-            "Version": "2012-10-17",
-            "Id": "sqspolicy",
-            "Statement": [
-              {
-                "Sid": "First",
-                "Effect": "Allow",
-                "Principal": "*",
-                "Action": "sqs:SendMessage",
-                "Resource": "${resource_arn}",
-                "Condition": {
-                  "ArnEquals": {
-                    "aws:SourceArn": "${source_arn}}"
-                  }
-                }
-              }
-            ]
-          }
+        policy:
+          Statement:
+            first:
+              Effect: "Allow"
+              Principal: "*"
+              Action: "sqs:SendMessage"
+              Resource: "${resource_arn}"
+              Condition:
+                "ArnEquals":
+                  "aws:SourceArn": "${source_arn}"
         queueUrlSelector:
           matchLabels:
             testing.upbound.io/example-name: example
