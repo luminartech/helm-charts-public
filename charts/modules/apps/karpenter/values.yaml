@@ -53,46 +53,125 @@ crossplane-aws-iam:
           description: "IAM Policy for karpenter to access aws services"
           policy:
             Statement:
-              allowEC2Karpenteradmin:
+              allowScopedEc2InstanceActions:
                 Action:
                   - ec2:CreateFleet
-                  - ec2:CreateLaunchTemplate
-                  - ec2:CreateTags
-                  - ec2:DeleteLaunchTemplate
-                  - ec2:DescribeAvailabilityZones
-                  - ec2:DescribeImages
-                  - ec2:DescribeInstances
-                  - ec2:DescribeInstanceStatus
-                  - ec2:DescribeInstanceTypeOfferings
-                  - ec2:DescribeInstanceTypes
-                  - ec2:DescribeLaunchTemplates
-                  - ec2:DescribeSecurityGroups
-                  - ec2:DescribeSpotPriceHistory
-                  - ec2:DescribeSubnets
-                  - ec2:RequestSpotInstances
                   - ec2:RunInstances
-                  - pricing:GetProducts
-                  - ssm:GetParameter
                 Effect: Allow
-                Resource: '*'
-              allowIAMPassRole:
+                Resource:
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}::image/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}::snapshot/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:spot-instances-request/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:security-group/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:subnet/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+              allowScopedEC2LaunchTemplateActions:
+                Action: "ec2:CreateLaunchTemplate"
+                Effect: Allow
+                Resource: "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+                Condition:
+                  StringEquals:
+                    "aws:RequestTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                  StringLike:
+                    'aws:RequestTag/karpenter.sh/provisioner-name': "*"
+              allowScopedEC2InstanceActionsWithTags:
+                Action:
+                  - "ec2:RunInstances"
+                  - "ec2:CreateFleet"
+                Effect: Allow
+                Resource:
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:fleet/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:volume/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:network-interface/*"
+                Condition:
+                  StringEquals:
+                    "aws:RequestTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                  StringLike:
+                    'aws:RequestTag/karpenter.sh/provisioner-name': "*"
+              allowScopedResourceCreationTagging:
+                Action: "ec2:CreateTags"
+                Effect: Allow
+                Resource:
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:fleet/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:volume/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:network-interface/*"
+                  - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+                Condition:
+                  StringEquals:
+                    "aws:RequestTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                    "ec2:CreateAction":
+                      - "RunInstances"
+                      - "CreateFleet"
+                      - "CreateLaunchTemplate"
+                  StringLike:
+                    'aws:RequestTag/karpenter.sh/provisioner-name': "*"
+              allowMachineMigrationTagging:
+                Action: "ec2:CreateTags"
+                Effect: Allow
+                Resource: "arn:${AWS::Partition}:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                    "aws:RequestTag/karpenter.sh/managed-by": "{{ .Values.global.eksClusterName }}"
+                  StringLike:
+                    'aws:RequestTag/karpenter.sh/provisioner-name': "*"
+              allowScopedDeletion:
+                Action:
+                  - "ec2:TerminateInstances"
+                  - "ec2:DeleteLaunchTemplate"
+                Effect: Allow
+                Resource:
+                  - "arn:${AWS::Partition}:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
+                  - "arn:${AWS::Partition}:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                  StringLike:
+                    'aws:RequestTag/karpenter.sh/provisioner-name': "*"
+              allowRegionalReadActions:
+                Action:
+                  - "ec2:DescribeAvailabilityZones"
+                  - "ec2:DescribeImages"
+                  - "ec2:DescribeInstances"
+                  - "ec2:DescribeInstanceTypeOfferings"
+                  - "ec2:DescribeInstanceTypes"
+                  - "ec2:DescribeLaunchTemplates"
+                  - "ec2:DescribeSecurityGroups"
+                  - "ec2:DescribeSpotPriceHistory"
+                  - "ec2:DescribeSubnets"
+                Effect: Allow
+                Resource: "*"
+                Condition:
+                  StringEquals:
+                    "aws:RequestedRegion": "{{ .Values.global.awsRegion }}"
+              allowGlobalReadActions:
+                Action:
+                  - "pricing:GetProducts"
+                  - "ssm:GetParameter"
+                Effect: Allow
+                Resource: "*"
+              allowInterruptionQueueActions:
+                Effect: Allow
+                Action:
+                  - sqs:DeleteMessage
+                  - sqs:GetQueueAttributes
+                  - sqs:GetQueueUrl
+                  - sqs:ReceiveMessage
+                Resource: "arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:karpenter-{{ .Values.global.eksClusterName }}"
+              allowPassingInstanceRole:
                 Effect: Allow
                 Action: iam:PassRole
                 Condition:
                   StringEquals:
                     iam:PassedToService: ec2.amazonaws.com
                 Resource: '*'
-              allowallowAssumeRoleWebIdentity:
+              allowAPIServerEndpointDiscovery:
                 Effect: Allow
-                Action: sts:AssumeRoleWithWebIdentity
-                Resource: '*'
-              allowConditionalEC2Terminate:
-                Effect: Allow
-                Action: ec2:TerminateInstances
-                Condition:
-                  StringLike:
-                    ec2:ResourceTag/karpenter.sh/provisioner-name: '*'
-                Resource: '*'
+                Action: eks:DescribeCluster
+                Resource: arn:aws:eks:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:cluster/{{ .Values.global.eksClusterName }}
+              # TODO: How are next 2 policies used by Karpenter?
               allowElasticLBRegisterInstances:
                 Effect: Allow
                 Action: elasticloadbalancing:RegisterInstancesWithLoadBalancer
@@ -101,10 +180,6 @@ crossplane-aws-iam:
                 Effect: Allow
                 Action: elasticloadbalancing:RegisterTargets
                 Resource: arn:aws:elasticloadbalancing:*:*:*/*
-              allowEKSDiscovery:
-                Effect: Allow
-                Action: eks:DescribeCluster
-                Resource: arn:aws:eks:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:cluster/{{ .Values.global.eksClusterName }}
   Role:
     items:
       node:
@@ -190,18 +265,96 @@ crossplane-aws-iam:
           policyArn: "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}-node'
-      # Why this is needed? https://karpenter.sh/v0.16.1/getting-started/getting-started-with-eksctl/cloudformation.yaml does not have it
+      # Needed for windows support: https://docs.aws.amazon.com/eks/latest/userguide/windows-support.html
       eks-vpc-res-cont:
         forProvider:
           policyArn: "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}-node'
-    # # TODO: Limit access to ECR
-    #   ecr-full-access:
-    #     forProvider:
-    #       policyArn: "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
-    #       roleRef:
-    #         name: '{{ include "common-gitops.names.release" . }}-node'
+
+## @skip crossplane-aws-sqs
+##
+crossplane-aws-sqs:
+  enabled: false
+  Queue:
+    items:
+      _:
+        forProvider:
+          messageRetentionSeconds: 300
+          sqsManagedSseEnabled: true
+  QueuePolicy:
+    items:
+      _:
+        forProvider:
+          queueUrlRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+          policy:
+            Statement:
+              ec2InterruptionPolicy:
+                Effect: Allow
+                Principal:
+                  Service:
+                    - events.amazonaws.com
+                    - sqs.amazonaws.com
+                Action: 'sqs:SendMessage'
+                Resource: 'arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ include "common-gitops.names.release" . }}'
+
+## @skip crossplane-aws-cloudwatchevents
+##
+crossplane-aws-cloudwatchevents:
+  enabled: false
+  Rule:
+    items:
+      scheduled-change:
+        forProvider:
+          eventPattern: |
+            {
+              "source": [ "aws.health" ],
+              "detail-type": "AWS Health Event"
+            }
+      spot-interruption:
+        forProvider:
+          eventPattern: |
+            {
+              "source": [ "aws.ec2" ],
+              "detail-type": "EC2 Spot Instance Interruption Warning"
+            }
+      rebalance:
+        forProvider:
+          eventPattern: |
+            {
+              "source": [ "aws.ec2" ],
+              "detail-type": "EC2 Instance Rebalance Recommendation"
+            }
+      instance-state-change:
+        forProvider:
+          eventPattern: |
+            {
+              "source": [ "aws.ec2" ],
+              "detail-type": "EC2 Instance State-change Notification"
+            }
+  Target:
+    items:
+      scheduled-change:
+        forProvider:
+          ruleRef:
+            name: '{{ include "common-gitops.names.release" . }}-scheduled-change'
+          arn: 'arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ include "common-gitops.names.release" . }}'
+      spot-interruption:
+        forProvider:
+          ruleRef:
+            name: '{{ include "common-gitops.names.release" . }}-spot-interruption'
+          arn: 'arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ include "common-gitops.names.release" . }}'
+      rebalance:
+        forProvider:
+          ruleRef:
+            name: '{{ include "common-gitops.names.release" . }}-rebalance'
+          arn: 'arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ include "common-gitops.names.release" . }}'
+      instance-state-change:
+        forProvider:
+          ruleRef:
+            name: '{{ include "common-gitops.names.release" . }}-instance-state-change'
+          arn: 'arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ include "common-gitops.names.release" . }}'
 
 ## @skip crossplane-aws-ec2
 ##
