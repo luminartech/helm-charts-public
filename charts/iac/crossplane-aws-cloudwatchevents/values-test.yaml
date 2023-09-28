@@ -1,0 +1,114 @@
+---
+APIDestination:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        connectionArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: apitest
+        description: An API Destination
+        httpMethod: POST
+        invocationEndpoint: https://api.publicapis.org/entries
+        invocationRateLimitPerSecond: 20
+        region: us-west-1
+
+Archive:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        eventSourceArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: order
+        region: us-west-1
+
+Bus:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        region: us-west-1
+
+BusPolicy:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        eventBusNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test-bus
+        policy: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "0",
+                "Effect": "Allow",
+                "Principal": {"AWS":"arn:aws:iam::${data.aws_account_id}:root"},
+                "Action": "events:PutEvents",
+                "Resource": "arn:aws:events:${data.aws_region}:${data.aws_account_id}:event-bus/test-bus"
+              }
+            ]
+          }
+        region: us-west-1
+
+Connection:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        authParameters:
+          - apiKey:
+              - key: x-signature
+                valueSecretRef:
+                  key: example-key
+                  name: example-secret-api
+                  namespace: upbound-system
+        authorizationType: API_KEY
+        description: A connection description
+        region: us-west-1
+
+Permission:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        principal: "${data.aws_account_id}"
+        region: us-west-1
+        statementId: DevAccountAccess
+        eventBusNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: access
+
+Rule:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        description: Capture each AWS Console Sign In
+        eventPattern: |
+          {
+            "detail-type": [
+              "AWS Console Sign In via CloudTrail"
+            ]
+          }
+        region: us-west-1
+        eventBusNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: rule-bus
+
+Target:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        arn: "arn:aws:sns:${data.aws_region}:${data.aws_account_id}:topic"
+        region: us-west-1
+        ruleSelector:
+          matchLabels:
+            testing.upbound.io/example-name: login-rule
+        eventBusNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: target-bus
+        targetId: aws-login
