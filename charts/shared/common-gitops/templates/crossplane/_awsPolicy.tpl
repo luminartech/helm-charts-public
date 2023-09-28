@@ -36,33 +36,39 @@ Sample return:
 }
 */}}
 {{- define "common-gitops.crossplane.awsPolicy" -}}
-  {{- if kindIs "string" .value -}}
-    {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) }}
-  {{- else if kindIs "slice" .value.Statement -}}
-    {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) |
-      fromYaml |
-      mustToPrettyJson |
-      replace "  " "    " -}}
-  {{- else if kindIs "map" .value.Statement -}}
+  {{- if .value -}}
+    {{- if kindIs "string" .value -}}
+      {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) }}
+    {{- else if kindIs "map" .value -}}
+      {{- if kindIs "slice" .value.Statement -}}
+        {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) |
+          fromYaml |
+          mustToPrettyJson |
+          replace "  " "    " -}}
+      {{- else if kindIs "map" .value.Statement -}}
 {
     "Version": "{{ .value.Version | default "2012-10-17" }}",
     "Statement": [
-    {{- $Statement := .value.Statement -}}
-    {{- /* List allows to find out inside the loop if the item is last and comma is not needed */ -}}
-    {{- $Sids := keys $Statement | sortAlpha -}}
-    {{ range $sid := $Sids -}}
-      {{ $stmt := get $Statement $sid -}}
-      {{ $_ := set $stmt "Sid" $sid -}}
-      {{ include "common-gitops.tplvalues.render" (dict "value" $stmt "context" $.root) |
-          fromYaml |
-          mustToPrettyJson |
-          replace "  " "    " |
-          nindent 8 -}}
-      {{ if ne (last $Sids) $sid }},{{ end -}}
-    {{ end }}
+        {{- $Statement := .value.Statement -}}
+        {{- /* List allows to find out inside the loop if the item is last and comma is not needed */ -}}
+        {{- $Sids := keys $Statement | sortAlpha -}}
+        {{ range $sid := $Sids -}}
+          {{ $stmt := get $Statement $sid -}}
+          {{ $_ := set $stmt "Sid" $sid -}}
+          {{ include "common-gitops.tplvalues.render" (dict "value" $stmt "context" $.root) |
+              fromYaml |
+              mustToPrettyJson |
+              replace "  " "    " |
+              nindent 8 -}}
+          {{ if ne (last $Sids) $sid }},{{ end -}}
+        {{ end }}
     ]
 }
-  {{- else -}}
-    {{- fail (print "Unsupported Statement type of policy document: " (kindOf .value.Statement)) -}}
+      {{- else -}}
+        {{- fail (print "Unsupported Statement type of policy document: " (kindOf .value.Statement)) -}}
+      {{- end -}}
+    {{- else -}}
+      {{- fail (print "Unsupported type of policy document: " (kindOf .value)) -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
