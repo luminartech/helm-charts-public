@@ -619,6 +619,7 @@ external-secrets:
           vpcFullname: "{{ .Values.global.vpcFullname }}"
           # AWS vars
           awsMgmtAccountId: '{{ .Values.global.awsMgmtAccountId }}'
+          awsBackupAccountId: '{{ .Values.global.awsBackupAccountId }}'
           awsAccountId: '{{ .Values.global.awsAccountId }}'
           awsRegion: '{{ .Values.global.awsRegion }}'
           # Crossplane vars
