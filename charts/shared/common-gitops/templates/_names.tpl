@@ -58,13 +58,24 @@ For example, allows to avoid word duplication in item name - "cicd-infra-vpc" in
 {{- end -}}
 
 {{/*
-Create a namespace value.
+Render the namespace value
 Allow the release namespace to be overridden for multi-namespace deployments in combined charts.
+Accepts dict:
+{
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
+}
+Sample return:
+namespace: test
+
 */}}
 {{- define "common-gitops.names.namespace" -}}
-  {{- with .Values.global.namespaceOverride -}}
-    {{- . -}}
-  {{- else -}}
-    {{- .Release.Namespace -}}
-  {{- end -}}
+  {{- $kindObj := (index .root.Values .kind) -}}
+  {{- $item := (index $kindObj.items .name) -}}
+  {{- /* Take the first non-empty argument */ -}}
+namespace: {{ coalesce $item.namespace
+                $kindObj.namespace
+                (.root.Values.global).namespace
+                .root.Release.Namespace }}
 {{- end -}}
