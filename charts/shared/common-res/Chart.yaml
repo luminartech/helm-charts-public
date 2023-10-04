@@ -2,7 +2,7 @@ apiVersion: "v2"
 appVersion: "latest"
 name: "common-res"
 type: "application"
-version: "1.0.12"
+version: "1.0.13"
 deprecated: false
 description: "Helm chart with common resources"
 home: https://helm-repo-public.luminarinfra.com
@@ -20,5 +20,6 @@ maintainers:
     email: "hennadii.mykhailiuta@luminartech.com"
 dependencies:
   - name: "common-gitops"
-    version: "1.1.2"
-    repository: "https://helm-repo-public.luminarinfra.com/"
+    version: "1.1.5"
+    # repository: "https://helm-repo-public.luminarinfra.com/"
+    repository: file://../common-gitops
