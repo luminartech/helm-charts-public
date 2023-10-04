@@ -115,6 +115,8 @@ ConfigMap:
   enabled: true
   items:
     _:
+      name: test
+      namespace: test
       enabled: true
       data:
         config.yaml: |
