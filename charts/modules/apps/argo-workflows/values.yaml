@@ -121,3 +121,15 @@ crossplane-aws-iam:
             name: '{{ include "common-gitops.names.release" . }}'
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}'
+
+## @skip Workflow
+Workflow: {}
+
+## @skip CronWorkflow
+CronWorkflow: {}
+
+## @skip WorkflowTemplate
+WorkflowTemplate: {}
+
+## @skip ClusterWorkflowTemplate
+ClusterWorkflowTemplate: {}
