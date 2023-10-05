@@ -38,13 +38,11 @@
 | `global.eksNodeVersion`             | EKS node version                                                                                            | `1.25.11-20230816`               |
 | `global.teamAdminIAMRole`           | Grant EKS admin permissions to this IAM Role                                                                | `infra-admins`                   |
 
-
 ### Dependency: crossplane-aws-iam upstream helm chart parameters for creating EKS resources
 
 | Name                         | Description                                                | Value   |
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-iam.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
-
 
 ### Dependency: crossplane-aws-ec2 upstream helm chart parameters for creating EKS resources
 
@@ -52,20 +50,17 @@
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-ec2.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
 
-
 ### Dependency: crossplane-aws-kms upstream helm chart parameters for creating EKS resources
 
 | Name                         | Description                                                | Value   |
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-kms.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
 
-
 ### Dependency: crossplane-aws-eks upstream helm chart parameters for creating EKS resources
 
 | Name                         | Description                                                | Value   |
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-eks.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
-
 
 ### Dependency: external-secrets upstream helm chart parameters for creating EKS resources
 
