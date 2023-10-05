@@ -23,6 +23,9 @@ global:
   ## @param global.awsAccountId Default aws account id for crossplane aws provider resources. Quotes are important, value must be a string.
   ##
   awsAccountId: "0123456789"
+  ## @param global.awsBackupAccountId AWS Account where the DataBackups will be stored for all teams. Quotes are important, value must be a string.
+  ##
+  awsBackupAccountId: "0123456789"
   ## @param global.awsMgmtAccountId Management AWS account that runs the main mgmt cluster + argocd + crossplane.
   ## Crossplane and argocd IAM roles will be allowed to access this cluster and manage resources in the AWS account.
   ##
@@ -619,6 +622,7 @@ external-secrets:
           vpcFullname: "{{ .Values.global.vpcFullname }}"
           # AWS vars
           awsMgmtAccountId: '{{ .Values.global.awsMgmtAccountId }}'
+          awsBackupAccountId: '{{ .Values.global.awsBackupAccountId }}'
           awsAccountId: '{{ .Values.global.awsAccountId }}'
           awsRegion: '{{ .Values.global.awsRegion }}'
           # Crossplane vars
