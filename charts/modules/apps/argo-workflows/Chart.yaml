@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "0.20.11"
+appVersion: "0.20.11-1"
 description: A Helm chart for argo-workflows
 name: argo-workflows
-version: "0.20.11"
+version: "0.20.11-1"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/argo-workflows

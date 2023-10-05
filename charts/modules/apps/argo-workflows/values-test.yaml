@@ -65,3 +65,8 @@ argo-workflows:
 
 crossplane-aws-iam:
   enabled: true
+
+Workflow:
+  items:
+    test:
+      test: true
