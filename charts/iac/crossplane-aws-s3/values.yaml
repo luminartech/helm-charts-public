@@ -80,6 +80,10 @@ BucketServerSideEncryptionConfiguration: {}
 ##
 BucketVersioning: {}
 
+## @param BucketReplicationConfiguration resource parameters
+##
+BucketReplicationConfiguration: {}
+
 ## @param BucketWebsiteConfiguration resource parameters
 ##
 BucketWebsiteConfiguration: {}
