@@ -177,17 +177,9 @@ ProviderConfig:
   ## items._: Name of the resource in the kubernetes. "_" generates a default name as releaseName-object name
   ## ref: https://github.com/luminartech/helm-charts-public/blob/478ec718b93063f1eccfa591189ab0f59bf3fd1e/charts/shared/common-gitops/templates/_names.tpl#L50
   items:
-    'aws-{{ .Values.global.awsAccountId }}':
-      enabled: false
-      name: 'aws-{{ .Values.global.awsAccountId }}'
-      apiVersion: aws.upbound.io/v1beta1
-      spec:
-        credentials:
-          source: IRSA
     aws:
       enabled: false
       name: aws
-      apiVersion: aws.upbound.io/v1beta1
       spec:
         credentials:
           source: IRSA
@@ -205,7 +197,6 @@ StoreConfig:
     aws:
       enabled: false
       name: aws
-      apiVersion: aws.upbound.io/v1alpha1
       spec:
         defaultScope: '{{ .Values.global.crossplaneNamespace }}'
         type: Kubernetes
