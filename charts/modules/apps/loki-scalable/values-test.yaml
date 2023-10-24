@@ -1,0 +1,32 @@
+---
+global:
+  # chartNameOverride: "infra"
+  # releaseNameOverride: "infra"
+  providerConfigRef:
+    name: aws-01234567890
+  awsAccountId: "01234567890" # Quotes are important, this must be a string
+  awsRegion: us-west-2
+  eksHash: "AABBCCDDEEFF00112233445566778899"
+  imagePullSecrets: [{name: "infra-dockerhub-creds"}]
+  environment: infra
+  secretStoreRef: cluster-aws-secret-store
+
+loki:
+  enabled: true
+  monitoring:
+    serviceMonitor:
+      enabled: false
+  loki:
+    storage:
+      bucketNames:
+        chunks: 'chunks-set-me'
+promtail:
+  enabled: true
+  serviceMonitor:
+    enabled: false
+
+crossplane-aws-iam:
+  enabled: true
+
+crossplane-aws-s3:
+  enabled: true
