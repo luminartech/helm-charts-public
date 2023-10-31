@@ -1,0 +1,91 @@
+---
+CompositeAlarm:
+  enabled: true
+  items:
+    test:
+      forProvider:
+          alarmActionsSelector:
+            matchLabels:
+              testing.upbound.io/example-name: example
+          alarmDescription: This is a composite alarm!
+          alarmRule: |
+            ALARM(${aws_cloudwatch_metric_alarm.alpha.alarm_name}) OR
+            ALARM(${aws_cloudwatch_metric_alarm.bravo.alarm_name})
+          okActionsSelector:
+            matchLabels:
+              testing.upbound.io/example-name: example
+          region: us-west-1
+
+Dashboard:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        dashboardBody: |
+          {
+            "widgets": [
+              {
+                "type": "metric",
+                "x": 0,
+                "y": 0,
+                "width": 12,
+                "height": 6,
+                "properties": {
+                  "metrics": [
+                    [
+                      "AWS/EC2",
+                      "CPUUtilization",
+                      "InstanceId",
+                      "i-012345"
+                    ]
+                  ],
+                  "period": 300,
+                  "stat": "Average",
+                  "region": "us-east-1",
+                  "title": "EC2 Instance CPU"
+                }
+              },
+              {
+                "type": "text",
+                "x": 0,
+                "y": 7,
+                "width": 3,
+                "height": 3,
+                "properties": {
+                  "markdown": "Hello world"
+                }
+              }
+            ]
+          }
+        region: us-west-1
+
+MetricAlarm:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        alarmDescription: This metric monitors ec2 cpu utilization
+        comparisonOperator: GreaterThanOrEqualToThreshold
+        evaluationPeriods: 2
+        insufficientDataActions: []
+        metricName: CPUUtilization
+        namespace: AWS/EC2
+        period: 120
+        statistic: Average
+        threshold: 80
+        region: us-west-1
+
+MetricStream:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        firehoseArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: s3_stream
+        includeFilter:
+          - namespace: AWS/EC2
+          - namespace: AWS/EBS
+        name: my-metric-stream
+        outputFormat: json
+        region: us-west-1

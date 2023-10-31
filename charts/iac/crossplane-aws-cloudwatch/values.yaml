@@ -1,0 +1,18 @@
+## @section AWS resources
+
+
+## @param CompositeAlarm resource parameters
+##
+CompositeAlarm: {}
+
+## @param Dashboard resource parameters
+##
+Dashboard: {}
+
+## @param MetricAlarm resource parameters
+##
+MetricAlarm: {}
+
+## @param MetricStream resource parameters
+##
+MetricStream: {}
