@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "1.13.2"
 description: A Helm chart for Crossplane
 name: crossplane
-version: "1.13.2-24"
+version: "1.13.2-25"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/crossplane
@@ -25,5 +25,5 @@ dependencies:
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-iam.enabled
   - name: common-gitops
-    version: "1.1.3"
+    version: "1.1.5"
     repository: https://helm-repo-public.luminarinfra.com/
