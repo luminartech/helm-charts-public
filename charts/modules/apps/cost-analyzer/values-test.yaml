@@ -1,0 +1,29 @@
+---
+global:
+  prometheus:
+    enabled: false
+  environment: infra
+  secretStoreRef: cluster-aws-secret-store
+cost-analyzer:
+  enabled: true
+  imagePullSecrets: [{name: "infra-dockerhub-creds"}]
+  ingress:
+    enabled: true
+    className: nginx-ingress-external
+    annotations:
+      cert-manager.io/cluster-issuer: infra-cluster-issuer-example-com
+    hosts: ["kubecost.example.com"]
+    paths: ["/"]
+    tls:
+      - secretName: tls-kubecost.example.com
+        hosts:
+          - kubecost.example.com
+  serviceMonitor:
+    enabled: true
+  kubecostToken: "set-me"
+
+crossplane-aws-iam:
+  enabled: true
+
+crossplane-aws-s3:
+  enabled: true

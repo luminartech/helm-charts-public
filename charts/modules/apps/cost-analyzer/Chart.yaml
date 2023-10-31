@@ -1,0 +1,29 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "1.106.4"
+description: A Helm chart for cost-analyzer (kubecost)
+name: kubecost
+version: "1.106.4-0"
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/cost-analyzer
+maintainers:
+  - name: Luminar SRE Team
+    email: sre@luminartech.com
+dependencies:
+  - name: cost-analyzer
+    version: "1.106.4"
+    repository: https://kubecost.github.io/cost-analyzer/
+    condition: cost-analyzer.enabled
+  - name: crossplane-aws-iam
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-iam.enabled
+  - name: crossplane-aws-s3
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-s3.enabled
+  - name: common-res
+    version: "1.0.12"
+    repository: https://helm-repo-public.luminarinfra.com/
