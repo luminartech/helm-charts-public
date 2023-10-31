@@ -246,6 +246,20 @@ Provider:
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
+    aws-cloudwatch:
+      enabled: false
+      name: aws-cloudwatch
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
+      spec:
+        controllerConfigRef:
+          name: 'aws-s'
+        ignoreCrossplaneConstraints: false
+        package: "xpkg.upbound.io/upbound/provider-aws-cloudwatch:{{ .Values.global.awsProviderVersion }}"
+        packagePullPolicy: IfNotPresent
+        revisionActivationPolicy: Automatic
+        revisionHistoryLimit: 1
+        skipDependencyResolution: true
     aws-ec2:
       enabled: false
       name: aws-ec2
