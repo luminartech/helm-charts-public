@@ -4,17 +4,17 @@ CompositeAlarm:
   items:
     test:
       forProvider:
-          alarmActionsSelector:
-            matchLabels:
-              testing.upbound.io/example-name: example
-          alarmDescription: This is a composite alarm!
-          alarmRule: |
-            ALARM(${aws_cloudwatch_metric_alarm.alpha.alarm_name}) OR
-            ALARM(${aws_cloudwatch_metric_alarm.bravo.alarm_name})
-          okActionsSelector:
-            matchLabels:
-              testing.upbound.io/example-name: example
-          region: us-west-1
+        alarmActionsSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        alarmDescription: This is a composite alarm!
+        alarmRule: |
+          ALARM(${aws_cloudwatch_metric_alarm.alpha.alarm_name}) OR
+          ALARM(${aws_cloudwatch_metric_alarm.bravo.alarm_name})
+        okActionsSelector:
+          matchLabels:
+            testing.upbound.io/example-name: example
+        region: us-west-2
 
 Dashboard:
   enabled: true
@@ -57,7 +57,7 @@ Dashboard:
               }
             ]
           }
-        region: us-west-1
+        region: us-west-2
 
 MetricAlarm:
   enabled: true
@@ -73,7 +73,7 @@ MetricAlarm:
         period: 120
         statistic: Average
         threshold: 80
-        region: us-west-1
+        region: us-west-2
 
 MetricStream:
   enabled: true
@@ -88,4 +88,4 @@ MetricStream:
           - namespace: AWS/EBS
         name: my-metric-stream
         outputFormat: json
-        region: us-west-1
+        region: us-west-2

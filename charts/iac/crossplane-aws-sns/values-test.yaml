@@ -1,0 +1,83 @@
+---
+PlatformApplication:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        platform: GCM
+        platformCredentialSecretRef:
+          key: example-key
+          name: example-secret
+          namespace: upbound-system
+        region: us-west-2
+
+SMSPreferences:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        defaultSmsType: Promotional
+        region: us-west-2
+
+TopicPolicy:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        arnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test
+        policy: |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Sid": "Stmt1670943316577",
+                "Action": [
+                  "sns:AddPermission",
+                  "sns:DeleteTopic",
+                  "sns:GetTopicAttributes",
+                  "sns:ListSubscriptionsByTopic",
+                  "sns:Publish",
+                  "sns:RemovePermission",
+                  "sns:SetTopicAttributes",
+                  "sns:Subscribe"
+                ],
+                "Effect": "Allow",
+                "Resource": "arn:aws:sns:us-west-1:153891904029:test",
+                "Principal": {
+                  "AWS": "*"
+                }
+              }
+            ]
+          }
+        region: us-west-2
+
+Topic:
+  enabled: true
+  items:
+    test:
+      annotations:
+        meta.upbound.io/example-id: sns/v1beta1/topicsubscription
+      labels:
+        testing.upbound.io/example-name: sns
+      forProvider:
+        region: us-west-2
+
+TopicSubscription:
+  enabled: true
+  items:
+    test:
+      annotations:
+        meta.upbound.io/example-id: sns/v1beta1/topicsubscription
+      labels:
+        testing.upbound.io/example-name: sns
+      forProvider:
+        endpointSelector:
+          matchLabels:
+            testing.upbound.io/example-name: sns
+        protocol: sqs
+        topicArnSelector:
+          matchLabels:
+            testing.upbound.io/example-name: sns
+        region: us-west-2
