@@ -1,0 +1,22 @@
+## @section AWS resources
+
+
+## @param PlatformApplication resource parameters
+##
+PlatformApplication: {}
+
+## @param SMSPreferences resource parameters
+##
+SMSPreferences: {}
+
+## @param TopicPolicy resource parameters
+##
+TopicPolicy: {}
+
+## @param Topic resource parameters
+##
+Topic: {}
+
+## @param TopicSubscription resource parameters
+##
+TopicSubscription: {}

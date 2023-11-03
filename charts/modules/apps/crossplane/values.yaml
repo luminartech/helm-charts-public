@@ -344,6 +344,20 @@ Provider:
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
+    aws-sns:
+      enabled: false
+      name: aws-sns
+      annotations:
+        argocd.argoproj.io/sync-wave: "-1"
+      spec:
+        controllerConfigRef:
+          name: 'aws-s'
+        ignoreCrossplaneConstraints: false
+        package: "xpkg.upbound.io/upbound/provider-aws-sns:{{ .Values.global.awsProviderVersion }}"
+        packagePullPolicy: IfNotPresent
+        revisionActivationPolicy: Automatic
+        revisionHistoryLimit: 1
+        skipDependencyResolution: true
     aws-sqs:
       enabled: false
       name: aws-sqs
