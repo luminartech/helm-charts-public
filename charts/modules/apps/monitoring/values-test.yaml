@@ -52,11 +52,11 @@ kube-prometheus-stack:
         kubernetes.io/tls-acme: "true"
         cert-manager.io/acme-challenge-type: dns01
         cert-manager.io/acme-dns01-provider: route53
-        cert-manager.io/cluster-issuer: cluster-issuer-test-luminarinfra-com
+        cert-manager.io/cluster-issuer: cluster-issuer-test-example-com
       hosts:
-        - grafana.test.luminarinfra.com
+        - grafana.test.example.com
       path: /
       tls:
-        - secretName: tls-grafana.test.luminarinfra.com
+        - secretName: tls-grafana.test.example.com
           hosts:
-            - grafana.test.luminarinfra.com
+            - grafana.test.example.com

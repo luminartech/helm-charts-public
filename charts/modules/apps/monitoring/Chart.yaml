@@ -9,8 +9,8 @@ home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/monitoring
 maintainers:
-  - name: Luminar SRE Team
-    email: sre@luminartech.com
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
 dependencies:
   - name: kube-prometheus-stack
     version: "45.7.1"
