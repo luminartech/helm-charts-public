@@ -2,6 +2,8 @@
 ## @section commonGrafanaDashboards
 ## Grafana dashboards that are added to kube-prometheus-stack chart.
 ##
+## @skip commonGrafanaDashboards
+
 commonGrafanaDashboards:
   argocdBasicEnabled: false
   certManagerEnabled: false
@@ -17,6 +19,7 @@ commonGrafanaDashboards:
 ## @section kube-prometheus-stack
 ## Kube-prometheus-stack chart config.
 ##
+## @skip kube-prometheus-stack
 kube-prometheus-stack:
   enabled: false
   ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
@@ -54,8 +57,8 @@ kube-prometheus-stack:
             matchers:
               - alertname =~ "KubeSchedulerDown"
           - match:
-            receiver: 'slack'
-            continue: true
+              receiver: 'slack'
+              continue: true
       # receivers:
       #   - name: 'null'
       #   - name: "slack"
