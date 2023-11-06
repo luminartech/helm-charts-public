@@ -1,0 +1,1352 @@
+{{- /*
+Generated from 'trivy-vulnerabilities'
+Do not change in-place! In order to change this file look into sync_grafana_dashboards.py
+*/ -}}
+{{- if .Values.commonGrafanaDashboards.trivyVulnerabilitiesEnabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ print "grafana-dashboard-trivy-vulnerabilities" | trunc 63 | trimSuffix "-" }}
+  labels:
+    grafana_dashboard: "1"
+    app: {{ .Values.global.deploymentName }}-grafana
+data:
+  trivy-vulnerabilities.json: |-
+    {
+        "annotations": {
+            "list": [
+                {
+                    "$$hashKey": "object:7",
+                    "builtIn": 1,
+                    "datasource": {
+                        "type": "datasource",
+                        "uid": "grafana"
+                    },
+                    "enable": true,
+                    "hide": true,
+                    "iconColor": "rgba(0, 211, 255, 1)",
+                    "name": "Annotations & Alerts",
+                    "target": {
+                        "limit": 100,
+                        "matchAny": false,
+                        "tags": [
+
+                        ],
+                        "type": "dashboard"
+                    },
+                    "type": "dashboard"
+                }
+            ]
+        },
+        "description": "Dashboard for Trivy Operator",
+        "editable": true,
+        "fiscalYearStartMonth": 0,
+        "gnetId": 12331,
+        "graphTooltip": 0,
+        "id": 41,
+        "links": [
+
+        ],
+        "liveNow": false,
+        "panels": [
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:178",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 2,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "dark-red",
+                                    "value": null
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [
+
+                    ]
+                },
+                "gridPos": {
+                    "h": 5,
+                    "w": 2,
+                    "x": 0,
+                    "y": 0
+                },
+                "id": 18,
+                "links": [
+
+                ],
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                        "calcs": [
+                            "first"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "9.1.4",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "prometheus"
+                        },
+                        "dateTimeType": "DATETIME",
+                        "editorMode": "code",
+                        "expr": "sum(max(trivy_image_vulnerabilities{severity=\"Critical\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) )   ",
+                        "format": "table",
+                        "group": [
+                            {
+                                "params": [
+                                    "$__interval",
+                                    "none"
+                                ],
+                                "type": "time"
+                            }
+                        ],
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "legendFormat": "",
+                        "metricColumn": "none",
+                        "range": true,
+                        "refId": "A",
+                        "round": "0s",
+                        "select": [
+                            [
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "column"
+                                },
+                                {
+                                    "params": [
+                                        "count"
+                                    ],
+                                    "type": "aggregate"
+                                },
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "alias"
+                                }
+                            ]
+                        ],
+                        "table": "vulnerability",
+                        "timeColumn": "create_date",
+                        "timeColumnType": "timestamp",
+                        "where": [
+                            {
+                                "name": "$__timeFilter",
+                                "params": [
+
+                                ],
+                                "type": "macro"
+                            },
+                            {
+                                "datatype": "int4",
+                                "name": "",
+                                "params": [
+                                    "host_id",
+                                    "!=",
+                                    "None"
+                                ],
+                                "type": "expression"
+                            }
+                        ]
+                    }
+                ],
+                "title": "Critical",
+                "type": "stat"
+            },
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:135",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "semi-dark-red",
+                                    "value": null
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [
+
+                    ]
+                },
+                "gridPos": {
+                    "h": 5,
+                    "w": 2,
+                    "x": 2,
+                    "y": 0
+                },
+                "id": 48,
+                "links": [
+
+                ],
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                        "calcs": [
+                            "mean"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "9.1.4",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "000000001"
+                        },
+                        "dateTimeType": "DATETIME",
+                        "editorMode": "code",
+                        "expr": "sum(max(trivy_image_vulnerabilities{severity=\"High\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ))",
+                        "format": "table",
+                        "group": [
+                            {
+                                "params": [
+                                    "$__interval",
+                                    "none"
+                                ],
+                                "type": "time"
+                            }
+                        ],
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "legendFormat": "",
+                        "metricColumn": "none",
+                        "range": true,
+                        "refId": "A",
+                        "round": "0s",
+                        "select": [
+                            [
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "column"
+                                },
+                                {
+                                    "params": [
+                                        "count"
+                                    ],
+                                    "type": "aggregate"
+                                },
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "alias"
+                                }
+                            ]
+                        ],
+                        "table": "vulnerability",
+                        "timeColumn": "create_date",
+                        "timeColumnType": "timestamp",
+                        "where": [
+                            {
+                                "name": "$__timeFilter",
+                                "params": [
+
+                                ],
+                                "type": "macro"
+                            },
+                            {
+                                "datatype": "int4",
+                                "name": "",
+                                "params": [
+                                    "host_id",
+                                    "!=",
+                                    "None"
+                                ],
+                                "type": "expression"
+                            }
+                        ]
+                    }
+                ],
+                "title": "High",
+                "type": "stat"
+            },
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:221",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "dark-orange",
+                                    "value": null
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [
+
+                    ]
+                },
+                "gridPos": {
+                    "h": 5,
+                    "w": 2,
+                    "x": 4,
+                    "y": 0
+                },
+                "id": 26,
+                "links": [
+
+                ],
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                        "calcs": [
+                            "mean"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "9.1.4",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "000000001"
+                        },
+                        "dateTimeType": "DATETIME",
+                        "editorMode": "code",
+                        "expr": "sum(max(trivy_image_vulnerabilities{severity=\"Medium\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ))",
+                        "format": "table",
+                        "group": [
+                            {
+                                "params": [
+                                    "$__interval",
+                                    "none"
+                                ],
+                                "type": "time"
+                            }
+                        ],
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "legendFormat": "",
+                        "metricColumn": "none",
+                        "range": true,
+                        "refId": "A",
+                        "round": "0s",
+                        "select": [
+                            [
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "column"
+                                },
+                                {
+                                    "params": [
+                                        "count"
+                                    ],
+                                    "type": "aggregate"
+                                },
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "alias"
+                                }
+                            ]
+                        ],
+                        "table": "vulnerability",
+                        "timeColumn": "create_date",
+                        "timeColumnType": "timestamp",
+                        "where": [
+                            {
+                                "name": "$__timeFilter",
+                                "params": [
+
+                                ],
+                                "type": "macro"
+                            },
+                            {
+                                "datatype": "int4",
+                                "name": "",
+                                "params": [
+                                    "host_id",
+                                    "!=",
+                                    "None"
+                                ],
+                                "type": "expression"
+                            }
+                        ]
+                    }
+                ],
+                "title": "Medium",
+                "type": "stat"
+            },
+            {
+                "datasource": {
+                    "type": "prometheus",
+                    "uid": "prometheus"
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:264",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "light-blue",
+                                    "value": null
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [
+
+                    ]
+                },
+                "gridPos": {
+                    "h": 5,
+                    "w": 2,
+                    "x": 6,
+                    "y": 0
+                },
+                "id": 20,
+                "links": [
+
+                ],
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                        "calcs": [
+                            "mean"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "9.1.4",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "000000001"
+                        },
+                        "dateTimeType": "DATETIME",
+                        "editorMode": "code",
+                        "expr": "sum(max(trivy_image_vulnerabilities{severity=\"Low\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ))",
+                        "format": "table",
+                        "group": [
+                            {
+                                "params": [
+                                    "$__interval",
+                                    "none"
+                                ],
+                                "type": "time"
+                            }
+                        ],
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "legendFormat": "",
+                        "metricColumn": "none",
+                        "range": true,
+                        "refId": "A",
+                        "round": "0s",
+                        "select": [
+                            [
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "column"
+                                },
+                                {
+                                    "params": [
+                                        "count"
+                                    ],
+                                    "type": "aggregate"
+                                },
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "alias"
+                                }
+                            ]
+                        ],
+                        "table": "vulnerability",
+                        "timeColumn": "create_date",
+                        "timeColumnType": "timestamp",
+                        "where": [
+                            {
+                                "name": "$__timeFilter",
+                                "params": [
+
+                                ],
+                                "type": "macro"
+                            },
+                            {
+                                "datatype": "int4",
+                                "name": "",
+                                "params": [
+                                    "host_id",
+                                    "!=",
+                                    "None"
+                                ],
+                                "type": "expression"
+                            }
+                        ]
+                    }
+                ],
+                "title": "Low",
+                "type": "stat"
+            },
+            {
+                "datasource": {
+
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:315",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "light-purple",
+                                    "value": null
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [
+
+                    ]
+                },
+                "gridPos": {
+                    "h": 5,
+                    "w": 2,
+                    "x": 8,
+                    "y": 0
+                },
+                "id": 52,
+                "links": [
+
+                ],
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "horizontal",
+                    "reduceOptions": {
+                        "calcs": [
+                            "mean"
+                        ],
+                        "fields": "",
+                        "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "9.1.4",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "000000001"
+                        },
+                        "dateTimeType": "DATETIME",
+                        "editorMode": "code",
+                        "expr": "sum(max(trivy_image_vulnerabilities{severity=\"Unknown\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ))",
+                        "format": "table",
+                        "group": [
+                            {
+                                "params": [
+                                    "$__interval",
+                                    "none"
+                                ],
+                                "type": "time"
+                            }
+                        ],
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "legendFormat": "",
+                        "metricColumn": "none",
+                        "range": true,
+                        "refId": "A",
+                        "round": "0s",
+                        "select": [
+                            [
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "column"
+                                },
+                                {
+                                    "params": [
+                                        "count"
+                                    ],
+                                    "type": "aggregate"
+                                },
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "alias"
+                                }
+                            ]
+                        ],
+                        "table": "vulnerability",
+                        "timeColumn": "create_date",
+                        "timeColumnType": "timestamp",
+                        "where": [
+                            {
+                                "name": "$__timeFilter",
+                                "params": [
+
+                                ],
+                                "type": "macro"
+                            },
+                            {
+                                "datatype": "int4",
+                                "name": "",
+                                "params": [
+                                    "host_id",
+                                    "!=",
+                                    "None"
+                                ],
+                                "type": "expression"
+                            }
+                        ]
+                    }
+                ],
+                "title": "Unknown",
+                "type": "stat"
+            },
+            {
+                "datasource": {
+
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "mappings": [
+                            {
+                                "$$hashKey": "object:315",
+                                "id": 0,
+                                "op": "=",
+                                "text": "N/A",
+                                "type": 1,
+                                "value": "null"
+                            }
+                        ],
+                        "max": 100,
+                        "min": 0,
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "#ffffff",
+                                    "value": null
+                                }
+                            ]
+                        },
+                        "unit": "none"
+                    },
+                    "overrides": [
+
+                    ]
+                },
+                "gridPos": {
+                    "h": 5,
+                    "w": 2,
+                    "x": 10,
+                    "y": 0
+                },
+                "id": 55,
+                "links": [
+
+                ],
+                "options": {
+                    "colorMode": "value",
+                    "graphMode": "none",
+                    "justifyMode": "auto",
+                    "orientation": "auto",
+                    "reduceOptions": {
+                        "calcs": [
+                            "lastNotNull"
+                        ],
+                        "fields": "/^Value$/",
+                        "values": false
+                    },
+                    "textMode": "auto"
+                },
+                "pluginVersion": "9.1.4",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "000000001"
+                        },
+                        "dateTimeType": "DATETIME",
+                        "editorMode": "code",
+                        "expr": "sum(max(trivy_image_vulnerabilities{severity=\"Critical\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) + max(trivy_image_vulnerabilities{severity=\"High\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) + max(trivy_image_vulnerabilities{severity=\"Medium\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) + max(trivy_image_vulnerabilities{severity=\"Low\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) + max(trivy_image_vulnerabilities{severity=\"Unknown\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ))",
+                        "format": "table",
+                        "group": [
+                            {
+                                "params": [
+                                    "$__interval",
+                                    "none"
+                                ],
+                                "type": "time"
+                            }
+                        ],
+                        "interval": "",
+                        "intervalFactor": 1,
+                        "legendFormat": "",
+                        "metricColumn": "none",
+                        "range": true,
+                        "refId": "A",
+                        "round": "0s",
+                        "select": [
+                            [
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "column"
+                                },
+                                {
+                                    "params": [
+                                        "count"
+                                    ],
+                                    "type": "aggregate"
+                                },
+                                {
+                                    "params": [
+                                        "id"
+                                    ],
+                                    "type": "alias"
+                                }
+                            ]
+                        ],
+                        "table": "vulnerability",
+                        "timeColumn": "create_date",
+                        "timeColumnType": "timestamp",
+                        "where": [
+                            {
+                                "name": "$__timeFilter",
+                                "params": [
+
+                                ],
+                                "type": "macro"
+                            },
+                            {
+                                "datatype": "int4",
+                                "name": "",
+                                "params": [
+                                    "host_id",
+                                    "!=",
+                                    "None"
+                                ],
+                                "type": "expression"
+                            }
+                        ]
+                    }
+                ],
+                "title": "Total",
+                "type": "stat"
+            },
+            {
+                "datasource": {
+
+                },
+                "fieldConfig": {
+                    "defaults": {
+                        "color": {
+                            "mode": "thresholds"
+                        },
+                        "custom": {
+                            "align": "left",
+                            "displayMode": "auto",
+                            "filterable": true,
+                            "inspect": false
+                        },
+                        "decimals": 0,
+                        "displayName": "",
+                        "mappings": [
+
+                        ],
+                        "thresholds": {
+                            "mode": "absolute",
+                            "steps": [
+                                {
+                                    "color": "rgba(50, 172, 45, 0.97)",
+                                    "value": null
+                                },
+                                {
+                                    "color": "rgba(237, 129, 40, 0.89)"
+                                }
+                            ]
+                        },
+                        "unit": "short"
+                    },
+                    "overrides": [
+                        {
+                            "matcher": {
+                                "id": "byRegexp",
+                                "options": "/severity/"
+                            },
+                            "properties": [
+                                {
+                                    "id": "unit",
+                                    "value": "short"
+                                },
+                                {
+                                    "id": "custom.displayMode",
+                                    "value": "color-background"
+                                },
+                                {
+                                    "id": "custom.align"
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Value #A"
+                            },
+                            "properties": [
+                                {
+                                    "id": "displayName",
+                                    "value": "Total vulns"
+                                },
+                                {
+                                    "id": "unit",
+                                    "value": "short"
+                                },
+                                {
+                                    "id": "custom.displayMode",
+                                    "value": "color-background"
+                                },
+                                {
+                                    "id": "custom.align"
+                                },
+                                {
+                                    "id": "thresholds",
+                                    "value": {
+                                        "mode": "absolute",
+                                        "steps": [
+                                            {
+                                                "color": "green",
+                                                "value": null
+                                            },
+                                            {
+                                                "color": "yellow",
+                                                "value": 1
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Value #B"
+                            },
+                            "properties": [
+                                {
+                                    "id": "displayName",
+                                    "value": "Critial Vulns"
+                                },
+                                {
+                                    "id": "unit",
+                                    "value": "short"
+                                },
+                                {
+                                    "id": "custom.displayMode",
+                                    "value": "color-background"
+                                },
+                                {
+                                    "id": "custom.align"
+                                },
+                                {
+                                    "id": "thresholds",
+                                    "value": {
+                                        "mode": "absolute",
+                                        "steps": [
+                                            {
+                                                "color": "#73BF69",
+                                                "value": null
+                                            },
+                                            {
+                                                "color": "red",
+                                                "value": 1
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Value #C"
+                            },
+                            "properties": [
+                                {
+                                    "id": "displayName",
+                                    "value": "High Vulns"
+                                },
+                                {
+                                    "id": "unit",
+                                    "value": "short"
+                                },
+                                {
+                                    "id": "custom.displayMode",
+                                    "value": "color-background"
+                                },
+                                {
+                                    "id": "custom.align"
+                                },
+                                {
+                                    "id": "thresholds",
+                                    "value": {
+                                        "mode": "absolute",
+                                        "steps": [
+                                            {
+                                                "color": "#73BF69",
+                                                "value": null
+                                            },
+                                            {
+                                                "color": "orange",
+                                                "value": 1
+                                            }
+                                        ]
+                                    }
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "image"
+                            },
+                            "properties": [
+                                {
+                                    "id": "unit",
+                                    "value": "short"
+                                },
+                                {
+                                    "id": "decimals",
+                                    "value": 2
+                                },
+                                {
+                                    "id": "links",
+                                    "value": [
+                                        {
+                                            "targetBlank": false,
+                                            "title": "Drill down",
+                                            "url": "/d/VTc2usgGz/trivy-vulneribilities-image-overview?orgId=1&var-image=$__cell"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "custom.align"
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "image_repository"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 240
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Repository"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 284
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Digest"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 101
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Critial Vulns"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 110
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "High Vulns"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 105
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Total vulns"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 113
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Namespace"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 119
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Registry"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 142
+                                }
+                            ]
+                        },
+                        {
+                            "matcher": {
+                                "id": "byName",
+                                "options": "Tag"
+                            },
+                            "properties": [
+                                {
+                                    "id": "custom.width",
+                                    "value": 231
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "gridPos": {
+                    "h": 41,
+                    "w": 17,
+                    "x": 0,
+                    "y": 5
+                },
+                "id": 54,
+                "options": {
+                    "footer": {
+                        "enablePagination": false,
+                        "fields": "",
+                        "reducer": [
+                            "sum"
+                        ],
+                        "show": true
+                    },
+                    "frameIndex": 0,
+                    "showHeader": true,
+                    "sortBy": [
+                        {
+                            "desc": true,
+                            "displayName": "Critial Vulns"
+                        }
+                    ]
+                },
+                "pluginVersion": "9.1.4",
+                "targets": [
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "000000001"
+                        },
+                        "editorMode": "code",
+                        "expr": "max(trivy_image_vulnerabilities{severity=\"Critical\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) ",
+                        "format": "table",
+                        "instant": true,
+                        "interval": "",
+                        "legendFormat": "Critical",
+                        "refId": "B"
+                    },
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "000000001"
+                        },
+                        "editorMode": "code",
+                        "exemplar": false,
+                        "expr": "max(trivy_image_vulnerabilities{severity=\"High\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) ",
+                        "format": "table",
+                        "instant": true,
+                        "interval": "",
+                        "legendFormat": "High",
+                        "range": false,
+                        "refId": "C"
+                    },
+                    {
+                        "datasource": {
+                            "type": "prometheus",
+                            "uid": "000000001"
+                        },
+                        "editorMode": "code",
+                        "expr": "max(trivy_image_vulnerabilities{severity=\"Critical\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) + max(trivy_image_vulnerabilities{severity=\"High\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) + max(trivy_image_vulnerabilities{severity=\"Medium\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) + max(trivy_image_vulnerabilities{severity=\"Low\"})  by (image_registry, image_repository, image_tag, image_digest, namespace ) + max(trivy_image_vulnerabilities{severity=\"Unknown\"})  by (image_registry, image_repository, image_tag,image_digest, namespace ) ",
+                        "format": "table",
+                        "instant": true,
+                        "interval": "",
+                        "legendFormat": "Total",
+                        "refId": "A"
+                    }
+                ],
+                "title": "Image Vulnerabilities",
+                "transformations": [
+                    {
+                        "id": "merge",
+                        "options": {
+
+                        }
+                    },
+                    {
+                        "id": "organize",
+                        "options": {
+                            "excludeByName": {
+                                "Time": true,
+                                "Value #B": false
+                            },
+                            "indexByName": {
+                                "Time": 0,
+                                "Value #A": 8,
+                                "Value #B": 6,
+                                "Value #C": 7,
+                                "image_digest": 5,
+                                "image_registry": 1,
+                                "image_repository": 2,
+                                "image_tag": 4,
+                                "namespace": 3
+                            },
+                            "renameByName": {
+                                "Value #A": "",
+                                "Value #B": "a",
+                                "Value #C": "b",
+                                "image_digest": "Digest",
+                                "image_registry": "Registry",
+                                "image_repository": "Repository",
+                                "image_tag": "Tag",
+                                "namespace": "Namespace"
+                            }
+                        }
+                    }
+                ],
+                "type": "table"
+            }
+        ],
+        "refresh": "30s",
+        "schemaVersion": 37,
+        "style": "dark",
+        "tags": [
+
+        ],
+        "templating": {
+            "list": [
+                {
+                    "datasource": {
+                        "type": "prometheus",
+                        "uid": "prometheus"
+                    },
+                    "filters": [
+
+                    ],
+                    "hide": 0,
+                    "name": "Filters",
+                    "skipUrlSync": false,
+                    "type": "adhoc"
+                }
+            ]
+        },
+        "time": {
+            "from": "now-1h",
+            "to": "now"
+        },
+        "timepicker": {
+            "refresh_intervals": [
+                "5s",
+                "10s",
+                "30s",
+                "1m",
+                "5m",
+                "15m",
+                "30m",
+                "1h",
+                "2h",
+                "1d"
+            ],
+            "time_options": [
+                "5m",
+                "15m",
+                "1h",
+                "6h",
+                "12h",
+                "24h",
+                "2d",
+                "7d",
+                "30d"
+            ]
+        },
+        "timezone": "utc",
+        "title": "Trivy Vulnerabilities",
+        "uid": "BQnjzl-jz",
+        "version": 3,
+        "weekStart": ""
+    }
+{{- end }}

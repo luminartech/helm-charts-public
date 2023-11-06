@@ -1,0 +1,62 @@
+---
+##############
+# Global
+##############
+global:
+  imagePullSecrets: [{name: "infra-dockerhub-creds"}]
+  environment: infra
+  secretStoreRef: cluster-aws-secret-store
+  deploymentName: monitoring
+  # chartNameOverride: "infra"
+  # releaseNameOverride: "infra"
+  # tags: {}
+  # labels: {}
+  # annotations: {}
+
+commonGrafanaDashboards:
+  argocdBasicEnabled: true
+  certManagerEnabled: true
+  crossplaneEnabled: true
+  externalDnsEnabled: true
+  karpenterCapacityEnabled: true
+  karpenterPerformanceEnabled: true
+  lokiEnabled: true
+  nginxIngressEnabled: true
+  nvidiaDcgmEnabled: true
+  trivyVulnerabilitiesEnabled: true
+
+kube-prometheus-stack:
+  prometheusOperator:
+    tls:
+      enabled: false
+    admissionWebhooks:
+      enabled: false
+  prometheus:
+    enabled: true
+  grafana:
+    sidecar:
+      multicluster:
+        global:
+          enabled: true
+    adminPassword: dummy_password
+    ingress:
+      enabled: true
+      ingressClassName: nginx-ingress-external
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        nginx.ingress.kubernetes.io/server-snippet: |
+          proxy_ssl_verify off;
+          proxy_set_header X-Forwarded-Proto https;
+        kubernetes.io/ingress.allow-http: "false"
+        kubernetes.io/tls-acme: "true"
+        cert-manager.io/acme-challenge-type: dns01
+        cert-manager.io/acme-dns01-provider: route53
+        cert-manager.io/cluster-issuer: cluster-issuer-test-luminarinfra-com
+      hosts:
+        - grafana.test.luminarinfra.com
+      path: /
+      tls:
+        - secretName: tls-grafana.test.luminarinfra.com
+          hosts:
+            - grafana.test.luminarinfra.com

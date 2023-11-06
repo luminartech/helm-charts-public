@@ -1,0 +1,156 @@
+---
+## @section commonGrafanaDashboards
+## Grafana dashboards that are added to kube-prometheus-stack chart.
+##
+commonGrafanaDashboards:
+  argocdBasicEnabled: false
+  certManagerEnabled: false
+  crossplaneEnabled: false
+  externalDnsEnabled: false
+  karpenterCapacityEnabled: false
+  karpenterPerformanceEnabled: false
+  lokiEnabled: false
+  nginxIngressEnabled: false
+  nvidiaDcgmEnabled: false
+  trivyVulnerabilitiesEnabled: false
+
+## @section kube-prometheus-stack
+## Kube-prometheus-stack chart config.
+##
+kube-prometheus-stack:
+  enabled: false
+  ## Using default values from https://github.com/grafana/helm-charts/blob/main/charts/grafana/values.yaml
+  ##
+  fullnameOverride: monitoring
+  alertmanager:
+    fullnameOverride: alertmanager
+    alertmanagerSpec:
+      replicas: 1
+    tplConfig: true
+    ingress:
+      enabled: false
+    retention: 120h
+    listenLocal: true
+    priorityClassName: system-cluster-critical
+    clusterAdvertiseAddress: true
+    forceEnableClusterMode: true
+    config:
+      global:
+        resolve_timeout: 5m
+      route:
+        group_by: ['namespace']
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 12h
+        # receiver: 'slack'
+        routes:
+          - receiver: 'null'
+            matchers:
+              - alertname =~ "InfoInhibitor|Watchdog"
+          - receiver: 'null'
+            matchers:
+              - alertname =~ "KubeControllerManagerDown"
+          - receiver: 'null'
+            matchers:
+              - alertname =~ "KubeSchedulerDown"
+          - match:
+            receiver: 'slack'
+            continue: true
+      # receivers:
+      #   - name: 'null'
+      #   - name: "slack"
+      #     slack_configs:
+      #       - channel: "#sre-alerts"
+      #         api_url: 'https://hooks.slack.com/services/AABBCC))/AABBCCDDEE0011/AAABBBCCCDDDEEEFFFGGGHHH'
+      #         send_resolved: false
+      #         icon_url: https://avatars3.githubusercontent.com/u/3380462
+      #         color: '{{ `{{` }} template "slack.color" . {{ `}}` }}'
+      #         title: '{{ `{{` }} template "slack.title" . {{ `}}` }}'
+      #         text: '{{ `{{` }} template "slack.text" . {{ `}}` }}'
+      templates:
+        - '/etc/alertmanager/config/*.tmpl'
+        - '/etc/alertmanager/configmaps/monitoring-alertmanager-slack-templates/*.tmpl'
+  prometheusOperator:
+    tls:
+      enabled: false
+    admissionWebhooks:
+      enabled: false
+  prometheus:
+    fullnameOverride: prometheus
+    prometheusSpec:
+      replicas: 1
+      ruleSelectorNilUsesHelmValues: false
+      serviceMonitorSelectorNilUsesHelmValues: false
+      podMonitorSelectorNilUsesHelmValues: false
+      probeSelectorNilUsesHelmValues: false
+      podMetadata: {}
+      additionalScrapeConfigs: []
+      retention: 30d
+      retentionSize: 49GB
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: gp3
+            resources:
+              requests:
+                storage: 50Gi
+  grafana:
+    enabled: true
+    fullnameOverride: grafana
+    forceDeployDatasources: false
+    forceDeployDashboards: false
+    defaultDashboardsEnabled: true
+    defaultDashboardsTimezone: utc
+    adminPassword: prom-operator
+    rbac:
+      pspEnabled: false
+    ingress:
+      enabled: false
+      annotations: {}
+      labels: {}
+      hosts: []
+      path: /
+      tls: []
+
+    sidecar:
+      dashboards:
+        enabled: true
+        label: grafana_dashboard
+        labelValue: "1"
+        annotations: {}
+        multicluster:
+          global:
+            enabled: false
+          etcd:
+            enabled: false
+        provider:
+          allowUiUpdates: false
+      datasources:
+        enabled: true
+        defaultDatasourceEnabled: true
+        uid: prometheus
+        annotations: {}
+        createPrometheusReplicasDatasources: false
+        label: grafana_datasource
+        labelValue: "1"
+        exemplarTraceIdDestinations: {}
+    extraConfigmapMounts: []
+    deleteDatasources: []
+    additionalDataSources: []
+    service:
+      portName: http-web
+    serviceMonitor:
+      enabled: true
+      path: "/metrics"
+      labels: {}
+        # release: monitoring
+      interval: ""
+      scheme: http
+      tlsConfig: {}
+      scrapeTimeout: 30s
+      relabelings: []
+
+  prometheus-node-exporter:
+    fullnameOverride: node-exporter
+  kube-state-metrics:
+    fullnameOverride: kube-state-metrics
