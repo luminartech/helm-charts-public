@@ -1,0 +1,132 @@
+---
+Alias:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        description: a sample description
+        functionNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test_lambda_alias
+        functionVersion: "1"
+        region: us-west-2
+
+CodeSigningConfig:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        allowedPublishers:
+          - signingProfileVersionArnsRefs:
+              - name: example
+        description: My awesome code signing config.
+        policies:
+          - untrustedArtifactOnDeployment: Warn
+        region: us-west-2
+
+EventSourceMapping:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        eventSourceArn: null
+        functionNameRef:
+          name: example
+        startingPosition: LATEST
+        region: us-west-2
+
+FunctionEventInvokeConfig:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        destinationConfig:
+          - onFailure:
+              - destinationRef:
+                  name: example
+        functionName: example
+        region: us-west-2
+
+Function:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        handler: lambda_function.lambda_handler
+        publish: true
+        roleSelector:
+          matchLabels:
+            testing.upbound.io/example-name: test_lambda_alias
+        runtime: python3.9
+        s3Bucket: test-lambda-alias
+        s3Key: lambda-alias-test.zip
+        region: us-west-2
+
+FunctionURL:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        authorizationType: NONE
+        functionNameRef:
+          name: example
+        region: us-west-2
+
+Invocation:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        functionNameRef:
+          name: example
+        input: |-
+          {
+            key1 = "value1",
+            key2 = "value2"
+          }
+        region: us-west-2
+
+LayerVersionPermission:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        action: lambda:GetLayerVersion
+        layerName: null
+        principal: "*"
+        region: us-west-2
+        statementId: dev-account
+        versionNumber: 1
+
+LayerVersion:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        compatibleRuntimes:
+          - nodejs12.x
+        filename: example.zip
+        layerName: lambda_layer_name
+        region: us-west-2
+
+Permission:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        action: lambda:InvokeFunction
+        functionNameRef:
+          name: example
+        principal: events.amazonaws.com
+        region: us-west-2
+        statementId: AllowExecutionFromCloudWatch
+
+ProvisionedConcurrencyConfig:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        functionName: example
+        provisionedConcurrentExecutions: 1
+        qualifier: "1"
+        region: us-west-2

@@ -1,0 +1,45 @@
+## @section AWS resources
+
+## @param Alias resource parameters
+##
+Alias: {}
+
+## @param CodeSigningConfig resource parameters
+##
+CodeSigningConfig: {}
+
+## @param EventSourceMapping resource parameters
+##
+EventSourceMapping: {}
+
+## @param Function resource parameters
+##
+Function: {}
+
+## @param FunctionEventInvokeConfig resource parameters
+##
+FunctionEventInvokeConfig: {}
+
+## @param FunctionURL resource parameters
+##
+FunctionURL: {}
+
+## @param Invocation resource parameters
+##
+Invocation: {}
+
+## @param LayerVersion resource parameters
+##
+LayerVersion: {}
+
+## @param LayerVersionPermission resource parameters
+##
+LayerVersionPermission: {}
+
+## @param Permission resource parameters
+##
+Permission: {}
+
+## @param ProvisionedConcurrencyConfig resource parameters
+##
+ProvisionedConcurrencyConfig: {}
