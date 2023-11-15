@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "1.13.2"
 description: A Helm chart for Crossplane
 name: crossplane
-version: "1.13.2-27"
+version: "1.13.2-28"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/crossplane
