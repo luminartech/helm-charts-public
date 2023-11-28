@@ -30,14 +30,11 @@ spec:
         {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
       {{- end }}
   selector:
-    app.kubernetes.io/component: {{ include "common-gitops.names.chart" $root }}
-    helm.sh/chart: {{ include "common-gitops.names.chart" $root }}-{{ $root.Chart.Version }}
-    app.kubernetes.io/part-of: {{ include "common-gitops.names.release" $root }}
-    app.kubernetes.io/managed-by: {{ $root.Release.Service }}
-    app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" $name }}"
-      {{- with .selector -}}
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
+        {{- with .selector -}}
+          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+        {{ else }}
+        app.kubernetes.io/component: {{ include "common-gitops.names.chart" $root }}
+        {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end }}
