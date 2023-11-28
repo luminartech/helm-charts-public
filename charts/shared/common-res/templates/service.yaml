@@ -30,11 +30,11 @@ spec:
         {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
       {{- end }}
   selector:
-        {{- with .selector -}}
-          {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-        {{ else }}
-        app.kubernetes.io/component: {{ include "common-gitops.names.chart" $root }}
-        {{- end -}}
+      {{- with .selector -}}
+        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+      {{ else }}
+      app.kubernetes.io/component: {{ include "common-gitops.names.chart" $root }}
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end }}
