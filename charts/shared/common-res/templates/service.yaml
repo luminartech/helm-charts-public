@@ -33,7 +33,7 @@ spec:
       {{- with .selector -}}
         {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
       {{ else }}
-      app.kubernetes.io/component: {{ include "common-gitops.names.chart" $root }}
+    app.kubernetes.io/component: {{ include "common-gitops.names.chart" $root }}
       {{- end -}}
     {{- end -}}
   {{- end -}}
