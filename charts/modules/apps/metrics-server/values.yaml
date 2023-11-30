@@ -38,10 +38,8 @@ global:
 metrics-server:
   enabled: false
   metrics:
-    enabled: false
-
+    enabled: true
   serviceMonitor:
-    enabled: false
-
+    enabled: true
   args:
     - --kubelet-insecure-tls
