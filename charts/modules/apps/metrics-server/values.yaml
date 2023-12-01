@@ -1,0 +1,10 @@
+---
+## @skip metrics-server
+metrics-server:
+  enabled: false
+  metrics:
+    enabled: true
+  serviceMonitor:
+    enabled: true
+  args:
+    - --kubelet-insecure-tls
