@@ -1,11 +1,10 @@
-# Ref: https://github.com/bitnami/charts/blob/main/.github/workflows/generate-chart-readme.yml
 name: '[HELM] Package and release'
 on:
   workflow_dispatch:
     inputs:
-      chart-path:
+      force-scan-paths:
         type: "string"
-        description: "Helm chart relative dir path(s). e.g. charts/shared/common-gitops charts/shared/common-res "
+        description: "Helm chart relative dir path(s) to trigger release separated by space for. e.g.: charts/falco charts/monitoring"
         required: true
   push:
     branches:
@@ -14,100 +13,55 @@ on:
       # Create a release on version update
       - 'charts/**/Chart.yaml'
 permissions:
-  contents: write
+  contents: read
+  packages: write
+env:
+  REGISTRY: ghcr.io
 jobs:
   package-and-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Generate token
-        id: generate_token
-        uses: tibdex/github-app-token@v1
-        with:
-          app_id: ${{ secrets.SOFTWARE_APP_ID }}
-          private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
-          installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
-          token: ${{ steps.generate_token.outputs.token }}
           fetch-depth: 0
-          persist-credentials: true
-          path: luminartech/helm-charts-public
-      - name: Helm Repository Checkout
-        uses: actions/checkout@v3
-        with:
-          repository: luminartech/helm-repo-public
-          token: ${{ steps.generate_token.outputs.token }}
-          fetch-depth: 0
-          persist-credentials: true
-          ref: main
-          path: luminartech/helm-repo-public
       - name: Helm Installation
         uses: azure/setup-helm@v3
         with:
           version: v3.10.3
       - name: Get list of changed directories
         id: changed-files
-        uses: tj-actions/changed-files@v35
+        uses: tj-actions/changed-files@v40.2.1
         with:
-          path: luminartech/helm-charts-public
+          dir_names: "true"
+          dir_names_exclude_current_dir: "true"
+          dir_names_max_depth: 4
           files: |
             charts/**
-      - name: Build helm packages and push tags
+      - name: Build helm packages and push to registry
         run: |
-          [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
-          set -euo pipefail
-          workspace_dir=$(pwd)
-          cd luminartech/helm-charts-public
-          git config user.name "CI Bot"
-          git config user.email "ipe@luminartech.com"
-          chart_paths=(${{ inputs.chart-path }})
-          mv_cmd_flags=""
-          if [ ${#chart_paths[@]} -gt 0 ]; then
-            echo "INFO: Doing a manual build and release for helm chart(s): ${{ inputs.chart-path }}"
+          set -xeuo pipefail
+          echo "${{ steps.changed-files.outputs.all_changed_files }}"
+          force_scan_paths=(${{ inputs.force-scan-paths }})
+          if [ ${#force_scan_paths[@]} -gt 0 ]; then
+            echo "INFO: Doing a manual build and release for helm chart(s): ${{ inputs.force-scan-paths }}"
             echo "INFO: This will overwrite old release if exists"
-            charts_dirs_changed=("${chart_paths[@]}")
-            mv_cmd_flags="-f"
+            scan_paths=("${force_scan_paths[@]}")
           else
-            # Adding || true to avoid "Process exited with code 1" errors
-            charts_dirs_changed=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/iac\/.*\/Chart.yaml' | xargs dirname | sed -nr "s|charts/iac/([^/]*).*|charts/iac/\1|p" | sort | uniq || true))
-            charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/shared\/.*\/Chart.yaml' | xargs dirname | sed -nr "s|charts/shared/([^/]*).*|charts/shared/\1|p" | uniq || true))
-            charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/apps\/.*\/Chart.yaml' | xargs dirname | sed -nr "s|charts/modules/apps/([^/]*).*|charts/modules/apps/\1|p" | sort | uniq || true))
-            charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/infra\/.*\/Chart.yaml' | xargs dirname | sed -nr "s|charts/modules/infra/([^/]*).*|charts/modules/infra/\1|p" | sort | uniq || true))
-            charts_dirs_changed+=($(echo "${{ steps.changed-files.outputs.all_changed_files }}" | tr ' ' '\n' | grep -e '^charts\/modules\/iac\/.*\/Chart.yaml' | xargs dirname | sed -nr "s|charts/modules/iac/([^/]*).*|charts/modules/iac/\1|p" | sort | uniq || true))
+            scan_paths=(${{ steps.changed-files.outputs.all_changed_files }})
           fi
-          for chart in "${charts_dirs_changed[@]}"; do
-            cd ${chart}
-            if [ -f Chart.yaml ]; then
-              echo "Generating helm package for ${chart}"
-              helm dependency update
-              rm -f *.tgz || true
-              helm package .
-              chart_name=$(awk -F '[/]' '{print $NF}' <<< ${chart})
-              chart_version=$(ls -t|grep -e '.*-.*\..*\.tgz'|sed "s/.tgz//;s/${chart_name}-//")
-              # this command should fail the job if tag already exists
-              git tag rel-${chart_name}-${chart_version}
-              git push origin rel-${chart_name}-${chart_version}
-              mkdir -p ${workspace_dir}/luminartech/helm-repo-public/${chart_name}
-              # We want this job to fail if same version package exists and workflow is runing on_push event
-              # Overwrite only if workflow was triggered manually
-              mv ${mv_cmd_flags} *.tgz "${workspace_dir}/luminartech/helm-repo-public/${chart_name}"
-            else
-              echo "WARN: Chart.yaml missing for ${chart}"
-              exit 1
-            fi
-            cd -
+          echo "${{ secrets.GITHUB_TOKEN }}" | helm registry login -u 'gh-action-bot' --password-stdin ${REGISTRY}
+          for path in "${scan_paths[@]}"; do
+            (
+              cd "${path}"
+              if [ -f "Chart.yaml" ]; then
+                echo "Generating helm package for ${path}"
+                rm -f *.tgz || true
+                helm dependency update
+                helm package .
+                helm push *.tgz oci://${REGISTRY}/luminartech/helm-charts-public
+              else
+                echo "WARN: Chart.yaml missing in ${path}. Skipping..."
+              fi
+            )
           done
-      - name: Push changes to helm repository
-        run: |
-          [[ "${{ secrets.SCRIPT_DEBUG }}" == "1" ]] && set -x || true
-          # Push all the changes
-          cd luminartech/helm-repo-public
-          if git status --untracked-files=all | grep -e '.*-.*\..*\.tgz'; then
-            git config user.name "CI Bot"
-            git config user.email "ipe@luminartech.com"
-            git add **/*.tgz
-            git status
-            git commit -am "[ CI Bot ] Generated helm packages" --signoff
-            git push
-          fi
