@@ -1,0 +1,4 @@
+---
+
+crossplane-aws-iam:
+  enabled: true

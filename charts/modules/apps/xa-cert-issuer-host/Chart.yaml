@@ -1,0 +1,21 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "0.1.0"
+description: A Helm chart for the host (owner of the zone) of cross-account certificate issuer
+name: xa-cert-issuer-host
+version: "0.1.0"
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/xa-cert-issuer-host
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: crossplane-aws-iam
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-iam.enabled
+  - name: common-gitops
+    version: "1.1.5"
+    repository: https://helm-repo-public.luminarinfra.com/
