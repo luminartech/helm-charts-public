@@ -34,7 +34,10 @@ Module shold allow sharing/using Route53-hosted DNS zone between AWS accounts.
 | `global.clientExternalDnsRoleName` | Role name used by client's external-dns to access shared DNS zone.                                          | `tenant-role`    |
 | `global.clientCertManagerRoleName` | Role name used by client's cert-manager to access shared DNS zone.                                          | `tenant-role`    |
 
+
 ### AWS IAM configurations
+
+
 
 
 
