@@ -1,0 +1,19 @@
+---
+external-dns:
+  enabled: true
+  fullnameOverride: external-dns
+  aws:
+    assumeRoleArn: arn:aws:iam::627218074315:role/external-dns
+    roleArn: arn:aws:iam::627218074315:role/external-dns
+    region: us-west-2
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::627218074315:role/external-dns
+  prometheus:
+    enabled: true
+    servicemonitor:
+      enabled: true
+cert-manager:
+  enabled: true
+crossplane-aws-iam:
+  enabled: true

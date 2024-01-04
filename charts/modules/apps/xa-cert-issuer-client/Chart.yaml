@@ -1,0 +1,28 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "0.1.0"
+description: A Helm chart for the client of cross-account certificate issuer
+name: xa-cert-issuer-client
+version: "0.1.0"
+home: https://helm-repo-public.luminarinfra.com/
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/cert-issuer
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: cert-manager
+    version: "1.9.1-0"
+    repository: https://helm-repo-public.luminarinfra.com/
+  - name: external-dns
+    version: "6.28.6"
+    repository: https://charts.bitnami.com/bitnami
+    condition: external-dns.enabled
+  - name: crossplane-aws-iam
+    version: "0.37.0-1"
+    repository: https://helm-repo-public.luminarinfra.com/
+    condition: crossplane-aws-iam.enabled
+  - name: common-gitops
+    version: "1.1.5"
+    repository: https://helm-repo-public.luminarinfra.com/
