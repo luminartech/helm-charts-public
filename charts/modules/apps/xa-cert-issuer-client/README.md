@@ -38,13 +38,20 @@ Module shold allow sharing/using Route53-hosted DNS zone between AWS accounts.
 | `global.letsencryptServer`      | ServerURL used by Letsencrypt.                                                                              | `https://acme-v02.api.letsencrypt.org/directory` |
 | `global.letsencryptAdminEmail`  | Admin email used by Letsencrypt.                                                                            | `test@example.com`                               |
 
+
 ### AWS IAM configurations
+
+
 
 
 ### cert-manager's ClusterIssuer configuration
 
 
+
+
 ### external-dns basic configuration
+
+
 
 
 
