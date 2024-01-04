@@ -1,19 +1,19 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "1.9.1"
+appVersion: "1.13.3"
 description: A Helm chart for cert-manager
 name: cert-manager
-version: "1.9.1-0"
+version: "1.13.3-0"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/cert-manager
 maintainers:
-  - name: Luminar SRE Team
-    email: sre@luminartech.com
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
 dependencies:
   - name: cert-manager
-    version: "1.9.1"
+    version: "1.13.3"
     repository: https://charts.jetstack.io
     condition: cert-manager.enabled
   - name: crossplane-aws-iam
@@ -21,5 +21,5 @@ dependencies:
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-iam.enabled
   - name: common-gitops
-    version: "1.1.2"
+    version: "1.1.5"
     repository: https://helm-repo-public.luminarinfra.com/
