@@ -15,11 +15,14 @@
 
 ### AWS resources
 
-| Name          | Description         | Value |
-| ------------- | ------------------- | ----- |
-| `AccessPoint` | resource parameters | `{}`  |
-| `FileSystem`  | resource parameters | `{}`  |
-| `MountTarget` | resource parameters | `{}`  |
+| Name                       | Description         | Value |
+| -------------------------- | ------------------- | ----- |
+| `AccessPoint`              | resource parameters | `{}`  |
+| `BackupPolicy`             | resource parameters | `{}`  |
+| `FileSystemPolicy`         | resource parameters | `{}`  |
+| `FileSystem`               | resource parameters | `{}`  |
+| `MountTarget`              | resource parameters | `{}`  |
+| `ReplicationConfiguration` | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
