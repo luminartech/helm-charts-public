@@ -5,6 +5,14 @@
 ##
 AccessPoint: {}
 
+## @param BackupPolicy resource parameters
+##
+BackupPolicy: {}
+
+## @param FileSystemPolicy resource parameters
+##
+FileSystemPolicy: {}
+
 ## @param FileSystem resource parameters
 ##
 FileSystem: {}
@@ -12,3 +20,7 @@ FileSystem: {}
 ## @param MountTarget resource parameters
 ##
 MountTarget: {}
+
+## @param ReplicationConfiguration resource parameters
+##
+ReplicationConfiguration: {}
