@@ -3,8 +3,8 @@
 Module shold allow sharing/using Route53-hosted DNS zone between AWS accounts.
 
 You would need 3 things deployed:
-1. xa-cert-issuer-host module
-2. xa-cert-issuer-client module
+1. cert-cluster-issuer-host module
+2. cert-cluster-issuer-client module
 3. Next policy added to the IAM policy used by cert-manager of client account:
    ```
    Policy:
@@ -55,6 +55,8 @@ You would need 3 things deployed:
 
 
 ### AWS IAM configurations
+
+
 
 
 
