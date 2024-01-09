@@ -3,7 +3,7 @@ annotations:
 apiVersion: v2
 appVersion: "0.1.0"
 description: A Helm chart for the client of cross-account certificate issuer
-name: xa-cert-issuer-client
+name: cert-cluster-issuer-client
 version: "0.1.0"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
