@@ -7,7 +7,7 @@ name: cert-cluster-issuer-client
 version: "0.1.0"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
-  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/cert-issuer
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/cert-cluster-issuer-client
 maintainers:
   - name: Luminar IPE Team
     email: ipe@luminartech.com
