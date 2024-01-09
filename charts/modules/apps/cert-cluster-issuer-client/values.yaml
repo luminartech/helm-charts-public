@@ -91,7 +91,7 @@ crossplane-aws-iam:
                   Federated: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:oidc-provider/oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}'
                 Condition:
                   StringEquals:
-                    'oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub': 'system:serviceaccount:{{ .Release.Namespace }}:external-dns'
+                    'oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub': 'system:serviceaccount:{{ .Release.Namespace }}:external-dns-{{ .values.zoneName | replace "." "-" }}'
                     'oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud': 'sts.amazonaws.com'
               allowEC2AssumeRole:
                 Effect: Allow
