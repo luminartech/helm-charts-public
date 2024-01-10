@@ -21,7 +21,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: external-dns.enabled
   - name: crossplane-aws-iam
-    version: "0.37.0-2"
+    version: "0.41.0"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-iam.enabled
   - name: common-gitops
