@@ -1,4 +1,9 @@
 ---
+global:
+  hostDeploymentEnabled: true
+  clientDeploymentEnabled: true
+  standaloneDeploymentEnabled: true
+
 cert-manager:
   enabled: true
   ingressShim:
@@ -97,6 +102,20 @@ Issuer:
                 serviceAccountSecretRef:
                   name: clouddns-dns01-solver-svc-acct
                   key: key.json
+
+external-dns:
+  enabled: true
+  fullnameOverride: external-dns
+  aws:
+    assumeRoleArn: arn:aws:iam::0123456789:role/external-dns
+    region: us-west-2
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::0123456789:role/external-dns
+  prometheus:
+    enabled: true
+    servicemonitor:
+      enabled: true
 
 crossplane-aws-iam:
   enabled: true
