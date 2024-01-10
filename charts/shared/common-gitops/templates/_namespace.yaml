@@ -1,0 +1,25 @@
+{{/*
+Render the namespace value
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts.
+Accepts dict:
+{
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
+}
+Sample return:
+namespace: test
+
+*/}}
+{{- define "common-gitops.namespace" -}}
+  {{- $kindObj := (index .root.Values .kind) -}}
+  {{- $item := (index $kindObj.items .name) -}}
+  {{- /* Take the first non-empty argument */ -}}
+namespace: {{ include "common-gitops.tplvalues.render" (dict
+                "value" (coalesce
+                  $item.namespace
+                  $kindObj.namespace
+                  (.root.Values.global).namespace
+                  .root.Release.Namespace)
+                "context" .root) }}
+{{- end -}}

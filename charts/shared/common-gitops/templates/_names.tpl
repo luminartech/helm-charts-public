@@ -41,7 +41,7 @@ Example output:
     {{- include "common-gitops.utils.validateLength" (
         printf "%s-%s"
           (include "common-gitops.names.release" .root)
-          (include "common-gitops.names.itemId" .name) |
+          (include "common-gitops.names.itemId" (dict "value" .name "root" .root)) |
         trimSuffix "-") -}}
   {{- end -}}
 {{- end -}}
@@ -54,7 +54,7 @@ Use "_" when there's only one item of particular kind in deployment and you woul
 For example, allows to avoid word duplication in item name - "cicd-infra-vpc" instead of "cicd-infra-vpc-vpc".
 */}}
 {{- define "common-gitops.names.itemId" -}}
-  {{- . | trimSuffix "_" -}}
+  {{- include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) | trimSuffix "_" -}}
 {{- end -}}
 
 {{/*
@@ -74,8 +74,11 @@ namespace: test
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
   {{- /* Take the first non-empty argument */ -}}
-namespace: {{ coalesce $item.namespace
-                $kindObj.namespace
-                (.root.Values.global).namespace
-                .root.Release.Namespace }}
+namespace: {{ include "common-gitops.tplvalues.render" (dict
+                "value" (coalesce
+                  $item.namespace
+                  $kindObj.namespace
+                  (.root.Values.global).namespace
+                  .root.Release.Namespace)
+                "context" .root) }}
 {{- end -}}
