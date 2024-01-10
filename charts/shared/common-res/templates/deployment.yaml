@@ -28,7 +28,7 @@ spec:
       helm.sh/chart: {{ include "common-gitops.names.chart" $root }}-{{ $root.Chart.Version }}
       app.kubernetes.io/part-of: {{ include "common-gitops.names.release" $root }}
       app.kubernetes.io/managed-by: {{ $root.Release.Service }}
-      app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" $name }}"
+      app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" (dict "value" $name "root" $root)  }}"
     {{- with .selector -}}
       {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
     {{- end -}}
