@@ -1,8 +1,6 @@
 ---
 global:
-  hostDeploymentEnabled: true
-  clientDeploymentEnabled: true
-  standaloneDeploymentEnabled: true
+  deploymentType: "issuer"
 
 cert-manager:
   enabled: true

@@ -37,46 +37,46 @@ global:
   logLevel: 6
   ## @param global.deploymentName Deployment name for the app.
   deploymentName: cert-manager
-  ## @param global.clientAwsAccountId Id of the AWS Account that is trying to obtain access to shared DNS zone.
+  ## @param global.issuerAwsAccountId Id of the AWS Account that is trying to obtain access to shared DNS zone.
   ##
-  clientAwsAccountId: "9876543210"
-  ## @param global.clientExternalDnsRoleName Role name used by client's external-dns to access shared DNS zone.
+  issuerAwsAccountId: "9876543210"
+  ## @param global.issuerExternalDnsRoleName Role name used by issuer's external-dns to access shared DNS zone.
   ##
-  clientExternalDnsRoleName: "tenant-role"
-  ## @param global.clientCertManagerRoleName Role name used by client's cert-manager to access shared DNS zone.
+  issuerExternalDnsRoleName: "tenant-role"
+  ## @param global.issuerCertManagerRoleName Role name used by issuer's cert-manager to access shared DNS zone.
   ##
-  clientCertManagerRoleName: "tenant-role"
+  issuerCertManagerRoleName: "tenant-role"
   ## @param global.team Team.
   ##
   team: test
   ## @param global.environment Environment.
   ##
   environment: dev
-  ## @param global.zoneAwsAccountId Default allowed record names.
+  ## @param global.dnsZoneAwsAccountId Default allowed record names.
   ##
-  zoneAwsAccountId: "0123456789"
-  ## @param global.zoneRoleName Role that has access to the zone in the target account.
+  dnsZoneAwsAccountId: "0123456789"
+  ## @param global.dnsZoneRoleName Role that has access to the zone in the target account.
   ##
-  zoneRoleName: "role-name"
-  ## @param global.zoneAwsRegion Aws region where zone is hosted.
+  dnsZoneRoleName: "role-name"
+  ## @param global.dnsZoneAwsRegion Aws region where zone is hosted.
   ##
-  zoneAwsRegion: "us-west-2"
-  ## @param global.zoneName Zone name to be managed.
+  dnsZoneAwsRegion: "us-west-2"
+  ## @param global.dnsZoneName Zone name to be managed.
   ##
-  zoneName: "example.com"
+  dnsZoneName: "example.com"
   ## @param global.letsencryptServer ServerURL used by Letsencrypt.
   ##
   letsencryptServer: "https://acme-v02.api.letsencrypt.org/directory"
   ## @param global.letsencryptAdminEmail Admin email used by Letsencrypt.
   ##
   letsencryptAdminEmail: "test@example.com"
-  ## @param global.hostDeploymentEnabled Toggle for resources deployed in the account where zone is hosted (see diagram in docs folder).
-  ##
-  hostDeploymentEnabled: false
-  ## @param global.clientDeploymentEnabled Toggle for resources deployed in the account of DNS zone user (see diagram in docs folder).
-  clientDeploymentEnabled: false
-  ## @param global.standaloneDeploymentEnabled Toggle for resources deployed in the account of DNS zone user (see diagram in docs folder).
-  standaloneDeploymentEnabled: false
+  ## @param global.deploymentType Type of deployment, either app, issuer or xrole.
+  ## app - cert-manager depoloyment in issuer AWS account. Should be single per EKS cluster.
+  ## issuer - deploy everything that is necessary in the issuer (DNS zone user) AWS account except cert-manager itself.
+  ## xrole - deploy role in the account where zone is hosted
+  ## anything else - freestyle deployment
+  ## See diagram in docs folder.
+  deploymentType: "app"
 
 ## @section cert-manager configurations
 ##
@@ -127,9 +127,9 @@ CertificateRequest:
 ## @skip ClusterIssuer
 ClusterIssuer:
   items:
-    client:
-      enabled: "{{ .Values.global.clientDeploymentEnabled }}"
-      name: '{{ .Values.global.zoneName | replace "." "-" }}'
+    issuer:
+      enabled: '{{ eq .Values.global.deploymentType "issuer" }}'
+      name: '{{ .Values.global.dnsZoneName | replace "." "-" }}'
       spec:
         acme:
           # The ACME server URL
@@ -137,15 +137,15 @@ ClusterIssuer:
           # Email address used for ACME registration
           email: '{{ .Values.global.letsencryptAdminEmail }}'
           privateKeySecretRef:
-            name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.zoneName | replace "." "-" }}-pkc'
+            name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.dnsZoneName | replace "." "-" }}-pkc'
           solvers:
           - selector:
               dnsZones:
-              - '{{ .Values.global.zoneName }}'
+              - '{{ .Values.global.dnsZoneName }}'
             dns01:
               route53:
-                region: '{{ .Values.global.zoneAwsRegion }}'
-                role: "arn:aws:iam::{{ .Values.global.zoneAwsAccountId }}:role/{{ .Values.global.zoneRoleName }}"
+                region: '{{ .Values.global.dnsZoneAwsRegion }}'
+                role: "arn:aws:iam::{{ .Values.global.dnsZoneAwsAccountId }}:role/{{ .Values.global.dnsZoneRoleName }}"
 
 ## @section Issuer configurations
 ##
@@ -173,7 +173,7 @@ crossplane-aws-iam:
   Policy:
     items:
       _:
-        enabled: "{{ .Values.global.standaloneDeploymentEnabled }}"
+        enabled: '{{ eq .Values.global.deploymentType "app" }}'
         forProvider:
           description: "IAM Policy for cert-manager"
           policy:
@@ -185,9 +185,9 @@ crossplane-aws-iam:
                 # Since there's usually single cert-manager deployment per cluster but multiple ClusterIssuers
                 # with separate roles, we need to grant access to all of them. There's no known way to do it here, os it has to be done at applicationSet level
                 Resource:
-                  - 'arn:aws:iam::{{ .Values.global.zoneAwsAccountId }}:role/{{ .Values.global.zoneRoleName }}'
-      host:
-        enabled: "{{ .Values.global.hostDeploymentEnabled }}"
+                  - 'arn:aws:iam::{{ .Values.global.dnsZoneAwsAccountId }}:role/{{ .Values.global.dnsZoneRoleName }}'
+      xrole:
+        enabled: '{{ eq .Values.global.deploymentType "xrole" }}'
         forProvider:
           description: "IAM Policy to access r53 hostedzones"
           policy:
@@ -203,7 +203,7 @@ crossplane-aws-iam:
                 Condition:
                   "ForAllValues:StringLike":
                     "route53:ChangeResourceRecordSetsNormalizedRecordNames":
-                      - '*.{{ .Values.global.zoneName }}'
+                      - '*.{{ .Values.global.dnsZoneName }}'
               allowR53ListHostedZones:
                 Effect: Allow
                 Action:
@@ -211,8 +211,8 @@ crossplane-aws-iam:
                   - "route53:ListHostedZonesByName"
                   - "route53:ListResourceRecordSets"
                 Resource: '*'
-      client:
-        enabled: "{{ .Values.global.clientDeploymentEnabled }}"
+      issuer:
+        enabled: '{{ eq .Values.global.deploymentType "issuer" }}'
         forProvider:
           description: "IAM Policy external-dns to manage cross-account Route53 zone"
           policy:
@@ -220,11 +220,11 @@ crossplane-aws-iam:
               allowAssumeRoleInR53Account:
                 Effect: "Allow"
                 Action: "sts:AssumeRole"
-                Resource: "arn:aws:iam::{{ .Values.global.zoneAwsAccountId }}:role/{{ .Values.global.zoneRoleName }}"
+                Resource: "arn:aws:iam::{{ .Values.global.dnsZoneAwsAccountId }}:role/{{ .Values.global.dnsZoneRoleName }}"
   Role:
     items:
       _:
-        enabled: "{{ .Values.global.standaloneDeploymentEnabled }}"
+        enabled: '{{ eq .Values.global.deploymentType "app" }}'
         forProvider:
           assumeRolePolicy:
             Statement:
@@ -250,8 +250,8 @@ crossplane-aws-iam:
                 Condition:
                   ArnLike:
                     "aws:PrincipalArn": 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}'
-      host:
-        enabled: "{{ .Values.global.hostDeploymentEnabled }}"
+      xrole:
+        enabled: '{{ eq .Values.global.deploymentType "xrole" }}'
         forProvider:
           assumeRolePolicy:
             Statement:
@@ -259,11 +259,11 @@ crossplane-aws-iam:
                 Effect: Allow
                 Principal:
                   AWS:
-                    - "arn:aws:iam::{{ .Values.global.clientAwsAccountId }}:role/{{ .Values.global.clientExternalDnsRoleName }}"
-                    - "arn:aws:iam::{{ .Values.global.clientAwsAccountId }}:role/{{ .Values.global.clientCertManagerRoleName }}"
+                    - "arn:aws:iam::{{ .Values.global.issuerAwsAccountId }}:role/{{ .Values.global.issuerExternalDnsRoleName }}"
+                    - "arn:aws:iam::{{ .Values.global.issuerAwsAccountId }}:role/{{ .Values.global.issuerCertManagerRoleName }}"
                 Action: sts:AssumeRole
-      client:
-        enabled: "{{ .Values.global.clientDeploymentEnabled }}"
+      issuer:
+        enabled: '{{ eq .Values.global.deploymentType "issuer" }}'
         forProvider:
           assumeRolePolicy:
             Statement:
@@ -274,7 +274,7 @@ crossplane-aws-iam:
                   Federated: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:oidc-provider/oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}'
                 Condition:
                   StringEquals:
-                    'oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub': 'system:serviceaccount:{{ .Release.Namespace }}:external-dns-{{ .Values.global.zoneName | replace "." "-" }}'
+                    'oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub': 'system:serviceaccount:{{ .Release.Namespace }}:external-dns-{{ .Values.global.dnsZoneName | replace "." "-" }}'
                     'oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud': 'sts.amazonaws.com'
               allowEC2AssumeRole:
                 Effect: Allow
@@ -288,27 +288,27 @@ crossplane-aws-iam:
                 Action: sts:AssumeRole
                 Condition:
                   ArnLike:
-                    "aws:PrincipalArn": 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}-client'
+                    "aws:PrincipalArn": 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}-issuer'
   RolePolicyAttachment:
     items:
       _:
-        enabled: "{{ .Values.global.standaloneDeploymentEnabled }}"
+        enabled: '{{ eq .Values.global.deploymentType "app" }}'
         forProvider:
           policyArnRef:
             name: '{{ include "common-gitops.names.release" . }}'
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}'
-      host:
-        enabled: "{{ .Values.global.hostDeploymentEnabled }}"
+      xrole:
+        enabled: '{{ eq .Values.global.deploymentType "xrole" }}'
         forProvider:
           policyArnRef:
-            name: '{{ include "common-gitops.names.release" . }}-host'
+            name: '{{ include "common-gitops.names.release" . }}-xrole'
           roleRef:
-            name: '{{ include "common-gitops.names.release" . }}-host'
-      client:
-        enabled: "{{ .Values.global.clientDeploymentEnabled }}"
+            name: '{{ include "common-gitops.names.release" . }}-xrole'
+      issuer:
+        enabled: '{{ eq .Values.global.deploymentType "issuer" }}'
         forProvider:
           policyArnRef:
-            name: '{{ include "common-gitops.names.release" . }}-client'
+            name: '{{ include "common-gitops.names.release" . }}-issuer'
           roleRef:
-            name: '{{ include "common-gitops.names.release" . }}-client'
+            name: '{{ include "common-gitops.names.release" . }}-issuer'
