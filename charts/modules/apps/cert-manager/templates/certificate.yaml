@@ -2,7 +2,7 @@
 {{- $root := . -}}
 {{- $kindObj := or (get $root.Values $kind) (dict) -}}
 {{- range $name, $item := $kindObj.items -}}
-  {{- if eq (include "common-gitops.utils.itemEnabled" (dict "root" $root "name" $name "kind" $kind)) "true" -}}
+  {{- if eq (include "common-gitops.utils.itemEnabled" (dict "root" $root "name" $name "kind" $kind)) "true" }}
 ---
 apiVersion: cert-manager.io/v1
 kind: {{ $kind }}
