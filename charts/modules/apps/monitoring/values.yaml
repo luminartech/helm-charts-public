@@ -6,15 +6,16 @@
 
 commonGrafanaDashboards:
   argocdBasicEnabled: false
-  certManagerEnabled: false
   crossplaneEnabled: false
-  externalDnsEnabled: false
   karpenterCapacityEnabled: false
   karpenterPerformanceEnabled: false
   lokiEnabled: false
-  nginxIngressEnabled: false
   nvidiaDcgmEnabled: false
   trivyVulnerabilitiesEnabled: false
+  k8sNginxIngressEnabled: false
+  externalSecretsEnabled: false
+  externalDNSEnabled: false
+  certManagerEnabled: false
 
 ## @section kube-prometheus-stack
 ## Kube-prometheus-stack chart config.

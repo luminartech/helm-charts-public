@@ -15,15 +15,16 @@ global:
 
 commonGrafanaDashboards:
   argocdBasicEnabled: true
-  certManagerEnabled: true
   crossplaneEnabled: true
-  externalDnsEnabled: true
   karpenterCapacityEnabled: true
   karpenterPerformanceEnabled: true
   lokiEnabled: true
-  nginxIngressEnabled: true
   nvidiaDcgmEnabled: true
   trivyVulnerabilitiesEnabled: true
+  k8sNginxIngressEnabled: true
+  externalSecretsEnabled: true
+  externalDNSEnabled: true
+  certManagerEnabled: true
 
 kube-prometheus-stack:
   prometheusOperator:

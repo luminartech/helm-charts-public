@@ -47,9 +47,10 @@ _CONDITION_MAP = {
     "karpenter-capacity": ".Values.commonGrafanaDashboards.karpenterCapacityEnabled",
     "karpenter-performance": ".Values.commonGrafanaDashboards.karpenterPerformanceEnabled",
     "loki": ".Values.commonGrafanaDashboards.lokiEnabled",
-    "nginx-ingress": ".Values.commonGrafanaDashboards.nginxIngressEnabled",
+    "nginx-ingress": ".Values.commonGrafanaDashboards.k8sNginxIngressEnabled",
     "nvidia-dcgm": ".Values.commonGrafanaDashboards.nvidiaDcgmEnabled",
     "trivy-vulnerabilities": ".Values.commonGrafanaDashboards.trivyVulnerabilitiesEnabled",
+    "external-secrets": ".Values.commonGrafanaDashboards.externalSecretsEnabled"
 }
 
 # standard _TEMPLATE_HEADER
