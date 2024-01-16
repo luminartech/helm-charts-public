@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "3.8.4"
 description: A Helm chart for metrics-server
 name: metrics-server
-version: "3.8.4"
+version: "3.8.4-1"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/metrics-server
@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: common-gitops
-    version: "1.1.5"
+    version: "1.1.7"
     repository: https://helm-repo-public.luminarinfra.com/
   - name: metrics-server
     version: "3.8.4"
