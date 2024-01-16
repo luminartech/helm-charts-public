@@ -2,7 +2,7 @@ annotations:
   category: Infrastructure
 apiVersion: v2
 # App version follows crossplane AWS provider version.
-appVersion: "0.37.0"
+appVersion: "0.41.0"
 description: A Helm chart for managing eks configuration specs after eks cluster is deployed
 name: aws-eks-config
 version: "1.0.0"
@@ -14,13 +14,13 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: common-gitops
-    version: "1.1.2"
+    version: "1.1.7"
     repository: https://helm-repo-public.luminarinfra.com/
   - name: crossplane-aws-secretsmanager
-    version: "0.37.0-1"
+    version: "0.41.0"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-secretsmanager.enabled
   - name: external-secrets
-    version: "0.7.1-13"
+    version: "0.7.1-16"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: external-secrets.enabled
