@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "4.6.1"
 description: A wrapper Helm chart for loki scalable
 name: loki-scalable
-version: "4.6.1-0"
+version: "4.6.1-1"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/loki-scalable
@@ -21,14 +21,14 @@ dependencies:
     repository: https://grafana.github.io/helm-charts
     condition: promtail.enabled
   - name: crossplane-aws-iam
-    version: "0.37.0-1"
+    version: "0.41.0"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-iam.enabled
   - name: crossplane-aws-s3
-    version: "0.37.0-1"
+    version: "0.41.0"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-s3.enabled
   - name: crossplane-aws-secretsmanager
-    version: "0.37.0-1"
+    version: "0.41.0"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-secretsmanager.enabled
