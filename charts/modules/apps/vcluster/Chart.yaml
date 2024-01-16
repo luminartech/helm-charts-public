@@ -18,11 +18,11 @@ dependencies:
     condition: vcluster.enabled
   - name: common-gitops
     version: "1.1.7"
-    repository: https://helm-repo-public.luminarinfra.com/
+    repository: "ghcr.io/luminartech/helm-charts-public"
   - name: common-res
     version: "1.0.15"
-    repository: https://helm-repo-public.luminarinfra.com/
+    repository: "ghcr.io/luminartech/helm-charts-public"
   - name: external-secrets
     version: "0.7.1-16"
-    repository: https://helm-repo-public.luminarinfra.com/
+    repository: "ghcr.io/luminartech/helm-charts-public"
     condition: external-secrets.enabled

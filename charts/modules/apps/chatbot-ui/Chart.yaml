@@ -22,16 +22,16 @@ maintainers:
 dependencies:
   - name: common-gitops
     version: "1.1.7"
-    repository: https://helm-repo-public.luminarinfra.com/
+    repository: "ghcr.io/luminartech/helm-charts-public"
   - name: common-res
     version: "1.0.15"
-    repository: https://helm-repo-public.luminarinfra.com/
+    repository: "ghcr.io/luminartech/helm-charts-public"
     condition: common-res.enabled
   - name: crossplane-aws-secretsmanager
     version: "0.41.0"
-    repository: https://helm-repo-public.luminarinfra.com/
+    repository: "ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-secretsmanager.enabled
   - name: external-secrets
     version: "0.7.1-16"
-    repository: https://helm-repo-public.luminarinfra.com/
+    repository: "ghcr.io/luminartech/helm-charts-public"
     condition: external-secrets.enabled
