@@ -15,5 +15,5 @@ maintainers:
 dependencies:
   - name: crossplane-aws-ec2
     version: "0.41.0"
-    repository: https://helm-repo-public.luminarinfra.com/
+    repository: "ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-ec2.enabled
