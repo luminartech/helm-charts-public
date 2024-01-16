@@ -2,17 +2,17 @@ annotations:
   category: Infrastructure
 apiVersion: v2
 # App version follows crossplane Kubernetes provider version
-appVersion: "0.4.0"
+appVersion: "0.11.0"
 description: A Helm chart for crossplane Kubernetes resources
 name: crossplane-kubernetes
 # Below version must match the app version for the consistency.
 # Update minor bit if new tag is needed. e.g. 0.3.0-1
-version: "0.4.0-5"
+version: "0.11.0"
 home: https://helm-repo-public.luminarinfra.com
 sources:
   - https://github.com/luminartech/helm-charts-public/
 maintainers:
-  - name: SRE
+  - name: IPE
     email: ipe@luminartech.com
   - name: Satish Gaikwad
     email: satish.gaikwad@luminartech.com
@@ -20,5 +20,5 @@ maintainers:
     email: hennadii.mykhailiuta@luminartech.com
 dependencies:
   - name: common-gitops
-    version: "1.1.3"
+    version: "1.1.7"
     repository: https://helm-repo-public.luminarinfra.com/
