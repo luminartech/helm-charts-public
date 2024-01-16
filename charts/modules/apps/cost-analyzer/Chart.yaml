@@ -18,12 +18,12 @@ dependencies:
     condition: cost-analyzer.enabled
   - name: crossplane-aws-iam
     version: "0.41.0"
-    repository: "ghcr.io/luminartech/helm-charts-public"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-iam.enabled
   - name: crossplane-aws-s3
     version: "0.41.0"
-    repository: "ghcr.io/luminartech/helm-charts-public"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-s3.enabled
   - name: common-res
     version: "1.0.15"
-    repository: "ghcr.io/luminartech/helm-charts-public"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"

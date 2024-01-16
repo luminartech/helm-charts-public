@@ -18,5 +18,5 @@ dependencies:
     condition: argo-workflows.enabled
   - name: crossplane-aws-iam
     version: "0.41.0"
-    repository: "ghcr.io/luminartech/helm-charts-public"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-iam.enabled
