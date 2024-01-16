@@ -6,7 +6,7 @@ Module shold allow sharing/using Route53-hosted DNS zone between AWS accounts.
 
 You would need 2 application(sets) deployed:
 1. 1+ instances with deploymentType set to issuer in AWS account that will use DNS shared zone
-3. One cert-manager itself (standaloneDeploymentEnabled flag) in client account with next policy override:
+3. One cert-manager itself (deploymentType set to "app") in client account with next policy override:
    ```
    Policy:
      items:
