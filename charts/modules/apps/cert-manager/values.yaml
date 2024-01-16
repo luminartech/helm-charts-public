@@ -254,7 +254,9 @@ crossplane-aws-iam:
                 Effect: Allow
                 Principal:
                   AWS:
+                    # Role used by external-dns deployed in issuer's AWS account
                     - 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}-issuer'
+                    # Role used by cert-manager
                     - 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.issuerCertManagerRoleName }}'
                 Action: sts:AssumeRole
       issuer:
