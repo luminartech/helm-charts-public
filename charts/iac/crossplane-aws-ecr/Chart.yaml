@@ -2,7 +2,7 @@ annotations:
   category: Infrastructure
 apiVersion: v2
 # App version follows crossplane AWS provider version
-appVersion: "0.37.0"
+appVersion: "0.41.0"
 description: A Helm chart for crossplane AWS ECR resources
 # Naming pattern: crossplane-aws-<AWS_SERVICENAME>
 # Note: This chart name is used to extract the aws service name as common-gitops.names.aws.service variable
@@ -10,12 +10,12 @@ description: A Helm chart for crossplane AWS ECR resources
 name: crossplane-aws-ecr
 # Below version must match the app version for the consistency.
 # Update minor bit if new tag is needed. e.g. 0.28.0-1
-version: "0.37.0-2"
+version: "0.41.0"
 home: https://helm-repo-public.luminarinfra.com
 sources:
   - https://github.com/luminartech/helm-charts-public
 maintainers:
-  - name: SRE
+  - name: IPE
     email: ipe@luminartech.com
   - name: Satish Gaikwad
     email: satish.gaikwad@luminartech.com
@@ -23,5 +23,5 @@ maintainers:
     email: hennadii.mykhailiuta@luminartech.com
 dependencies:
   - name: common-gitops
-    version: "1.1.2"
+    version: "1.1.7"
     repository: https://helm-repo-public.luminarinfra.com/

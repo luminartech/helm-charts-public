@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "0.13.0"
 description: A Helm chart for vcluster
 name: vcluster
-version: "0.13.0-3"
+version: "0.13.0-4"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/vcluster
@@ -17,12 +17,12 @@ dependencies:
     repository: https://charts.loft.sh
     condition: vcluster.enabled
   - name: common-gitops
-    version: "1.1.2"
+    version: "1.1.7"
     repository: https://helm-repo-public.luminarinfra.com/
   - name: common-res
-    version: "1.0.12"
+    version: "1.0.15"
     repository: https://helm-repo-public.luminarinfra.com/
   - name: external-secrets
-    version: "0.7.1-15"
+    version: "0.7.1-16"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: external-secrets.enabled

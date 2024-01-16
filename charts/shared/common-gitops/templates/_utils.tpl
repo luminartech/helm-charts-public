@@ -55,3 +55,25 @@ Returns string:
     {{- fail "Netmask is expected to be a number >= 8 and <=30" -}}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Compute the logic of item enabled/disabled state.
+
+Input dict:
+{
+  root: [map] - root context
+  kind: [string] - resource kind name, e.g. "Policy"
+  name: [string] - item id, e.g. "argocd"
+}
+Sample return (always string):
+true
+*/}}
+{{- define "common-gitops.utils.itemEnabled" -}}
+  {{- $kindObj := (get (.root.Values) .kind) -}}
+  {{- $item := (get $kindObj.items .name) -}}
+  {{- hasKey $item "enabled" | ternary
+      (eq (include "common-gitops.tplvalues.render" (
+        dict "value" ($item.enabled | toString) "context" .root)) "true")
+      (ne (include "common-gitops.tplvalues.render" (
+        dict "value" ($kindObj.enabled | toString) "context" .root)) "false") }}
+{{- end -}}

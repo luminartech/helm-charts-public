@@ -2,7 +2,7 @@
 {{- $root := . -}}
 {{- $kindObj := or (get $root.Values $kind) (dict) -}}
 {{- range $name, $item := $kindObj.items -}}
-  {{- if hasKey $item "enabled" | ternary ($item.enabled) (ne $kindObj.enabled false) }}
+  {{- if eq (include "common-gitops.utils.itemEnabled" (dict "root" $root "name" $name "kind" $kind)) "true" }}
 ---
 apiVersion: {{ .apiVersion | default "aws.upbound.io/v1alpha1" }}
 kind: ProviderConfig

@@ -4,7 +4,7 @@ description: A Helm chart for Crossplane
 type: application
 appVersion: "main" # Chatbot-ui does not have gold version yet
 # Ref: https://github.com/mckaywrigley/chatbot-ui/tree/main
-version: "0.1.0"
+version: "0.1.1"
 kubeVersion: ">=1.16.0-0"
 annotations:
   category: Application
@@ -21,17 +21,17 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: common-gitops
-    version: "1.1.2"
+    version: "1.1.7"
     repository: https://helm-repo-public.luminarinfra.com/
   - name: common-res
+    version: "1.0.15"
     repository: https://helm-repo-public.luminarinfra.com/
-    version: "1.0.11"
     condition: common-res.enabled
   - name: crossplane-aws-secretsmanager
-    version: "0.37.0-1"
+    version: "0.41.0"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: crossplane-aws-secretsmanager.enabled
   - name: external-secrets
-    version: "0.7.1-15"
+    version: "0.7.1-16"
     repository: https://helm-repo-public.luminarinfra.com/
     condition: external-secrets.enabled
