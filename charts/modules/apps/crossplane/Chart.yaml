@@ -17,7 +17,7 @@ dependencies:
     repository: https://charts.crossplane.io/stable
     condition: crossplane.enabled
   - name: prometheus-service-discovery
-    version: "40.1.0-4"
+    version: "40.1.0-5"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: prometheus-service-discovery.enabled
   - name: crossplane-aws-iam
