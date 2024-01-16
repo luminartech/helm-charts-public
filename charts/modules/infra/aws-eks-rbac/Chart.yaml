@@ -15,9 +15,9 @@ maintainers:
 dependencies:
   - name: crossplane-aws-iam
     version: "0.41.0"
-    repository: "ghcr.io/luminartech/helm-charts-public"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-iam.enabled
   - name: crossplane-kubernetes
     version: "0.4.0-6"
-    repository: "ghcr.io/luminartech/helm-charts-public"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-kubernetes.enabled
