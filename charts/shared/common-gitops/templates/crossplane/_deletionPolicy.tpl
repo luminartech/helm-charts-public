@@ -14,9 +14,11 @@ deletionPolicy: Orphan
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
   {{- /* Take the first non-empty argument */ -}}
-deletionPolicy: {{ coalesce $item.deletionPolicy
-                            $kindObj.deletionPolicy
-                            .root.Values.deletionPolicy
-                            (.root.Values.global).awsDeletionPolicy
-                            "Orphan" }}
+deletionPolicy: {{ include "common-gitops.tplvalues.render" (dict
+                     "value" (coalesce $item.deletionPolicy
+                        $kindObj.deletionPolicy
+                        .root.Values.deletionPolicy
+                        (.root.Values.global).awsDeletionPolicy
+                        "Orphan")
+                     "context" .root) }}
 {{- end -}}

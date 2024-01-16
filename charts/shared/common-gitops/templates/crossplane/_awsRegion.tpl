@@ -15,8 +15,11 @@ us-west-1
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
   {{- /* Take the first non-empty argument */ -}}
-  {{- coalesce ($item.forProvider).region
-               $kindObj.region
-               (.root.Values.global).awsRegion
-               "us-west-2" }}
+  {{- include "common-gitops.tplvalues.render" (dict
+        "value" (coalesce
+          ($item.forProvider).region
+          $kindObj.region
+          (.root.Values.global).awsRegion
+          "us-west-2")
+        "context" .root) }}
 {{- end -}}

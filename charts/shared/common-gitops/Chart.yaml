@@ -15,7 +15,7 @@ keywords:
   - library
   - iac
 maintainers:
-  - name: SRE
+  - name: IPE
     email: ipe@luminartech.com
   - name: Satish Gaikwad
     email: satish.gaikwad@luminartech.com
@@ -23,6 +23,6 @@ maintainers:
     email: hennadii.mykhailiuta@luminartech.com
 name: common-gitops
 sources:
-  - https://github.com/luminartech/helm-charts-public/charts/common-gitops
+  - https://github.com/luminartech/helm-charts-public/charts/shared/common-gitops
 type: library
-version: "1.1.6"
+version: "1.1.7"

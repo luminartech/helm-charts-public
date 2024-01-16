@@ -6,7 +6,7 @@ labels:
   helm.sh/chart: {{ include "common-gitops.names.chart" .root }}-{{ .root.Chart.Version }}
   app.kubernetes.io/part-of: {{ include "common-gitops.names.release" .root }}
   app.kubernetes.io/managed-by: {{ .root.Release.Service }}
-  app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" .name }}"
+  app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" (dict "value" .name "root" .root) }}"
 {{- end -}}
 {{/*
 Generate labels map based on values set on global, resource kind and resource item levels.
@@ -26,7 +26,7 @@ labels:
   helm.sh/chart: {{ include "common-gitops.names.chart" .root }}-{{ .root.Chart.Version }}
   app.kubernetes.io/part-of: {{ include "common-gitops.names.release" .root }}
   app.kubernetes.io/managed-by: {{ .root.Release.Service }}
-  app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" .name }}"
+  app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" (dict "value" .name "root" .root) }}"
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
   {{- /* Left argument takes precedence over the right one */ -}}
