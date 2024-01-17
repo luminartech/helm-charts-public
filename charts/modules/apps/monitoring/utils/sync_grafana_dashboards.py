@@ -43,7 +43,7 @@ _CONDITION_MAP = {
     "argocd-basic": ".Values.commonGrafanaDashboards.argocdBasicEnabled",
     "cert-manager": ".Values.commonGrafanaDashboards.certManagerEnabled",
     "crossplane": ".Values.commonGrafanaDashboards.crossplaneEnabled",
-    "external-dns": ".Values.commonGrafanaDashboards.externalDnsEnabled",
+    "external-dns": ".Values.commonGrafanaDashboards.externalDNSEnabled",
     "karpenter-capacity": ".Values.commonGrafanaDashboards.karpenterCapacityEnabled",
     "karpenter-performance": ".Values.commonGrafanaDashboards.karpenterPerformanceEnabled",
     "loki": ".Values.commonGrafanaDashboards.lokiEnabled",
