@@ -14,50 +14,6 @@ metadata:
 data:
   external-dns.json: |-
     {
-        "__inputs": [
-
-        ],
-        "__elements": {
-
-        },
-        "__requires": [
-            {
-                "type": "panel",
-                "id": "bargauge",
-                "name": "Bar gauge",
-                "version": ""
-            },
-            {
-                "type": "panel",
-                "id": "gauge",
-                "name": "Gauge",
-                "version": ""
-            },
-            {
-                "type": "grafana",
-                "id": "grafana",
-                "name": "Grafana",
-                "version": "10.1.5"
-            },
-            {
-                "type": "datasource",
-                "id": "prometheus",
-                "name": "Prometheus",
-                "version": "1.0.0"
-            },
-            {
-                "type": "panel",
-                "id": "table",
-                "name": "Table",
-                "version": ""
-            },
-            {
-                "type": "panel",
-                "id": "timeseries",
-                "name": "Time series",
-                "version": ""
-            }
-        ],
         "annotations": {
             "list": [
                 {
@@ -70,6 +26,14 @@ data:
                     "hide": true,
                     "iconColor": "rgba(0, 211, 255, 1)",
                     "name": "Annotations & Alerts",
+                    "target": {
+                        "limit": 100,
+                        "matchAny": false,
+                        "tags": [
+
+                        ],
+                        "type": "dashboard"
+                    },
                     "type": "dashboard"
                 }
             ]
@@ -79,7 +43,7 @@ data:
         "fiscalYearStartMonth": 0,
         "gnetId": 15038,
         "graphTooltip": 0,
-        "id": null,
+        "id": 61,
         "links": [
 
         ],
@@ -135,7 +99,6 @@ data:
                                 "tooltip": false,
                                 "viz": false
                             },
-                            "insertNulls": false,
                             "lineInterpolation": "linear",
                             "lineWidth": 5,
                             "pointSize": 5,
@@ -234,7 +197,6 @@ data:
                                 "tooltip": false,
                                 "viz": false
                             },
-                            "insertNulls": false,
                             "lineInterpolation": "linear",
                             "lineWidth": 5,
                             "pointSize": 5,
@@ -390,7 +352,7 @@ data:
                     },
                     "valueMode": "color"
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -462,7 +424,7 @@ data:
                     },
                     "valueMode": "color"
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -531,7 +493,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -615,7 +577,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -684,7 +646,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -753,7 +715,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -822,7 +784,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -891,7 +853,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -960,7 +922,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -1054,7 +1016,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -1120,7 +1082,7 @@ data:
                     "showThresholdLabels": false,
                     "showThresholdMarkers": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -1186,7 +1148,6 @@ data:
                                 "tooltip": false,
                                 "viz": false
                             },
-                            "insertNulls": false,
                             "lineInterpolation": "stepBefore",
                             "lineStyle": {
                                 "fill": "solid"
@@ -1400,7 +1361,6 @@ data:
                                 "tooltip": false,
                                 "viz": false
                             },
-                            "insertNulls": false,
                             "lineInterpolation": "stepBefore",
                             "lineWidth": 0,
                             "pointSize": 5,
@@ -1603,9 +1563,7 @@ data:
                         },
                         "custom": {
                             "align": "auto",
-                            "cellOptions": {
-                                "type": "auto"
-                            },
+                            "displayMode": "auto",
                             "inspect": false
                         },
                         "decimals": 2,
@@ -1816,7 +1774,7 @@ data:
                     },
                     "showHeader": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -1912,9 +1870,8 @@ data:
                             "mode": "thresholds"
                         },
                         "custom": {
-                            "cellOptions": {
-                                "type": "auto"
-                            },
+                            "align": "auto",
+                            "displayMode": "auto",
                             "inspect": false
                         },
                         "decimals": 2,
@@ -2194,7 +2151,7 @@ data:
                     },
                     "showHeader": true
                 },
-                "pluginVersion": "10.1.5",
+                "pluginVersion": "9.3.8",
                 "targets": [
                     {
                         "datasource": {
@@ -2324,7 +2281,7 @@ data:
             }
         ],
         "refresh": "",
-        "schemaVersion": 38,
+        "schemaVersion": 37,
         "style": "dark",
         "tags": [
             "external-dns",
@@ -2354,7 +2311,9 @@ data:
                 },
                 {
                     "current": {
-
+                        "selected": false,
+                        "text": "All",
+                        "value": "$__all"
                     },
                     "datasource": {
                         "type": "prometheus",
@@ -2391,7 +2350,7 @@ data:
         "timezone": "utc",
         "title": "External DNS",
         "uid": "eea5u_I7z",
-        "version": 19,
+        "version": 1,
         "weekStart": ""
     }
 {{- end }}

@@ -1,44 +1,4 @@
 {
-  "__inputs": [],
-  "__elements": {},
-  "__requires": [
-    {
-      "type": "panel",
-      "id": "bargauge",
-      "name": "Bar gauge",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "gauge",
-      "name": "Gauge",
-      "version": ""
-    },
-    {
-      "type": "grafana",
-      "id": "grafana",
-      "name": "Grafana",
-      "version": "10.1.5"
-    },
-    {
-      "type": "datasource",
-      "id": "prometheus",
-      "name": "Prometheus",
-      "version": "1.0.0"
-    },
-    {
-      "type": "panel",
-      "id": "table",
-      "name": "Table",
-      "version": ""
-    },
-    {
-      "type": "panel",
-      "id": "timeseries",
-      "name": "Time series",
-      "version": ""
-    }
-  ],
   "annotations": {
     "list": [
       {
@@ -51,6 +11,12 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
@@ -60,7 +26,7 @@
   "fiscalYearStartMonth": 0,
   "gnetId": 15038,
   "graphTooltip": 0,
-  "id": null,
+  "id": 61,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -112,7 +78,6 @@
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 5,
             "pointSize": 5,
@@ -205,7 +170,6 @@
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
             "lineInterpolation": "linear",
             "lineWidth": 5,
             "pointSize": 5,
@@ -349,7 +313,7 @@
         },
         "valueMode": "color"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -417,7 +381,7 @@
         },
         "valueMode": "color"
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -482,7 +446,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -560,7 +524,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -625,7 +589,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -690,7 +654,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -755,7 +719,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -820,7 +784,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -885,7 +849,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -973,7 +937,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -1035,7 +999,7 @@
         "showThresholdLabels": false,
         "showThresholdMarkers": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -1099,7 +1063,6 @@
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
             "lineInterpolation": "stepBefore",
             "lineStyle": {
               "fill": "solid"
@@ -1307,7 +1270,6 @@
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
             "lineInterpolation": "stepBefore",
             "lineWidth": 0,
             "pointSize": 5,
@@ -1504,9 +1466,7 @@
           },
           "custom": {
             "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
+            "displayMode": "auto",
             "inspect": false
           },
           "decimals": 2,
@@ -1713,7 +1673,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -1807,9 +1767,8 @@
             "mode": "thresholds"
           },
           "custom": {
-            "cellOptions": {
-              "type": "auto"
-            },
+            "align": "auto",
+            "displayMode": "auto",
             "inspect": false
           },
           "decimals": 2,
@@ -2085,7 +2044,7 @@
         },
         "showHeader": true
       },
-      "pluginVersion": "10.1.5",
+      "pluginVersion": "9.3.8",
       "targets": [
         {
           "datasource": {
@@ -2213,7 +2172,7 @@
     }
   ],
   "refresh": "",
-  "schemaVersion": 38,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [
     "external-dns",
@@ -2240,7 +2199,11 @@
         "type": "datasource"
       },
       {
-        "current": {},
+        "current": {
+          "selected": false,
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": {
           "type": "prometheus",
           "uid": "$datasource"
@@ -2272,6 +2235,6 @@
   "timezone": "utc",
   "title": "External DNS",
   "uid": "eea5u_I7z",
-  "version": 19,
+  "version": 1,
   "weekStart": ""
 }
