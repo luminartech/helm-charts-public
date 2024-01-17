@@ -1,11 +1,10 @@
 {{/* vim: set filetype=mustache: */}}
 {{/*
 Render the Json from Yaml with support of templating in input.
-4 spaces are used for indentation as it's preffered by AWS
 Accepts dict:
 {
   root: [map] - root context
-  value: [string or dict] - policy
+  value: [string or dict] - content
 }
 Important note. JSON can be provided in 3 mutually exclusive formats:
 - raw Json (string)
@@ -24,8 +23,7 @@ Sample return:
     {{- else if kindIs "map" .value -}}
       {{ include "common-gitops.tplvalues.render" (dict "value" .value "context" .root) |
         fromYaml |
-        mustToPrettyJson |
-        replace "  " "    " -}}
+        mustToPrettyJson -}}
     {{- else -}}
       {{- fail (print "Unsupported type of JSON document: " (kindOf .value)) -}}
     {{- end -}}
