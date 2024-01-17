@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "45.7.1"
 description: A Helm chart for monitoring
 name: monitoring
-version: "45.7.1-4"
+version: "45.7.1-5"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/monitoring
