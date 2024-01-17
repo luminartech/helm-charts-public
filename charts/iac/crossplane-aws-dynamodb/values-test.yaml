@@ -1,0 +1,62 @@
+---
+ContributorInsights:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        tableName: test
+
+GlobalTable:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        replica:
+          - regionName: us-west-2
+
+KinesisStreamingDestination:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        streamArn: test
+
+TableItem:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        item:
+          Key: value
+          attribute: test
+
+TableReplica:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        globalTableArn: test
+
+Table:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        hashKey: key-name
+        tableClass: STANDARD
+        billingMode: PROVISIONED
+        readCapacity: 5
+        writeCapacity: 5
+        localSecondaryIndex: []
+        globalSecondaryIndex: []
+        serverSideEncryption: []
+        deletionProtectionEnabled: false
+
+
+Tag:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        key: example
+        resourceArn: test
