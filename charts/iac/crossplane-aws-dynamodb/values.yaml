@@ -1,0 +1,29 @@
+## @section AWS resources
+
+## @param ContributorInsights resource parameters
+##
+ContributorInsights: {}
+
+## @param GlobalTable resource parameters
+##
+GlobalTable: {}
+
+## @param KinesisStreamingDestination resource parameters
+##
+KinesisStreamingDestination: {}
+
+## @param TableItem resource parameters
+##
+TableItem: {}
+
+## @param TableReplica resource parameters
+##
+TableReplica: {}
+
+## @param Table resource parameters
+##
+Table: {}
+
+## @param Tag resource parameters
+##
+Tag: {}
