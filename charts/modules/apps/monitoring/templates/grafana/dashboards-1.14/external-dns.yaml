@@ -2,7 +2,7 @@
 Generated from 'external-dns'
 Do not change in-place! In order to change this file look into sync_grafana_dashboards.py
 */ -}}
-{{- if .Values.commonGrafanaDashboards.externalDnsEnabled }}
+{{- if .Values.commonGrafanaDashboards.externalDNSEnabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
