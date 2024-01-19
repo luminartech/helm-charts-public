@@ -27,8 +27,8 @@
 | `global.awsRegion`                 | Default aws region for crossplane aws provider resources.                                                                | `us-east-2`                      |
 | `global.eksHash`                   | Default EKS cluster hash for relevant crossplane resources such as IAM Role.                                             | `XXXXX`                          |
 | `global.providerConfigRef.name`    | Default crossplane provider all resources generated for crossplane.                                                      | `crossplane-provider-config-aws` |
-| `global.awsProviderVersion`        | Crossplane official AWS provider version: https://marketplace.upbound.io/providers/upbound/provider-aws/                 | `v0.38.0`                        |
-| `global.kubernetesProviderVersion` | Crossplane Kubernetes provider version: https://marketplace.upbound.io/providers/crossplane-contrib/provider-kubernetes/ | `v0.4.0`                         |
+| `global.awsProviderVersion`        | Crossplane official AWS provider version: https://marketplace.upbound.io/providers/upbound/provider-aws/                 | `v0.47.1`                        |
+| `global.kubernetesProviderVersion` | Crossplane Kubernetes provider version: https://marketplace.upbound.io/providers/crossplane-contrib/provider-kubernetes/ | `v0.11.0`                        |
 | `global.crossplaneIAMRole`         | Crossplane AWS IAM role with administrative permissions to create cloud resources                                        | `crossplane-provider-aws`        |
 | `global.crossplaneNamespace`       | Crossplane namespace                                                                                                     | `infra-crossplane`               |
 
