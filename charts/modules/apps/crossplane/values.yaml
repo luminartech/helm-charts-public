@@ -487,6 +487,8 @@ crossplane:
   args:
     - '--enable-external-secret-stores'
     - '--enable-usages'
+    # Use providerConfigs for now and upgrade later
+    - '--enable-deployment-runtime-configs=false'
   ## @skip crossplane.resourcesCrossplane
   resourcesCrossplane:
     limits:
