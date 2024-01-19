@@ -4,7 +4,7 @@
 {{- range $name, $item := $kindObj.items -}}
   {{- if eq (include "common-gitops.utils.itemEnabled" (dict "root" $root "name" $name "kind" $kind)) "true" }}
 ---
-apiVersion: kubernetes.crossplane.io/v1alpha1
+apiVersion: kubernetes.crossplane.io/v1alpha2
 kind: {{ $kind }}
 metadata:
   name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
