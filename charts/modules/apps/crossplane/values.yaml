@@ -486,10 +486,7 @@ crossplane:
   ## @skip crossplane.args
   args:
     - '--enable-external-secret-stores'
-    # Use providerConfigs for now and upgrade later
-    - '--enable-deployment-runtime-configs=false'
-    - '--enable-composition-functions=false'
-    - '--enable-composition-webhook-schema-validation=false'
+    - '--enable-usages'
   ## @skip crossplane.resourcesCrossplane
   resourcesCrossplane:
     limits:
