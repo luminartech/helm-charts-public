@@ -38,10 +38,10 @@ global:
     name: crossplane-provider-config-aws
   ## @param global.awsProviderVersion Crossplane official AWS provider version: https://marketplace.upbound.io/providers/upbound/provider-aws/
   ##
-  awsProviderVersion: v0.47.1
+  awsProviderVersion: v0.41.0
   ## @param global.kubernetesProviderVersion Crossplane Kubernetes provider version: https://marketplace.upbound.io/providers/crossplane-contrib/provider-kubernetes/
   ##
-  kubernetesProviderVersion: v0.11.0
+  kubernetesProviderVersion: v0.4.0
   ## @param global.crossplaneIAMRole Crossplane AWS IAM role with administrative permissions to create cloud resources
   ##
   crossplaneIAMRole: "crossplane-provider-aws"
@@ -461,7 +461,7 @@ Provider:
       name: kubernetes
       spec:
         ignoreCrossplaneConstraints: false
-        package: "crossplanecontrib/provider-kubernetes:{{ .Values.global.kubernetesProviderVersion }}"
+        package: "crossplane/provider-kubernetes:{{ .Values.global.kubernetesProviderVersion }}"
         packagePullPolicy: IfNotPresent
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
@@ -485,10 +485,7 @@ crossplane:
   installCRDs: true
   ## @skip crossplane.args
   args:
-    - '--enable-external-secret-stores'
-    - '--enable-usages'
-    # Use providerConfigs for now and upgrade later
-    - '--enable-deployment-runtime-configs=false'
+    - --enable-external-secret-stores
   ## @skip crossplane.resourcesCrossplane
   resourcesCrossplane:
     limits:

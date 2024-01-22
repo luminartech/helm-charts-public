@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "1.14.5"
+appVersion: "1.13.2"
 description: A Helm chart for Crossplane
 name: crossplane
-version: "1.14.5-2"
+version: "1.13.2-30"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/crossplane
@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: crossplane
-    version: "1.14.5"
+    version: "1.13.2"
     repository: https://charts.crossplane.io/stable
     condition: crossplane.enabled
   - name: prometheus-service-discovery
