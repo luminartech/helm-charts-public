@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "2.0.10"
+appVersion: "2.4.0"
 description: A Helm chart for argo-events
 name: argo-events
-version: "2.4.0"
+version: "2.4.0-1"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/argo-events
