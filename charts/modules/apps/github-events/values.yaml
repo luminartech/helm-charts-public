@@ -225,6 +225,9 @@ external-secrets:
           secretStoreRef:
             name: '{{ .Values.global.secretStoreRef }}'
           data:
+            pat:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
+              awsSecretKey: pat
             url:
               awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/gh/{{ .Values.global.githubOrg }}'
               awsSecretKey: url
