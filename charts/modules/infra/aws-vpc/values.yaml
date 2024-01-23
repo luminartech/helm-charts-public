@@ -290,6 +290,7 @@ crossplane-aws-ec2:
     enabled: true
     items:
       private-default:
+        deletionPolicy: Orphan
         forProvider:
           destinationCidrBlock: "0.0.0.0/0"
           natGatewayIdRef:
@@ -297,6 +298,7 @@ crossplane-aws-ec2:
           routeTableIdRef:
             name: '{{ include "common-gitops.names.release" . }}-private'
       public-default:
+        deletionPolicy: Orphan
         forProvider:
           destinationCidrBlock: "0.0.0.0/0"
           gatewayIdRef:
