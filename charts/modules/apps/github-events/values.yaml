@@ -41,7 +41,7 @@ global:
   githubAppID: ""
   ## @param global.githubAppInstallationID Github Installation ID
   ##
-  githubAppInstallationID:
+  githubAppInstallationID: ""
   ## @param global.clusterOwner Vcluster owner
   ##
   clusterOwner: "engineer.name"
