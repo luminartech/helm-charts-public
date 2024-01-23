@@ -38,7 +38,7 @@ global:
   githubOrg: satish-labs
   ## @param global.githubAppID Github App ID
   ##
-  githubAppID:
+  githubAppID: ""
   ## @param global.githubAppInstallationID Github Installation ID
   ##
   githubAppInstallationID:
@@ -76,7 +76,7 @@ global:
   ## @param global.secretStoreNamespace Namespace to store the the AWS Secrets
   ##
   secretStoreNamespace: github-events-gitops-infra-demo
-  ## @param global.baseDomain Based omain for the ingress vhost
+  ## @param global.baseDomain Based domain for the ingress vhost
   ##
   baseDomain: dev.domain.com
 
