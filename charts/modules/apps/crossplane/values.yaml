@@ -200,9 +200,9 @@ StoreConfig:
       spec:
         defaultScope: '{{ .Values.global.crossplaneNamespace }}'
         type: Kubernetes
-    kubernetes:
+    k8s:
       enabled: false
-      name: kubernetes
+      name: k8s
       apiVersion: secrets.crossplane.io/v1alpha1
       spec:
         defaultScope: '{{ .Values.global.crossplaneNamespace }}'
@@ -456,9 +456,9 @@ Provider:
         revisionActivationPolicy: Automatic
         revisionHistoryLimit: 1
         skipDependencyResolution: true
-    kubernetes:
+    k8s:
       enabled: false
-      name: kubernetes
+      name: k8s
       spec:
         ignoreCrossplaneConstraints: false
         package: "crossplane/provider-kubernetes:{{ .Values.global.kubernetesProviderVersion }}"
