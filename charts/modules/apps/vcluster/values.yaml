@@ -302,6 +302,7 @@ common-res:
   Job:
     enabled: true
     items:
+      # This job exists because there's no elegant solution known as of now to run CronJob (below) upon helm chart install
       get-argocd-token:
         # annotations:
         #   "helm.sh/hook": post-install,post-upgrade
@@ -329,6 +330,34 @@ common-res:
               - name: get-token-script
                 configMap:
                   name: '{{ .Release.Name }}-get-token-script'
+  CronJob:
+    enabled: true
+    items:
+      refresh-argocd-token:
+        # Token expires in about 2.5 hours
+        schedule: "*/30 * * * *"
+        jobTemplate:
+          spec:
+            template:
+              spec:
+                serviceAccountName: vc-{{ .Release.Name }}
+                containers:
+                  - name: get-argocd-token
+                    image: "efrecon/vcluster:{{ .Values.global.vclusterVersion }}"
+                    env:
+                      - name: RELEASE_NAME
+                        value: '{{ .Release.Name }}'
+                      - name: VCLUSTER_SERVER
+                        value: '{{ .Values.global.githubRepoName }}-pr-{{ .Values.global.githubPrNumber }}.{{ .Values.global.environment }}.{{ .Values.global.clusterExternalDomain }}'
+                    volumeMounts:
+                      - name: get-token-script
+                        mountPath: /scripts
+                        readOnly: true
+                    command: ['sh', '/scripts/get-token.sh']
+                volumes:
+                  - name: get-token-script
+                    configMap:
+                      name: '{{ .Release.Name }}-get-token-script'
 
   ServiceAccount:
     enabled: true
