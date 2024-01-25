@@ -331,11 +331,11 @@ common-res:
                 configMap:
                   name: '{{ .Release.Name }}-get-token-script'
   CronJob:
-    enabled: true
+    # Presumably k3s token expires in 24 hours. Enable this CronJob if you would like to keep token fresh
+    enabled: false
     items:
       refresh-argocd-token:
-        # Token expires in about 2.5 hours
-        schedule: "*/30 * * * *"
+        schedule: "0 */22 * * *"
         jobTemplate:
           spec:
             template:
