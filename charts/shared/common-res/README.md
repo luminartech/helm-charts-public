@@ -87,6 +87,13 @@
 | `Job` |             | `{}`  |
 
 
+### Kubernetes CronJob object.
+
+| Name      | Description | Value |
+| --------- | ----------- | ----- |
+| `CronJob` |             | `{}`  |
+
+
 ### Kubernetes Secret object.
 
 | Name     | Description | Value |
@@ -120,6 +127,20 @@
 | Name  | Description | Value |
 | ----- | ----------- | ----- |
 | `Pod` |             | `{}`  |
+
+
+### Kubernetes Deployment object.
+
+| Name         | Description | Value |
+| ------------ | ----------- | ----- |
+| `Deployment` |             | `{}`  |
+
+
+### Kubernetes HorizontalPodAutoscaler object.
+
+| Name                      | Description | Value |
+| ------------------------- | ----------- | ----- |
+| `HorizontalPodAutoscaler` |             | `{}`  |
 
 
 ## Configuration and installation details

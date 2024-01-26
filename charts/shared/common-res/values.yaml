@@ -67,6 +67,11 @@ ClusterRoleBinding: {}
 ##
 Job: {}
 
+## @section Kubernetes CronJob object.
+## @param CronJob
+##
+CronJob: {}
+
 ## @section Kubernetes Secret object.
 ## @param Secret
 ##
