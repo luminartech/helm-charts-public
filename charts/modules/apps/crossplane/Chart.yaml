@@ -1,29 +1,29 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "1.13.2"
-description: A Helm chart for Crossplane
-name: crossplane
-version: "1.13.2-31"
-home: https://helm-repo-public.luminarinfra.com/
-sources:
-  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/crossplane
-maintainers:
-  - name: Luminar IPE Team
-    email: ipe@luminartech.com
+appVersion: 1.14.5
 dependencies:
-  - name: crossplane
-    version: "1.13.2"
-    repository: https://charts.crossplane.io/stable
-    condition: crossplane.enabled
-  - name: prometheus-service-discovery
-    version: "40.1.0-5"
-    repository: "oci://ghcr.io/luminartech/helm-charts-public"
-    condition: prometheus-service-discovery.enabled
-  - name: crossplane-aws-iam
-    version: "0.41.0"
-    repository: "oci://ghcr.io/luminartech/helm-charts-public"
-    condition: crossplane-aws-iam.enabled
-  - name: common-gitops
-    version: "1.1.7"
-    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+- condition: crossplane.enabled
+  name: crossplane
+  repository: https://charts.crossplane.io/stable
+  version: 1.14.5
+- condition: prometheus-service-discovery.enabled
+  name: prometheus-service-discovery
+  repository: oci://ghcr.io/luminartech/helm-charts-public
+  version: 40.1.0-5
+- condition: crossplane-aws-iam.enabled
+  name: crossplane-aws-iam
+  repository: oci://ghcr.io/luminartech/helm-charts-public
+  version: 0.41.0
+- name: common-gitops
+  repository: oci://ghcr.io/luminartech/helm-charts-public
+  version: 1.1.7
+description: A Helm chart for Crossplane
+home: https://helm-repo-public.luminarinfra.com/
+maintainers:
+- email: ipe@luminartech.com
+  name: Luminar IPE Team
+name: crossplane
+sources:
+- https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/crossplane
+version: 1.14.5-3
