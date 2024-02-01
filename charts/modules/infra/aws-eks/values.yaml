@@ -509,6 +509,8 @@ crossplane-aws-eks:
         #   enabled: true
         writeConnectionSecretToRef:
           enabled: true
+          name: '{{ include "common-gitops.names.release" . }}'
+          namespace: '{{ .Release.Namespace }}'
         forProvider:
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
