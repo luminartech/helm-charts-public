@@ -29,7 +29,11 @@ publishConnectionDetailsTo:
     default (include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" $.nameOverride)) }}
       {{- with .configRef }}
   configRef:
-    name: {{ include "common-gitops.tplvalues.render" (dict "value" .name "context" $root) | default "default" }}
+        {{- with .name }}
+    name: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+        {{ else -}}
+    name: default
+        {{ end -}}
         {{- with .policy }}
     policy:
           {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 -}}
