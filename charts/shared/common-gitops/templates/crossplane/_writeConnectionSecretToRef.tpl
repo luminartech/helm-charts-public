@@ -20,13 +20,19 @@ writeConnectionSecretToRef:
   {{- /* Left argument takes precedence over the right one */ -}}
   {{- with merge ($item.writeConnectionSecretToRef)
                  ($kindObj.writeConnectionSecretToRef)
-                 ((.root.Values.global).writeConnectionSecretToRef) -}}
+                 (($root.Values.global).writeConnectionSecretToRef) -}}
     {{- if .enabled }}
 writeConnectionSecretToRef:
-  name: {{ include "common-gitops.tplvalues.render" (dict "value" .name "context" $root) |
-    default (include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" $.nameOverride)) }}
-  namespace: {{ include "common-gitops.tplvalues.render" (dict "value" .namespace "context" $root) |
-    default "infra-crossplane" }}
+      {{- with .name }}
+  name: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+      {{- else }}
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" $.nameOverride) | quote }}
+      {{- end }}
+      {{- with .namespace }}
+  namespace: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+      {{- else }}
+  namespace: "infra-crossplane"
+      {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
