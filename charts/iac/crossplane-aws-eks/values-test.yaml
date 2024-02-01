@@ -33,7 +33,7 @@ ClusterAuth:
     test:
       writeConnectionSecretToRef:
         enabled: true
-        name: '{{ .Values.global.clusterAuthName }}'
+        name: '{{ include "common-gitops.names.release" . }}'
         namespace: '{{ .Release.Namespace }}'
       forProvider:
         region: us-west-1
