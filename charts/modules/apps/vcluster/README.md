@@ -34,7 +34,9 @@
 | `global.argocdNamespace`        | ArgoCD namespace                                                                                            | `infra-argo-cd`                  |
 | `global.clusterType`            | K8s cluster type                                                                                            | `vcluster`                       |
 | `global.clusterExternalDomain`  | cluster external base domain                                                                                | `infra-aws-eks`                  |
+| `global.team`                   | Team name                                                                                                   | `infra`                          |
 | `global.environment`            | VCluster environment                                                                                        | `dev`                            |
+| `global.ingressClassName`       | Ingress class name for the vcluster ingresses                                                               | `nginx-ingress-internal`         |
 | `global.vclusterVersion`        | VCluster version                                                                                            | `v0.13.0`                        |
 
 
