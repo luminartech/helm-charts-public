@@ -1,10 +1,10 @@
-{{- $kind := "Provisioner" -}}
+{{- $kind := "EC2NodeClass" -}}
 {{- $root := . -}}
 {{- $kindObj := or (get $root.Values $kind) (dict) -}}
 {{- range $name, $item := $kindObj.items -}}
   {{- if eq (include "common-gitops.utils.itemEnabled" (dict "root" $root "name" $name "kind" $kind)) "true" }}
 ---
-apiVersion: karpenter.sh/v1alpha5
+apiVersion: karpenter.k8s.aws/v1beta1
 kind: {{ $kind }}
 metadata:
   name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
@@ -12,20 +12,9 @@ metadata:
     {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
 spec:
     {{- include "common-gitops.tplvalues.render" (dict
-      "value" (omit . "provider" "providerRef")
+      "value" (omit . "tags")
       "context" $root) | nindent 2 }}
-    {{- with .provider }}
-  provider:
-      {{- include "common-gitops.tplvalues.render" (dict
-        "value" (omit . "tags")
-        "context" $root) | nindent 4 }}
-    tags:
-      {{- include "common-gitops.tags.dict" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 6 }}
-    {{- else }}
-      {{- with .providerRef }}
-  providerRef:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end }}
-    {{- end }}
+  tags:
+    {{- include "common-gitops.tags.dict" (dict "root" $root "name" $name "kind" $kind "nameOverride" .name) | nindent 4 }}
   {{- end }}
 {{- end }}

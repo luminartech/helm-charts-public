@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "0.32.6"
 description: A Helm chart for karpenter + related resources
 name: karpenter
-version: "0.32.6-0"
+version: "0.32.6-1"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/karpenter
