@@ -53,58 +53,162 @@ crossplane-aws-iam:
           description: "IAM Policy for karpenter to access aws services"
           policy:
             Statement:
-              allowEC2Karpenteradmin:
+              allowScopedEC2InstanceActions:
+                Effect: Allow
+                Resource:
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}::image/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}::snapshot/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:spot-instances-request/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:security-group/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:subnet/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
                 Action:
-                  - ec2:CreateFleet
-                  - ec2:CreateLaunchTemplate
-                  - ec2:CreateTags
-                  - ec2:DeleteLaunchTemplate
-                  - ec2:DescribeAvailabilityZones
-                  - ec2:DescribeImages
-                  - ec2:DescribeInstances
-                  - ec2:DescribeInstanceStatus
-                  - ec2:DescribeInstanceTypeOfferings
-                  - ec2:DescribeInstanceTypes
-                  - ec2:DescribeLaunchTemplates
-                  - ec2:DescribeSecurityGroups
-                  - ec2:DescribeSpotPriceHistory
-                  - ec2:DescribeSubnets
-                  - ec2:RequestSpotInstances
-                  - ec2:RunInstances
-                  - pricing:GetProducts
-                  - ssm:GetParameter
+                - "ec2:RunInstances"
+                - "ec2:CreateFleet"
+              allowScopedEC2InstanceActionsWithTags:
                 Effect: Allow
-                Resource: '*'
-              allowIAMPassRole:
-                Effect: Allow
-                Action: iam:PassRole
+                Resource:
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:fleet/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:volume/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:network-interface/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+                Action:
+                - "ec2:RunInstances"
+                - "ec2:CreateFleet"
+                - "ec2:CreateLaunchTemplate"
                 Condition:
                   StringEquals:
-                    iam:PassedToService: ec2.amazonaws.com
-                Resource: '*'
-              allowallowAssumeRoleWebIdentity:
-                Effect: Allow
-                Action: sts:AssumeRoleWithWebIdentity
-                Resource: '*'
-              allowConditionalEC2Terminate:
-                Effect: Allow
-                Action: ec2:TerminateInstances
-                Condition:
+                    "aws:RequestTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
                   StringLike:
-                    ec2:ResourceTag/karpenter.sh/provisioner-name: '*'
-                Resource: '*'
-              allowElasticLBRegisterInstances:
+                    "aws:RequestTag/karpenter.sh/nodepool": "*"
+              allowScopedResourceCreationTagging:
                 Effect: Allow
-                Action: elasticloadbalancing:RegisterInstancesWithLoadBalancer
-                Resource: arn:aws:elasticloadbalancing:*:*:loadbalancer/*
-              allowElasticLBRegisterTargets:
+                Resource:
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:fleet/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:volume/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:network-interface/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+                Action: "ec2:CreateTags"
+                Condition:
+                  StringEquals:
+                    "aws:RequestTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                    "ec2:CreateAction":
+                    - RunInstances
+                    - CreateFleet
+                    - CreateLaunchTemplate
+                  StringLike:
+                    "aws:RequestTag/karpenter.sh/nodepool": "*"
+              allowScopedResourceTagging:
                 Effect: Allow
-                Action: elasticloadbalancing:RegisterTargets
-                Resource: arn:aws:elasticloadbalancing:*:*:*/*
-              allowEKSDiscovery:
+                Resource: "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
+                Action: "ec2:CreateTags"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                  StringLike:
+                    "aws:ResourceTag/karpenter.sh/nodepool": "*"
+                  "ForAllValues:StringEquals":
+                    "aws:TagKeys":
+                    - "karpenter.sh/nodeclaim"
+                    - "Name"
+              allowScopedDeletion:
                 Effect: Allow
-                Action: eks:DescribeCluster
-                Resource: arn:aws:eks:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:cluster/{{ .Values.global.eksClusterName }}
+                Resource:
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+                Action:
+                - "ec2:TerminateInstances"
+                - "ec2:DeleteLaunchTemplate"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                  StringLike:
+                    "aws:ResourceTag/karpenter.sh/nodepool": "*"
+              allowRegionalReadActions:
+                Effect: Allow
+                Resource: "*"
+                Action:
+                - "ec2:DescribeAvailabilityZones"
+                - "ec2:DescribeImages"
+                - "ec2:DescribeInstances"
+                - "ec2:DescribeInstanceTypeOfferings"
+                - "ec2:DescribeInstanceTypes"
+                - "ec2:DescribeLaunchTemplates"
+                - "ec2:DescribeSecurityGroups"
+                - "ec2:DescribeSpotPriceHistory"
+                - "ec2:DescribeSubnets"
+                Condition:
+                  StringEquals:
+                    aws:RequestedRegion: "{{ .Values.global.awsRegion }}"
+              allowSSMReadActions:
+                Effect: Allow
+                Resource: "arn:aws:ssm:{{ .Values.global.awsRegion }}::parameter/aws/service/*"
+                Action: "ssm:GetParameter"
+              allowPricingReadActions:
+                Effect: Allow
+                Resource: "*"
+                Action: "pricing:GetProducts"
+              allowInterruptionQueueActions:
+                Effect: Allow
+                Resource: "arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ .Values.global.eksClusterName }}"
+                Action:
+                - "sqs:DeleteMessage"
+                - "sqs:GetQueueAttributes"
+                - "sqs:GetQueueUrl"
+                - "sqs:ReceiveMessage"
+              allowPassingInstanceRole:
+                Effect: Allow
+                Resource: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}-node'
+                Action: "iam:PassRole"
+                Condition:
+                  StringEquals:
+                    "iam:PassedToService": "ec2.amazonaws.com"
+              allowScopedInstanceProfileCreationActions:
+                Effect: Allow
+                Resource: "*"
+                Action: "iam:CreateInstanceProfile"
+                Condition:
+                  StringEquals:
+                    "aws:RequestTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                    "aws:RequestTag/topology.kubernetes.io/region": "{{ .Values.global.awsRegion }}"
+                  StringLike:
+                    "aws:RequestTag/karpenter.k8s.aws/ec2nodeclass": "*"
+              allowScopedInstanceProfileTagActions:
+                Effect: Allow
+                Resource: "*"
+                Action: "iam:TagInstanceProfile"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                    "aws:ResourceTag/topology.kubernetes.io/region": "{{ .Values.global.awsRegion }}"
+                    "aws:RequestTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                    "aws:RequestTag/topology.kubernetes.io/region": "{{ .Values.global.awsRegion }}"
+                  StringLike:
+                    "aws:ResourceTag/karpenter.k8s.aws/ec2nodeclass": "*"
+                    "aws:RequestTag/karpenter.k8s.aws/ec2nodeclass": "*"
+              allowScopedInstanceProfileActions:
+                Effect: Allow
+                Resource: "*"
+                Action:
+                  - "iam:AddRoleToInstanceProfile"
+                  - "iam:RemoveRoleFromInstanceProfile"
+                  - "iam:DeleteInstanceProfile"
+                Condition:
+                  StringEquals:
+                    "aws:ResourceTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
+                    "aws:ResourceTag/topology.kubernetes.io/region": "{{ .Values.global.awsRegion }}"
+                  StringLike:
+                    "aws:ResourceTag/karpenter.k8s.aws/ec2nodeclass": "*"
+              allowInstanceProfileReadActions:
+                Effect: Allow
+                Resource: "*"
+                Action: "iam:GetInstanceProfile"
+              allowAPIServerEndpointDiscovery:
+                Effect: Allow
+                Resource: "arn:aws:eks:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:cluster/{{ .Values.global.eksClusterName }}"
+                Action: "eks:DescribeCluster"
   Role:
     items:
       node:
@@ -150,6 +254,7 @@ crossplane-aws-iam:
                   ArnLike:
                     "aws:PrincipalArn": 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}'
 
+  # Deprecated
   InstanceProfile:
     items:
       node:
@@ -190,18 +295,11 @@ crossplane-aws-iam:
           policyArn: "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}-node'
-      # Why this is needed? https://karpenter.sh/v0.16.1/getting-started/getting-started-with-eksctl/cloudformation.yaml does not have it
       eks-vpc-res-cont:
         forProvider:
           policyArn: "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}-node'
-    # # TODO: Limit access to ECR
-    #   ecr-full-access:
-    #     forProvider:
-    #       policyArn: "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryFullAccess"
-    #       roleRef:
-    #         name: '{{ include "common-gitops.names.release" . }}-node'
 
 ## @skip crossplane-aws-ec2
 ##
@@ -235,6 +333,7 @@ karpenter:
 
 ## @skip Provisioner
 ##
+# Deprecated
 Provisioner:
   enabled: false
   items:
@@ -271,6 +370,7 @@ Provisioner:
 
 ## @skip AWSNodeTemplate
 ##
+# Deprecated
 AWSNodeTemplate:
   enabled: false
   items:
@@ -296,6 +396,66 @@ AWSNodeTemplate:
             deleteOnTermination: true
             throughput: 500
             # snapshotID: snap-0123456789
+      # userData:  |
+      #   [settings.bootstrap-containers.setup-ephemeral-disks]
+      #     source = "satishweb/bottlerocket-ephemeral-disk-setup:1.46.5-alpine"
+      #     mode = "always"
+      #     essential = true
+      #     # This will format and mount ephemeral disk at /data
+
+## @skip NodePool
+##
+NodePool:
+  enabled: false
+  items:
+    _:
+      limits:
+        cpu: 100
+        memory: 1000Gi
+      template:
+        spec:
+          # required field
+          nodeClassRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+          # required field
+          requirements:
+            - key: "karpenter.sh/capacity-type"
+              operator: In
+              values: ["spot"]
+            - key: "kubernetes.io/arch"
+              operator: In
+              values: ["amd64"]
+            - key: kubernetes.io/os
+              operator: In
+              values:	["linux"]
+
+## @skip EC2NodeClass
+EC2NodeClass:
+  enabled: false
+  items:
+    _:
+      # TODO: Change this to AL2 by default
+      amiFamily: Bottlerocket
+      blockDeviceMappings:
+        # Note: Some special instances types may use xvdb as its root device
+        #       Most of the generic instance types and AMI images make use of xvda
+        #       Bottlerocket uses xvdb as its root device
+        - deviceName: /dev/xvdb
+          ebs:
+            volumeSize: 500Gi
+            volumeType: gp3
+            iops: 5000
+            # encrypted: true
+            # kmsKeyID: "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
+            deleteOnTermination: true
+            throughput: 500
+            # snapshotID: snap-0123456789
+      role: '{{ .Values.global.eksClusterName }}-karpenter-node'
+      securityGroupSelectorTerms:
+        - name: "eks-cluster-sg-{{ .Values.global.eksClusterName }}-*"
+      subnetSelectorTerms:
+        - tags:
+            Name: "{{ .Values.global.vpcFullname }}-private-*"
       # userData:  |
       #   [settings.bootstrap-containers.setup-ephemeral-disks]
       #     source = "satishweb/bottlerocket-ephemeral-disk-setup:1.46.5-alpine"

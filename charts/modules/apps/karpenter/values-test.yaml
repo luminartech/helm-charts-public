@@ -3,6 +3,11 @@ crossplane-aws-iam:
 karpenter:
   enabled: true
 
+NodePool:
+  enabled: true
+EC2NodeClass:
+  enabled: true
+
 Provisioner:
   enabled: true
   tags:
@@ -62,59 +67,3 @@ AWSNodeTemplate:
             # snapshotID: snap-0123456789
       tags:
         environment: dev
-
-crossplane-aws-ec2:
-  enabled: true
-  LaunchTemplate:
-    items:
-      windows:
-        forProvider:
-          launchTemplateData:
-            blockDeviceMappings:
-            - deviceName: /dev/sda1
-              ebs:
-                deleteOnTermination: true
-                # encrypted: true
-                iops: 5000
-                throughput: 500
-                volumeSize: 200 # Gb, value must be integer based on the CRD
-                volumeType: gp3
-            disableAPITermination: false # allow termination from console
-            iamInstanceProfile:
-              name: karpenter-node
-            # aws ssm get-parameters --region=us-west-2 --names /aws/service/ami-windows-latest/Windows_Server-2019-English-Full-EKS_Optimized-1.23/image_id
-            imageID: ami-0967f9800a184a611
-            # Instance must terminate when they are shutdown, save costs
-            instanceInitiatedShutdownBehavior: terminate
-            # instanceMarketOptions:
-            #   marketType: spot
-            # There's "securityGroups" parameter, which is supposed to use names, but it does not work as of now
-            securityGroupIDs:
-            # This value can be retrieved from aws secrets manager
-            - sg-123123123123
-            # Encode userdata script with base64 (look for the script data below)
-            userData: "XXXXX-base64-encoded-data"
-
-            # Script ^ to make it searchable
-            # <powershell>
-            # # Deal with extra new disks
-            # $disks_to_adjust = Get-Disk | Select-Object Number,Size,PartitionStyle | Where-Object PartitionStyle -Match RAW
-            # if ($disks_to_adjust -ne $null) {
-            #   [int64] $partition_mbr_max_size = 2199023255552
-            #   $partition_style = "MBR"
-            #   foreach ($disk in $disks_to_adjust) {
-            #     if ($disk.Size -gt $partition_mbr_max_size) {
-            #       $partition_style = "GPT"
-            #     }
-            #     Initialize-Disk -Number $disk.Number -PartitionStyle $partition_style
-            #     New-Partition -DiskNumber $disk.Number -UseMaximumSize -AssignDriveLetter | Format-Volume -FileSystem NTFS
-            #   }
-            # }
-            # # Bootstrap and join the cluster
-            # [string]$EKSBinDir = "$env:ProgramFiles\Amazon\EKS"
-            # [string]$EKSBootstrapScriptName = 'Start-EKSBootstrap.ps1'
-            # [string]$EKSBootstrapScriptFile = "$EKSBinDir\$EKSBootstrapScriptName"
-            # (Get-Content $EKSBootstrapScriptFile).replace('"--proxy-mode=kernelspace",', '"--proxy-mode=kernelspace", "--feature-gates WinDSR=true", "--enable-dsr",') | Set-Content $EKSBootstrapScriptFile
-            # & $EKSBootstrapScriptFile -EKSClusterName iac-cicd-infra-eks -KubeletExtraArgs '--register-with-taints=environment=cicd-prod:NoSchedule,type=windows-x86-cpu-medium:NoSchedule,kubernetes.io/os=windows:NoSchedule' 3>&1 4>&1 5>&1 6>&1
-            # $LastError = if ($?) { 0 } else { $Error[0].Exception.HResult }
-            # </powershell>

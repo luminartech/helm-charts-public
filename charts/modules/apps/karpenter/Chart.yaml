@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "0.32.6"
 description: A Helm chart for karpenter + related resources
 name: karpenter
-version: "0.32.6-1"
+version: "0.32.6-2"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/karpenter
@@ -19,10 +19,6 @@ dependencies:
     version: "0.41.0"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-iam.enabled
-  - name: crossplane-aws-ec2
-    version: "0.41.0"
-    repository: "oci://ghcr.io/luminartech/helm-charts-public"
-    condition: crossplane-aws-ec2.enabled
   - name: karpenter
     version: "v0.32.6"
     repository: "oci://public.ecr.aws/karpenter"
