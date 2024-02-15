@@ -5,7 +5,7 @@ appVersion: "2.6.4"
 description: A Wrapper Helm chart for argo-cd
 name: argo-cd
 version: "5.25.0-3"
-home: https://helm-repo-public.luminarinfra.com/
+home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/argo-cd
 maintainers:

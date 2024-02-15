@@ -5,7 +5,7 @@ appVersion: "6.28.6"
 description: A Helm chart for external-dns
 name: external-dns
 version: "6.28.6-1"
-home: https://helm-repo-public.luminarinfra.com/
+home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/external-dns
 maintainers:

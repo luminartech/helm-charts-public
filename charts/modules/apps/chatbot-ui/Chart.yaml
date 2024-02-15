@@ -13,7 +13,7 @@ keywords:
   - chatbot
   - chatbot-ui
   - openai
-home: https://helm-repo-public.luminarinfra.com/
+home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/chatbot-ui
 maintainers:

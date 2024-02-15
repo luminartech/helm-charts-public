@@ -665,10 +665,6 @@ argo-cd:
         url: https://kyverno.github.io/kyverno/
         name: kyverno
         type: helm
-      luminar-public:
-        url: https://helm-repo-public.luminarinfra.com/
-        name: luminar-public
-        type: helm
   repoServer:
     replicas: 2
     resources:

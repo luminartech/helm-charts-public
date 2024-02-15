@@ -5,7 +5,7 @@ appVersion: "0.13.0"
 description: A Helm chart for vcluster
 name: vcluster
 version: "0.13.0-5"
-home: https://helm-repo-public.luminarinfra.com/
+home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/vcluster
 maintainers:
