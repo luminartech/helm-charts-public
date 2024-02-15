@@ -5,7 +5,7 @@ appVersion: "4.3.0"
 description: A Helm chart for ingress-nginx
 name: ingress-nginx
 version: "4.3.0"
-home: https://helm-repo-public.luminarinfra.com/
+home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/ingress-nginx
 maintainers:

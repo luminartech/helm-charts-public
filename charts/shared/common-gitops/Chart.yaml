@@ -3,7 +3,7 @@ annotations:
   category: Infrastructure
 apiVersion: v2
 description: A Library Helm Chart for common gitops functions. This chart is not deployable by itself.
-home: https://helm-repo-public.luminarinfra.com
+home: "https://github.com/luminartech/helm-charts-public"
 keywords:
   - common-gitops
   - helper

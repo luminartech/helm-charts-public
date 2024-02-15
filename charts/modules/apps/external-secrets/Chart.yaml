@@ -8,7 +8,7 @@ name: external-secrets
 # Below version must match the app version for the consistency.
 # Update minor bit if new tag is needed. e.g. 0.7.0-1
 version: "0.7.1-16"
-home: https://helm-repo-public.luminarinfra.com
+home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/
 maintainers:

@@ -5,7 +5,7 @@ appVersion: "1.13.3"
 description: A Helm chart for cert-manager
 name: cert-manager
 version: "1.13.3-1"
-home: https://helm-repo-public.luminarinfra.com/
+home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/cert-manager
 maintainers:

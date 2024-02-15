@@ -42,24 +42,35 @@ sequenceDiagram
 | `global.githubOrg`                | Github Org for accessing repos using github app                                                                  | `satish-labs`                    |
 | `global.environment`              | Used for identifying secret path in the AWS secrets                                                              | `dev`                            |
 | `global.team`                     | Used for identifying secret path in the AWS secrets                                                              | `infra`                          |
-| `global.ingressUrl`               | Ingress URL to use for additional ingress.                                                                       | `argo-cd.dev.satishweb.com`      |
+| `global.ingressUrl`               | Ingress URL to use for additional ingress.                                                                       | `argo-cd.dev.domain.com`         |
 | `global.ingressClassNameExternal` | External facing ingress class name, used for webhooks                                                            | `nginx-ingress-external`         |
 | `global.ingressClassNameInternal` | Internal facing ingress class name for argocd UI                                                                 | `nginx-ingress-internal`         |
 | `global.certIssuer`               | External Secrets secret store ref to fetch AWS secret for repo creds                                             | `dev-satishweb-com`              |
 
+
 ### ArgoCDExtension
+
+
 
 
 ### crossplane-aws-iam
 
 
+
+
 ### argo-cd
+
+
+
+
+### common-res
+
+
 
 
 ### external-secrets
 
 
-### common-res
 
 
 

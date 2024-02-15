@@ -1,6 +1,6 @@
 ---
 global:
-  deploymentType: "issuer"
+  deploymentType: "custom"
 
 cert-manager:
   enabled: true

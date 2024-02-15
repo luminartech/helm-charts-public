@@ -5,7 +5,7 @@ appVersion: "1.106.4"
 description: A Helm chart for cost-analyzer (kubecost)
 name: cost-analyzer
 version: "1.106.4-1"
-home: https://helm-repo-public.luminarinfra.com/
+home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/cost-analyzer
 maintainers:
