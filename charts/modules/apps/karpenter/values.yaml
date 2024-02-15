@@ -58,7 +58,6 @@ crossplane-aws-iam:
                 Resource:
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}::image/*"
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}::snapshot/*"
-                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:spot-instances-request/*"
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:security-group/*"
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:subnet/*"
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
@@ -73,6 +72,7 @@ crossplane-aws-iam:
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:volume/*"
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:network-interface/*"
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:spot-instances-request/*"
                 Action:
                 - "ec2:RunInstances"
                 - "ec2:CreateFleet"
@@ -90,6 +90,7 @@ crossplane-aws-iam:
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:volume/*"
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:network-interface/*"
                 - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:launch-template/*"
+                - "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:spot-instances-request/*"
                 Action: "ec2:CreateTags"
                 Condition:
                   StringEquals:
@@ -152,7 +153,7 @@ crossplane-aws-iam:
                 Action: "pricing:GetProducts"
               allowInterruptionQueueActions:
                 Effect: Allow
-                Resource: "arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ .Values.global.eksClusterName }}"
+                Resource: 'arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ include "common-gitops.names.release" . }}'
                 Action:
                 - "sqs:DeleteMessage"
                 - "sqs:GetQueueAttributes"
@@ -254,14 +255,6 @@ crossplane-aws-iam:
                   ArnLike:
                     "aws:PrincipalArn": 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}'
 
-  # Deprecated
-  InstanceProfile:
-    items:
-      node:
-        forProvider:
-          roleRef:
-            name: '{{ include "common-gitops.names.release" . }}-node'
-
   RolePolicyAttachment:
     items:
       _:
@@ -301,6 +294,92 @@ crossplane-aws-iam:
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}-node'
 
+## @skip crossplane-aws-sqs
+##
+crossplane-aws-sqs:
+  enabled: false
+  Queue:
+    items:
+      _:
+        forProvider:
+          messageRetentionSeconds: 300
+          sqsManagedSseEnabled: true
+  QueuePolicy:
+    items:
+      _:
+        forProvider:
+          queueUrlRef:
+            namme: '{{ include "common-gitops.names.release" . }}'
+          policy:
+            Statement:
+              ec2InterruptionPolicy:
+                Effect: Allow
+                Principal:
+                  Service:
+                    - events.amazonaws.com
+                    - sqs.amazonaws.com
+                Action: 'sqs:SendMessage'
+                Resource: 'arn:aws:sqs:{{ .Values.global.awsRegion }}:{{ .Values.global.awsAccountId }}:{{ include "common-gitops.names.release" . }}'
+
+## @skip crossplane-aws-cloudwatch
+##
+crossplane-aws-cloudwatch:
+  enabled: false
+  Rule:
+    items:
+      schChange:
+        forProvider:
+          eventPattern: |
+            {
+              "source": [
+                "aws.health"
+              ],
+              "detail-type": [
+                "AWS Health Event"
+              ]
+            }
+          eventBusNameRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+      spotInterrupt:
+        forProvider:
+          eventPattern: |
+            {
+              "source": [
+                "aws.ec2"
+              ],
+              "detail-type": [
+                "EC2 Spot Instance Interruption Warning"
+              ]
+            }
+          eventBusNameRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+      rebalance:
+        forProvider:
+          eventPattern: |
+            {
+              "source": [
+                "aws.ec2"
+              ],
+              "detail-type": [
+                "EC2 Instance Rebalance Recommendation"
+              ]
+            }
+          eventBusNameRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+      instStateChange:
+        forProvider:
+          eventPattern: |
+            {
+              "source": [
+                "aws.ec2"
+              ],
+              "detail-type": [
+                "EC2 Instance State-change Notification"
+              ]
+            }
+          eventBusNameRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+
 ## @skip crossplane-aws-ec2
 ##
 crossplane-aws-ec2:
@@ -331,78 +410,6 @@ karpenter:
         cpu: 0.5
         memory: 1Gi
 
-## @skip Provisioner
-##
-# Deprecated
-Provisioner:
-  enabled: false
-  items:
-    _:
-      providerRef: # AWSNodeTemplate
-        name: '{{ include "common-gitops.names.release" . }}'
-      # requirements:
-      #   # Zone is taken from subnets anyway
-      #   # - key: "topology.kubernetes.io/zone"
-      #   #   operator: In
-      #   #   values: ["us-west-2a", "us-west-2c", "us-west-2b"]
-      #   - key: "karpenter.sh/capacity-type"
-      #     operator: In
-      #     values: ["spot"]
-      #   - key: "node.kubernetes.io/instance-type"
-      #     operator: In
-      #     values: ["g4dn.4xlarge"]
-      #   - key: "kubernetes.io/arch"
-      #     operator: In
-      #     values: ["amd64"]
-      #   - key: kubernetes.io/os
-      #     operator: In
-      #     values:	["linux"]
-      # taints:
-      #   - key: "class"
-      #     value: "set me"
-      #     effect: NoSchedule
-      limits:
-        resources:
-          cpu: 1k
-          # memory: 1000Gi
-      ttlSecondsAfterEmpty: 30
-      ttlSecondsUntilExpired: 7200 # 2 hours
-
-## @skip AWSNodeTemplate
-##
-# Deprecated
-AWSNodeTemplate:
-  enabled: false
-  items:
-    _:
-      # TODO: Change this to AL2 by default
-      amiFamily: Bottlerocket
-      instanceProfile: '{{ .Values.global.eksClusterName }}-karpenter-node'
-      subnetSelector:
-        Name: "{{ .Values.global.vpcFullname }}-private-*"
-      securityGroupSelector:
-        Name: "eks-cluster-sg-{{ .Values.global.eksClusterName }}-*"
-      blockDeviceMappings:
-        # Note: Some special instances types may use xvdb as its root device
-        #       Most of the generic instance types and AMI images make use of xvda
-        #       Bottlerocket uses xvdb as its root device
-        - deviceName: /dev/xvdb
-          ebs:
-            volumeSize: 500Gi
-            volumeType: gp3
-            iops: 5000
-            # encrypted: true
-            # kmsKeyID: "arn:aws:kms:us-west-2:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
-            deleteOnTermination: true
-            throughput: 500
-            # snapshotID: snap-0123456789
-      # userData:  |
-      #   [settings.bootstrap-containers.setup-ephemeral-disks]
-      #     source = "satishweb/bottlerocket-ephemeral-disk-setup:1.46.5-alpine"
-      #     mode = "always"
-      #     essential = true
-      #     # This will format and mount ephemeral disk at /data
-
 ## @skip NodePool
 ##
 NodePool:
@@ -428,6 +435,10 @@ NodePool:
             - key: kubernetes.io/os
               operator: In
               values:	["linux"]
+          # taints:
+          #   - key: "class"
+          #     value: "set me"
+          #     effect: NoSchedule
 
 ## @skip EC2NodeClass
 EC2NodeClass:

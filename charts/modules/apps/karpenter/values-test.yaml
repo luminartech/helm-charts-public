@@ -1,5 +1,9 @@
 crossplane-aws-iam:
   enabled: true
+crossplane-aws-sqs:
+  enabled: true
+crossplane-aws-cloudwatch:
+  enabled: true
 karpenter:
   enabled: true
 
