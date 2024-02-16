@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "6.28.6"
+appVersion: "6.33.0"
 description: A Helm chart for external-dns
 name: external-dns
-version: "6.28.6-1"
+version: "6.33.0-0"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/external-dns
@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: external-dns
-    version: "6.28.6"
+    version: "6.33.0"
     repository: https://charts.bitnami.com/bitnami
     condition: external-dns.enabled
   - name: crossplane-aws-iam
@@ -21,5 +21,5 @@ dependencies:
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-iam.enabled
   - name: common-gitops
-    version: "1.1.7"
+    version: "1.1.9"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
