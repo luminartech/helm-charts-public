@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "1.0.0"
 description: A Helm chart for Gitub events based on argo events
 name: github-events
-version: "1.0.0-6"
+version: "1.0.0-7"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/github-events
@@ -17,12 +17,12 @@ dependencies:
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-secretsmanager.enabled
   - name: external-secrets
-    version: "0.7.1-16"
+    version: "0.9.13-0"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: external-secrets.enabled
   - name: common-gitops
-    version: "1.1.7"
+    version: "1.1.9"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
   - name: common-res
-    version: "1.0.15"
+    version: "1.0.16"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
