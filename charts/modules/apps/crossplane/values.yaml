@@ -82,11 +82,11 @@ ControllerConfig:
           fsGroup: 2000
         resources:
           limits:
-            memory: "20000Mi"
-            cpu: "10000m"
+            memory: "3000Mi"
+            cpu: "3000m"
           requests:
-            memory: "18000Mi"
-            cpu: "8000m"
+            memory: "2000Mi"
+            cpu: "2000m"
     ## @skip ControllerConfig.items.aws-l ControllerConfig with large resource allocation for provider pod
     ##
     aws-l:
@@ -108,11 +108,11 @@ ControllerConfig:
           fsGroup: 2000
         resources:
           limits:
-            memory: "12000Mi"
-            cpu: "10000m"
+            memory: "2000Mi"
+            cpu: "2000m"
           requests:
-            memory: "8000Mi"
-            cpu: "8000m"
+            memory: "1500Mi"
+            cpu: "1500m"
     ## @skip ControllerConfig.items.aws-m ControllerConfig with medium resource allocation for provider pod
     ##
     aws-m:
@@ -134,11 +134,11 @@ ControllerConfig:
           fsGroup: 2000
         resources:
           limits:
-            memory: "6000Mi"
-            cpu: "6000m"
+            memory: "1500Mi"
+            cpu: "1500m"
           requests:
-            memory: "6000Mi"
-            cpu: "4000m"
+            memory: "1000Mi"
+            cpu: "1000m"
     ## @skip ControllerConfig.items.aws-s ControllerConfig with small resource allocation for provider pod
     ##
     aws-s:
@@ -160,10 +160,10 @@ ControllerConfig:
           fsGroup: 2000
         resources:
           limits:
-            memory: "1000Mi"
-            cpu: "2000m"
+            memory: "700Mi"
+            cpu: "700m"
           requests:
-            memory: "1000Mi"
+            memory: "500Mi"
             cpu: "500m"
 
 # Default aws provider config for current aws account. Crossplane IAM role will be used
@@ -492,19 +492,19 @@ crossplane:
   ## @skip crossplane.resourcesCrossplane
   resourcesCrossplane:
     limits:
-      memory: "1Gi"
-      cpu: "2"
-    requests:
+      cpu: "200m"
       memory: "512Mi"
-      cpu: "1"
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
   ## @skip crossplane.resourcesRBACManager
   resourcesRBACManager:
     limits:
-      memory: "200Mi"
-      cpu: "300m"
+      cpu: "200m"
+      memory: "512Mi"
     requests:
-      memory: "100Mi"
       cpu: "100m"
+      memory: "256Mi"
 
 ## @section Dependency: prometheus-service-discovery upstream helm chart parameters for creating serviceMonitors and podMonitors.
 ## ref: https://artifacthub.io/packages/helm/crossplane/crossplane
