@@ -12,9 +12,10 @@ Luminar public helm charts.
 
 ### appVersion field
 
-- equals to the version of the main upstream dependency chart.
+It equals to the version of the main upstream dependency chart.
 E.g. for karpenter chart with:
 
+```
 	...
 	dependencies:
 	  - name: karpenter
@@ -22,6 +23,7 @@ E.g. for karpenter chart with:
 	    repository: "oci://public.ecr.aws/karpenter"
 	    condition: karpenter.enabled
 	...
+```
 
 it will be `0.33.2`.
 
