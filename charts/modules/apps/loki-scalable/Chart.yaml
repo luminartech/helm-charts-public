@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "4.6.1"
+appVersion: "5.43.3"
 description: A wrapper Helm chart for loki scalable
 name: loki-scalable
-version: "4.6.1-3"
+version: "5.43.3-1"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/loki-scalable
