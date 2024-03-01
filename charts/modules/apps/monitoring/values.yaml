@@ -106,6 +106,7 @@ kube-prometheus-stack:
     defaultDashboardsEnabled: true
     defaultDashboardsTimezone: utc
     adminPassword: prom-operator
+    assertNoLeakedSecrets: false
     rbac:
       pspEnabled: false
     ingress:

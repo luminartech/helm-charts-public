@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "45.7.1"
+appVersion: "0.71.2"
 description: A Helm chart for monitoring
 name: monitoring
-version: "45.7.1-6"
+version: "56.19.0-1"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/monitoring
@@ -13,5 +13,5 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: kube-prometheus-stack
-    version: "56.18.0"
+    version: "56.19.0"
     repository: https://prometheus-community.github.io/helm-charts
