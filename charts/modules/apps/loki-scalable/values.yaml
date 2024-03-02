@@ -236,7 +236,8 @@ loki:
       log_level: debug
       grpc_server_max_recv_msg_size: 16777216
     query_scheduler:
-      max_outstanding_requests_per_tenant: 1000
+      # default is 100. Match with Frontend max_outstanding_per_tenant default value 2048
+      max_outstanding_requests_per_tenant: 2048
   ingress:
     enabled: false
   gateway:
