@@ -104,6 +104,7 @@ kube-prometheus-stack:
     forceDeployDatasources: false
     forceDeployDashboards: false
     defaultDashboardsEnabled: true
+    defaultDashboardsEditable: true
     defaultDashboardsTimezone: utc
     adminPassword: prom-operator
     assertNoLeakedSecrets: false
