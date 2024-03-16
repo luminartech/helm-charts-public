@@ -102,7 +102,7 @@ Pod: {}
 ##
 Deployment: {}
 
-## @section Kubernetes Deployment object.
+## @section Kubernetes StatefulSet object.
 ## @param StatefulSet
 ##
 StatefulSet: {}
