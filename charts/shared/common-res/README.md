@@ -136,7 +136,7 @@
 | `Deployment` |             | `{}`  |
 
 
-### Kubernetes Deployment object.
+### Kubernetes StatefulSet object.
 
 | Name          | Description | Value |
 | ------------- | ----------- | ----- |
