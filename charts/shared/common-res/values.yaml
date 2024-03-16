@@ -102,6 +102,11 @@ Pod: {}
 ##
 Deployment: {}
 
+## @section Kubernetes StatefulSet object.
+## @param StatefulSet
+##
+StatefulSet: {}
+
 ## @section Kubernetes HorizontalPodAutoscaler object.
 ## @param HorizontalPodAutoscaler
 ##

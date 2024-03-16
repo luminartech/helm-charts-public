@@ -136,6 +136,13 @@
 | `Deployment` |             | `{}`  |
 
 
+### Kubernetes StatefulSet object.
+
+| Name          | Description | Value |
+| ------------- | ----------- | ----- |
+| `StatefulSet` |             | `{}`  |
+
+
 ### Kubernetes HorizontalPodAutoscaler object.
 
 | Name                      | Description | Value |
