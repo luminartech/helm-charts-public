@@ -1,0 +1,40 @@
+{{- $kind := "StatefulSet" -}}
+{{- $root := . -}}
+{{- $kindObj := or (get $root.Values $kind) (dict) -}}
+{{- range $name, $item := $kindObj.items -}}
+  {{- if eq (include "common-gitops.utils.itemEnabled" (dict "root" $root "name" $name "kind" $kind)) "true" }}
+---
+apiVersion: apps/v1
+kind: {{ $kind }}
+metadata:
+  name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
+    {{- include "common-gitops.labels" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+    {{- include "common-gitops.names.namespace" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
+spec:
+    {{- with .replicas }}
+  replicas: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+    {{- end -}}
+    {{- with .revisionHistoryLimit }}
+  revisionHistoryLimit: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+    {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: {{ include "common-gitops.names.chart" $root }}
+      helm.sh/chart: {{ include "common-gitops.names.chart" $root }}-{{ $root.Chart.Version }}
+      app.kubernetes.io/part-of: {{ include "common-gitops.names.release" $root }}
+      app.kubernetes.io/managed-by: {{ $root.Release.Service }}
+      app.kubernetes.io/instance: "{{ include "common-gitops.names.itemId" (dict "value" $name "root" $root)  }}"
+    {{- with .selector -}}
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 6 }}
+    {{- end -}}
+    {{- with .podSpec }}
+  template:
+      {{- include "common-res.podSpec" (dict "root" $root "name" $name "kind" $kind) | nindent 4 }}
+    {{- end -}}
+    {{- with .volumeClaimTemplates }}
+  volumeClaimTemplates:
+      {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
+    {{- end -}}
+  {{- end -}}
+{{- end }}
