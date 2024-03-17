@@ -33,12 +33,18 @@ global:
   ##
   storageClassName: gp3-persistent-125
   images:
-    ## @param global.buildbarn.images.browser Browser component container image
+    ## @param global.images.devcontainer Devcontainer image
     ##
     devcontainer: "satishweb/devops-tools:latest"
   env:
+    ## @param global.env.FIXUID Fix UID for the persistent volume mount
+    ##
     FIXUID: "1000"
+    ## @param global.env.FIXGID Fix GID for the persistent volume mount
+    ##
     FIXGID: "1000"
+    ## @param global.env.HOME Default home directory path for the container
+    ##
     HOME: "/persistent-data"
 
 ## @section Devspace configurations
@@ -51,27 +57,29 @@ common-res:
   Pod:
     items:
       _:
+        ## @skip common-res.Pod.items._.labels
+        ##
         labels:
           app.kubernetes.io/instance: "{{ .Release.Name }}"
         spec:
-          ## @param common-res.Deployment.items._.spec.automountServiceAccountToken Automount Service account token
+          ## @param common-res.Pod.items._.spec.automountServiceAccountToken Automount Service account token
           ##
           automountServiceAccountToken: false
-          ## @param common-res.Deployment.items._.spec.restartPolicy Restart policy for the pod
+          ## @param common-res.Pod.items._.spec.restartPolicy Restart policy for the pod
           restartPolicy: Never
           ## Configure the Security Context for the Pod
           securityContext:
-            ## @param common-res.Deployment.items._.spec.securityContext.fsGroup Specify the default fs group id
+            ## @param common-res.Pod.items._.spec.securityContext.fsGroup Specify the default fs group id
             ##
             fsGroup: 1000
-            ## @param common-res.Deployment.items._.spec.securityContext.supplementalGroups Specify the additional groups
+            ## @param common-res.Pod.items._.spec.securityContext.supplementalGroups Specify the additional groups
             ##
             supplementalGroups: []
-            ## @param common-res.Deployment.items._.spec.securityContext.fsGroupChangePolicy Specify the default gs group change policy
+            ## @param common-res.Pod.items._.spec.securityContext.fsGroupChangePolicy Specify the default gs group change policy
             ##
             fsGroupChangePolicy: OnRootMismatch
           ## Init Containers configuration
-          ## @skip common-res.Deployment.items.storage.podSpec.spec.initContainers
+          ## @skip common-res.Pod.items._.spec.initContainers
           ##
           initContainers:
             - name: volume-init
@@ -94,22 +102,22 @@ common-res:
           ## Containers configuration
           ##
           containers:
-            ## @param common-res.Deployment.items._.spec.containers[0].name
+            ## @param common-res.Pod.items._.spec.containers[0].name
             ##
             - name: container-0
-              ## @param common-res.Deployment.items._.spec.containers[0].image
+              ## @param common-res.Pod.items._.spec.containers[0].image
               ##
               image: '{{ .Values.global.images.devcontainer }}'
-              ## @param common-res.Deployment.items._.spec.containers[0].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
+              ## @param common-res.Pod.items._.spec.containers[0].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
               ##
               imagePullPolicy: IfNotPresent
-              ## @param common-res.Deployment.items._.spec.containers[0].tty Determines whether containers in a pod runs with TTY enabled.
+              ## @param common-res.Pod.items._.spec.containers[0].tty Determines whether containers in a pod runs with TTY enabled.
               ##
               tty: true
-              ## @param common-res.Deployment.items._.spec.containers[0].stdin Determines whether containers in a pod runs with stdin enabled.
+              ## @param common-res.Pod.items._.spec.containers[0].stdin Determines whether containers in a pod runs with stdin enabled.
               ##
               stdin: true
-              ## @skip common-res.Deployment.items._.spec.containers[0].command
+              ## @skip common-res.Pod.items._.spec.containers[0].command
               ##
               command:
                 - /bin/bash
@@ -119,29 +127,33 @@ common-res:
               ## Container ports configuration
               ##
               ports:
-                ## @param common-res.Deployment.items._.spec.containers[0].ports[0].name Name of the port
+                ## @param common-res.Pod.items._.spec.containers[0].ports[0].name Name of the port
                 ##
                 - name: http
-                  ## @param common-res.Deployment.items._.spec.containers[0].ports[0].containerPort The port number
+                  ## @param common-res.Pod.items._.spec.containers[0].ports[0].containerPort The port number
                   ##
                   containerPort: 8080
 
-                  ## @param common-res.Deployment.items._.spec.containers[0].ports[0].protocol Port protocol. Allowed values: "SCTP", `TCP` and `UDP`.
+                  ## @param common-res.Pod.items._.spec.containers[0].ports[0].protocol Port protocol. Allowed values: "SCTP", `TCP` and `UDP`.
                   ##
                   protocol: TCP
               ## Default Volume mounts
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[0].name
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[0].mountPath
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[0].readOnly
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[1].name
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[1].mountPath
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[1].readOnly
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[2].name
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[2].mountPath
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[2].readOnly
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[3].name
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[3].mountPath
-              ## @skip common-res.Deployment.items._.spec.containers[0].volumeMounts[3].readOnly
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[0].name
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[0].mountPath
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[0].readOnly
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[1].name
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[1].mountPath
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[1].readOnly
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[2].name
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[2].mountPath
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[2].readOnly
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[3].name
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[3].mountPath
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[3].readOnly
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[4].name
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[4].mountPath
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[4].subPath
+              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[4].readOnly
               ##
               volumeMounts:
                 - name: devshm
@@ -161,7 +173,7 @@ common-res:
                   subPath: entrypoint-script.sh
                   readOnly: true
               ## Environment variables configuration
-              ## @skip common-res.Deployment.items._.spec.containers[0].env
+              ## @skip common-res.Pod.items._.spec.containers[0].env
               env:  # Add environment variables here
                 - name: HOME
                   value: "{{ .Values.global.env.HOME }}"
@@ -177,55 +189,55 @@ common-res:
                 ## Resource limits configuration
                 ##
                 limits:
-                  ## @param common-res.Deployment.items._.spec.containers[0].resources.limits.cpu CPU limits
+                  ## @param common-res.Pod.items._.spec.containers[0].resources.limits.cpu CPU limits
                   ##
                   cpu: "1"
-                  ## @param common-res.Deployment.items._.spec.containers[0].resources.limits.memory Memory limits
+                  ## @param common-res.Pod.items._.spec.containers[0].resources.limits.memory Memory limits
                   ##
                   memory: 512Mi
                 ## Resource Requests configurations
                 ##
                 requests:
-                  ## @param common-res.Deployment.items._.spec.containers[0].resources.requests.cpu CPU requests
+                  ## @param common-res.Pod.items._.spec.containers[0].resources.requests.cpu CPU requests
                   ##
                   cpu: "1"
-                  ## @param common-res.Deployment.items._.spec.containers[0].resources.requests.memory Memory requests
+                  ## @param common-res.Pod.items._.spec.containers[0].resources.requests.memory Memory requests
                   ##
                   memory: 512Mi
               ## Security context configuration
               ##
               securityContext:
-                ## @param common-res.Deployment.items._.spec.containers[0].securityContext.runAsGroup Specify the default user group id
+                ## @param common-res.Pod.items._.spec.containers[0].securityContext.runAsGroup Specify the default user group id
                 ##
                 runAsGroup: 1000
-                ## @param common-res.Deployment.items._.spec.containers[0].securityContext.runAsUser Specify the default user id
+                ## @param common-res.Pod.items._.spec.containers[0].securityContext.runAsUser Specify the default user id
                 ##
                 runAsUser: 1000
-                ## @param common-res.Deployment.items._.spec.containers[0].securityContext.privileged Privileged mode true or false. Allowed values: `true` or `false`
+                ## @param common-res.Pod.items._.spec.containers[0].securityContext.privileged Privileged mode true or false. Allowed values: `true` or `false`
                 ##
                 privileged: false
-                ## @param common-res.Deployment.items._.spec.containers[0].securityContext.readOnlyRootFilesystem Access level for the file system.  Allowed values: `true` or `false`
+                ## @param common-res.Pod.items._.spec.containers[0].securityContext.readOnlyRootFilesystem Access level for the file system.  Allowed values: `true` or `false`
                 ##
                 readOnlyRootFilesystem: false
-                ## @param common-res.Deployment.items._.spec.containers[0].securityContext.allowPrivilegeEscalation Allow escalation of privileges true or false. Allowed values: `true` or `false`
+                ## @param common-res.Pod.items._.spec.containers[0].securityContext.allowPrivilegeEscalation Allow escalation of privileges true or false. Allowed values: `true` or `false`
                 ##
                 allowPrivilegeEscalation: true
-                ## @param common-res.Deployment.items._.spec.containers[0].securityContext.runAsNonRoot Run the process as root, true or false. Allowed values: `true` or `false`
+                ## @param common-res.Pod.items._.spec.containers[0].securityContext.runAsNonRoot Run the process as root, true or false. Allowed values: `true` or `false`
                 ##
                 runAsNonRoot: true
                 seccompProfile:
-                  ## @param common-res.Deployment.items._.spec.containers[0].securityContext.seccompProfile.type Seccomp profile type
+                  ## @param common-res.Pod.items._.spec.containers[0].securityContext.seccompProfile.type Seccomp profile type
                   ##
                   type: RuntimeDefault
                 ## Linux pod capabilities configurations
                 ## https://man7.org/linux/man-pages/man7/capabilities.7.html
                 ##
                 capabilities:
-                  ## @param common-res.Deployment.items._.spec.containers[0].securityContext.capabilities.drop Capabilities to drop
+                  ## @param common-res.Pod.items._.spec.containers[0].securityContext.capabilities.drop Capabilities to drop
                   ##
                   drop:
                     - ALL
-                  ## @param common-res.Deployment.items._.spec.containers[0].securityContext.capabilities.add Capabilities to add
+                  ## @param common-res.Pod.items._.spec.containers[0].securityContext.capabilities.add Capabilities to add
                   ##
                   add:
                     - SYS_ADMIN
@@ -236,14 +248,16 @@ common-res:
                     - CAP_SETGID
                     - CAP_SETPCAP
           ## Pod Volumes configuration
-          ## @skip common-res.Deployment.items._.spec.volumes[0].name
-          ## @skip common-res.Deployment.items._.spec.volumes[0].emptyDir.medium
-          ## @skip common-res.Deployment.items._.spec.volumes[1].name
-          ## @skip common-res.Deployment.items._.spec.volumes[1].emptyDir.medium
-          ## @skip common-res.Deployment.items._.spec.volumes[2].name
-          ## @skip common-res.Deployment.items._.spec.volumes[2].emptyDir
-          ## @skip common-res.Deployment.items._.spec.volumes[3].name
-          ## @skip common-res.Deployment.items._.spec.volumes[3].persistentVolumeClaim
+          ## @skip common-res.Pod.items._.spec.volumes[0].name
+          ## @skip common-res.Pod.items._.spec.volumes[0].emptyDir.medium
+          ## @skip common-res.Pod.items._.spec.volumes[1].name
+          ## @skip common-res.Pod.items._.spec.volumes[1].emptyDir.medium
+          ## @skip common-res.Pod.items._.spec.volumes[2].name
+          ## @skip common-res.Pod.items._.spec.volumes[2].emptyDir
+          ## @skip common-res.Pod.items._.spec.volumes[3].name
+          ## @skip common-res.Pod.items._.spec.volumes[3].persistentVolumeClaim.claimName
+          ## @skip common-res.Pod.items._.spec.volumes[4].name
+          ## @skip common-res.Pod.items._.spec.volumes[4].configMap.name
           volumes:
             - name: devshm
               emptyDir:
@@ -354,11 +368,13 @@ common-res:
         ##
         enabled: true
         annotations:
+          ## @param common-res.ServiceAccount.items._.annotations.eks.amazonaws.com/role-arn The AWS IAM role ARN for service account of the pod
+          ##
           eks.amazonaws.com/role-arn: '{{ .Values.global.IAMRoleARN }}'
 
-  ## Role configuration
+  ## Kubernetes Role configuration
   ## @default -- See below
-  ## @param common-res.Role
+  ## @skip common-res.Role
   ##
   Role:
     enabled: true
@@ -377,7 +393,7 @@ common-res:
 
   ## RoleBinding configuration
   ## @default -- See below
-  ## @param common-res.RoleBinding
+  ## @skip common-res.RoleBinding
   ##
   RoleBinding:
     enabled: true
@@ -385,7 +401,7 @@ common-res:
       _:
         roleRef:
           apiGroup: rbac.authorization.k8s.io
-          kind: ClusterRole
+          kind: Role
           name: '{{ include "common-gitops.names.release" . }}'
         subjects:
           - kind: ServiceAccount
