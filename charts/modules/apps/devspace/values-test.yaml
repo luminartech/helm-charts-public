@@ -1,0 +1,3 @@
+---
+global:
+  IAMRole: arn:aws:iam::xxxxxxxx:role/role-name
