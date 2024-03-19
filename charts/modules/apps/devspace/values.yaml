@@ -54,307 +54,269 @@ common-res:
   ## @param common-res.enabled Toggle for enabling or disabling chatbot ui resources.
   ##
   enabled: true
-  Pod:
+  StatefulSet:
     items:
       _:
-        ## @skip common-res.Pod.items._.labels
+        ## @param common-res.StatefulSet.items._.replicas Number of desired pods. Disable this if HPA is enabled
         ##
-        labels:
-          app.kubernetes.io/instance: "{{ .Release.Name }}"
-        spec:
-          ## @param common-res.Pod.items._.spec.automountServiceAccountToken Automount Service account token
-          ##
-          automountServiceAccountToken: false
-          ## @param common-res.Pod.items._.spec.restartPolicy Restart policy for the pod
-          restartPolicy: Never
-          ## Configure the Security Context for the Pod
-          securityContext:
-            ## @param common-res.Pod.items._.spec.securityContext.fsGroup Specify the default fs group id
-            ##
-            fsGroup: 1000
-            ## @param common-res.Pod.items._.spec.securityContext.supplementalGroups Specify the additional groups
-            ##
-            supplementalGroups: []
-            ## @param common-res.Pod.items._.spec.securityContext.fsGroupChangePolicy Specify the default gs group change policy
-            ##
-            fsGroupChangePolicy: OnRootMismatch
-          ## Init Containers configuration
-          ## @skip common-res.Pod.items._.spec.initContainers
-          ##
-          initContainers:
-            - name: volume-init
-              image: '{{ .Values.global.images.devcontainer }}'
-              command:
-                - /bin/bash
-                - -x
-                - /init-script.sh
-              securityContext:
-                runAsUser: 0  # Run as root user to setup disks
-                allowPrivilegeEscalation: true  # Allow privilege escalation if necessary
-              volumeMounts:
-                - name: persistent-data
-                  mountPath: "/persistent-data"
-                  readOnly: false
-                - name: scripts
-                  mountPath: /init-script.sh
-                  subPath: init-script.sh
-                  readOnly: true
-          ## Containers configuration
-          ##
-          containers:
-            ## @param common-res.Pod.items._.spec.containers[0].name
-            ##
-            - name: container-0
-              ## @param common-res.Pod.items._.spec.containers[0].image
-              ##
-              image: '{{ .Values.global.images.devcontainer }}'
-              ## @param common-res.Pod.items._.spec.containers[0].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
-              ##
-              imagePullPolicy: IfNotPresent
-              ## @param common-res.Pod.items._.spec.containers[0].tty Determines whether containers in a pod runs with TTY enabled.
-              ##
-              tty: true
-              ## @param common-res.Pod.items._.spec.containers[0].stdin Determines whether containers in a pod runs with stdin enabled.
-              ##
-              stdin: true
-              ## @skip common-res.Pod.items._.spec.containers[0].command
-              ##
-              command:
-                - /bin/bash
-                - -x
-                - /entrypoint-script.sh
+        replicas: 0
+        ## @param common-res.StatefulSet.items._.revisionHistoryLimit ReplicaSet revision history limit
+        ##
+        revisionHistoryLimit: 3
+        ## @param common-res.StatefulSet.items._.selector Additional selectors for the deployment
+        ##
+        selector: {}
+        ## @skip common-res.StatefulSet.items._.labels
+        ##
+        # labels:
+        #   app.kubernetes.io/instance: "{{ .Release.Name }}"
 
-              ## Container ports configuration
+        ## Pod spec template (to generate spec.template)
+        ##
+        podSpec:
+          spec:
+            ## @param common-res.StatefulSet.items._.podSpec.spec.automountServiceAccountToken Automount Service account token
+            ##
+            automountServiceAccountToken: false
+            ## @param common-res.StatefulSet.items._.podSpec.spec.restartPolicy Restart policy for the pod
+            restartPolicy: Always
+            ## Configure the Security Context for the Pod
+            securityContext:
+              ## @param common-res.StatefulSet.items._.podSpec.spec.securityContext.fsGroup Specify the default fs group id
               ##
-              ports:
-                ## @param common-res.Pod.items._.spec.containers[0].ports[0].name Name of the port
+              fsGroup: 1000
+              ## @param common-res.StatefulSet.items._.podSpec.spec.securityContext.supplementalGroups Specify the additional groups
+              ##
+              supplementalGroups: []
+              ## @param common-res.StatefulSet.items._.podSpec.spec.securityContext.fsGroupChangePolicy Specify the default gs group change policy
+              ##
+              fsGroupChangePolicy: OnRootMismatch
+            # Init Containers configuration
+            # @skip common-res.StatefulSet.items._.podSpec.spec.initContainers
+            #
+            initContainers:
+              - name: volume-init
+                image: '{{ .Values.global.images.devcontainer }}'
+                command:
+                  - /bin/bash
+                  - -ec
+                  - |
+                    dest_dir={{ .Values.global.env.HOME }}
+                    if [ ! -f "$dest_dir/.keep" ]; then
+                      touch "$dest_dir/.keep"
+                      chown -Rf ${FIXUID}:${FIXGID} "$dest_dir"
+                    fi
+                    devspace_dir=/.devspace
+                    mkdir -p "${devspace_dir}"
+                    chown -Rf ${FIXUID}:${FIXGID} "${devspace_dir}"
+                    sudo -u ${USER} /entrypoint.sh
+                securityContext:
+                  runAsUser: 0  # Run as root user to setup disks
+                  allowPrivilegeEscalation: true  # Allow privilege escalation if necessary
+                env:  # Add environment variables here
+                  - name: HOME
+                    value: "{{ .Values.global.env.HOME }}"
+                  - name: USER
+                    value: "ubuntu"
+                  - name: FIXUID
+                    value: "{{ .Values.global.env.FIXUID }}"
+                  - name: FIXGID
+                    value: "{{ .Values.global.env.FIXGID }}"
+                volumeMounts:
+                  - mountPath: "{{ .Values.global.env.HOME }}"
+                    name: '{{ include "common-gitops.names.release" . }}'
+                    readOnly: false
+                  - name: devspace
+                    mountPath: /.devspace
+                    readOnly: false
+            ## Containers configuration
+            ##
+            containers:
+              ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].name
+              ##
+              - name: container-0
+                ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].image
                 ##
-                - name: http
-                  ## @param common-res.Pod.items._.spec.containers[0].ports[0].containerPort The port number
+                image: '{{ .Values.global.images.devcontainer }}'
+                ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
+                ##
+                imagePullPolicy: Always
+                ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].tty Determines whether containers in a pod runs with TTY enabled.
+                ##
+                tty: true
+                ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].stdin Determines whether containers in a pod runs with stdin enabled.
+                ##
+                stdin: true
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].command
+                ##
+                command: ["tail", "-f", "/dev/null"]
+                ## Container ports configuration
+                ##
+                ports:
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].ports[0].name Name of the port
                   ##
-                  containerPort: 8080
+                  - name: http
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].ports[0].containerPort The port number
+                    ##
+                    containerPort: 8080
 
-                  ## @param common-res.Pod.items._.spec.containers[0].ports[0].protocol Port protocol. Allowed values: "SCTP", `TCP` and `UDP`.
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].ports[0].protocol Port protocol. Allowed values: "SCTP", `TCP` and `UDP`.
+                    ##
+                    protocol: TCP
+                ## Default Volume mounts
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[0].name
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[0].mountPath
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[0].readOnly
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[1].name
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[1].mountPath
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[1].readOnly
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[2].name
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[2].mountPath
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[2].readOnly
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[3].name
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[3].mountPath
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[3].readOnly
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[4].name
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[4].mountPath
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[4].subPath
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[4].readOnly
+                ##
+                volumeMounts:
+                  - name: devshm
+                    mountPath: /dev/shm
+                    readOnly: false
+                  - mountPath: "{{ .Values.global.env.HOME }}"
+                    name: '{{ include "common-gitops.names.release" . }}'
+                    readOnly: false
+                  - name: tmp
+                    mountPath: /tmp
+                    readOnly: false
+                  - name: devspace
+                    mountPath: /.devspace
+                    readOnly: false
+                  - name: varrun
+                    mountPath: /var/run
+                    readOnly: false
+                ## Environment variables configuration
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].env
+                ##
+                env:  # Add environment variables here
+                  - name: HOME
+                    value: "{{ .Values.global.env.HOME }}"
+                  - name: USER
+                    value: "ubuntu"
+                  - name: FIXUID
+                    value: "{{ .Values.global.env.FIXUID }}"
+                  - name: FIXGID
+                    value: "{{ .Values.global.env.FIXGID }}"
+                  - name: NAMESPACE
+                    value: "{{ .Release.Namespace }}"
+                ## Set the resource requests / limits for the main container.
+                ##
+                resources:
+                  ## Resource limits configuration
                   ##
-                  protocol: TCP
-              ## Default Volume mounts
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[0].name
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[0].mountPath
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[0].readOnly
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[1].name
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[1].mountPath
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[1].readOnly
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[2].name
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[2].mountPath
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[2].readOnly
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[3].name
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[3].mountPath
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[3].readOnly
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[4].name
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[4].mountPath
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[4].subPath
-              ## @skip common-res.Pod.items._.spec.containers[0].volumeMounts[4].readOnly
-              ##
-              volumeMounts:
-                - name: devshm
-                  mountPath: /dev/shm
-                  readOnly: false
-                - name: persistent-data
-                  mountPath: "/persistent-data"
-                  readOnly: false
-                - name: tmp
-                  mountPath: /tmp
-                  readOnly: false
-                - name: varrun
-                  mountPath: /var/run
-                  readOnly: false
-                - name: scripts
-                  mountPath: /entrypoint-script.sh
-                  subPath: entrypoint-script.sh
-                  readOnly: true
-              ## Environment variables configuration
-              ## @skip common-res.Pod.items._.spec.containers[0].env
-              env:  # Add environment variables here
-                - name: HOME
-                  value: "{{ .Values.global.env.HOME }}"
-                - name: FIXUID
-                  value: "{{ .Values.global.env.FIXUID }}"
-                - name: FIXGID
-                  value: "{{ .Values.global.env.FIXGID }}"
-                - name: NAMESPACE
-                  value: "{{ .Release.Namespace }}"
-              ## Set the resource requests / limits for the main container.
-              ##
+                  limits:
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].resources.limits.cpu CPU limits
+                    ##
+                    cpu: "1"
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].resources.limits.memory Memory limits
+                    ##
+                    memory: 512Mi
+                  ## Resource Requests configurations
+                  ##
+                  requests:
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].resources.requests.cpu CPU requests
+                    ##
+                    cpu: "1"
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].resources.requests.memory Memory requests
+                    ##
+                    memory: 512Mi
+                ## Security context configuration
+                ##
+                securityContext:
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.runAsGroup Specify the default user group id
+                  ##
+                  runAsGroup: 1000
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.runAsUser Specify the default user id
+                  ##
+                  runAsUser: 1000
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.privileged Privileged mode true or false. Allowed values: `true` or `false`
+                  ##
+                  privileged: false
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.readOnlyRootFilesystem Access level for the file system.  Allowed values: `true` or `false`
+                  ##
+                  readOnlyRootFilesystem: false
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.allowPrivilegeEscalation Allow escalation of privileges true or false. Allowed values: `true` or `false`
+                  ##
+                  allowPrivilegeEscalation: true
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.runAsNonRoot Run the process as root, true or false. Allowed values: `true` or `false`
+                  ##
+                  runAsNonRoot: true
+                  seccompProfile:
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.seccompProfile.type Seccomp profile type
+                    ##
+                    type: RuntimeDefault
+                  ## Linux pod capabilities configurations
+                  ## https://man7.org/linux/man-pages/man7/capabilities.7.html
+                  ##
+                  capabilities:
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.capabilities.drop Capabilities to drop
+                    ##
+                    drop:
+                      - ALL
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.capabilities.add Capabilities to add
+                    ##
+                    add:
+                      - SYS_ADMIN
+                      - CAP_CHOWN
+                      - CAP_KILL
+                      - CAP_MKNOD
+                      - CAP_PERFMON
+                      - CAP_SETGID
+                      - CAP_SETPCAP
+            ## Pod Volumes configuration
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[0].name
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[0].emptyDir.medium
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[1].name
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[1].emptyDir.medium
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[2].name
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[2].emptyDir
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[3].name
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[3].persistentVolumeClaim.claimName
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[4].name
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[4].configMap.name
+            volumes:
+              - name: devshm
+                emptyDir:
+                  medium: Memory
+              - name: varrun
+                emptyDir:
+                  medium: Memory
+              - name: tmp
+                emptyDir: {}
+              - name: devspace
+                emptyDir: {}
+              # - name: persistent-data
+              #   persistentVolumeClaim:
+              #     claimName: '{{ include "common-gitops.names.release" . }}'
+              # - name: scripts
+              #   configMap:
+              #     name: '{{ include "common-gitops.names.release" . }}'
+
+        ## Storage Volume Claims
+        ## @skip common-res.StatefulSet.items.storage.volumeClaimTemplates
+        ##
+        volumeClaimTemplates:
+          - metadata:
+              name: '{{ include "common-gitops.names.release" . }}'
+            spec:
+              accessModes:
+              - ReadWriteOnce
               resources:
-                ## Resource limits configuration
-                ##
-                limits:
-                  ## @param common-res.Pod.items._.spec.containers[0].resources.limits.cpu CPU limits
-                  ##
-                  cpu: "1"
-                  ## @param common-res.Pod.items._.spec.containers[0].resources.limits.memory Memory limits
-                  ##
-                  memory: 512Mi
-                ## Resource Requests configurations
-                ##
                 requests:
-                  ## @param common-res.Pod.items._.spec.containers[0].resources.requests.cpu CPU requests
-                  ##
-                  cpu: "1"
-                  ## @param common-res.Pod.items._.spec.containers[0].resources.requests.memory Memory requests
-                  ##
-                  memory: 512Mi
-              ## Security context configuration
-              ##
-              securityContext:
-                ## @param common-res.Pod.items._.spec.containers[0].securityContext.runAsGroup Specify the default user group id
-                ##
-                runAsGroup: 1000
-                ## @param common-res.Pod.items._.spec.containers[0].securityContext.runAsUser Specify the default user id
-                ##
-                runAsUser: 1000
-                ## @param common-res.Pod.items._.spec.containers[0].securityContext.privileged Privileged mode true or false. Allowed values: `true` or `false`
-                ##
-                privileged: false
-                ## @param common-res.Pod.items._.spec.containers[0].securityContext.readOnlyRootFilesystem Access level for the file system.  Allowed values: `true` or `false`
-                ##
-                readOnlyRootFilesystem: false
-                ## @param common-res.Pod.items._.spec.containers[0].securityContext.allowPrivilegeEscalation Allow escalation of privileges true or false. Allowed values: `true` or `false`
-                ##
-                allowPrivilegeEscalation: true
-                ## @param common-res.Pod.items._.spec.containers[0].securityContext.runAsNonRoot Run the process as root, true or false. Allowed values: `true` or `false`
-                ##
-                runAsNonRoot: true
-                seccompProfile:
-                  ## @param common-res.Pod.items._.spec.containers[0].securityContext.seccompProfile.type Seccomp profile type
-                  ##
-                  type: RuntimeDefault
-                ## Linux pod capabilities configurations
-                ## https://man7.org/linux/man-pages/man7/capabilities.7.html
-                ##
-                capabilities:
-                  ## @param common-res.Pod.items._.spec.containers[0].securityContext.capabilities.drop Capabilities to drop
-                  ##
-                  drop:
-                    - ALL
-                  ## @param common-res.Pod.items._.spec.containers[0].securityContext.capabilities.add Capabilities to add
-                  ##
-                  add:
-                    - SYS_ADMIN
-                    - CAP_CHOWN
-                    - CAP_KILL
-                    - CAP_MKNOD
-                    - CAP_PERFMON
-                    - CAP_SETGID
-                    - CAP_SETPCAP
-          ## Pod Volumes configuration
-          ## @skip common-res.Pod.items._.spec.volumes[0].name
-          ## @skip common-res.Pod.items._.spec.volumes[0].emptyDir.medium
-          ## @skip common-res.Pod.items._.spec.volumes[1].name
-          ## @skip common-res.Pod.items._.spec.volumes[1].emptyDir.medium
-          ## @skip common-res.Pod.items._.spec.volumes[2].name
-          ## @skip common-res.Pod.items._.spec.volumes[2].emptyDir
-          ## @skip common-res.Pod.items._.spec.volumes[3].name
-          ## @skip common-res.Pod.items._.spec.volumes[3].persistentVolumeClaim.claimName
-          ## @skip common-res.Pod.items._.spec.volumes[4].name
-          ## @skip common-res.Pod.items._.spec.volumes[4].configMap.name
-          volumes:
-            - name: devshm
-              emptyDir:
-                medium: Memory
-            - name: varrun
-              emptyDir:
-                medium: Memory
-            - name: tmp
-              emptyDir: {}
-            - name: persistent-data
-              persistentVolumeClaim:
-                claimName: '{{ include "common-gitops.names.release" . }}'
-            - name: scripts
-              configMap:
-                name: '{{ include "common-gitops.names.release" . }}'
-
-  ## Configure configMaps for the chart here.
-  ##
-  ConfigMap:
-    ## @param common-res.ConfigMap.enabled Enable or Disable the configmap from being created. Allowed values: `true` or `false`
-    ##
-    enabled: true
-    ## Chatbot UI config variables
-    ##
-    items:
-      _:
-        data:
-          ## @param common-res.ConfigMap.items._.data.init-script.sh
-          ##
-          ## TODO: These scripts will not be required after new developer container image version is released
-          init-script.sh: |
-            #!/bin/bash
-            # Define the source and destination directories
-            src_dir="/home/devops"
-            dest_dir="/persistent-data"
-            sed -i 's/DEVOPS/DEV-ENV/g' /home/devops/.zshrc || true
-            # Define directories and files to be copied
-            items_to_copy=(
-                "$src_dir/.oh-my-zsh"
-                "$src_dir/.cache"
-                "$src_dir/.local"
-                "$src_dir/.config"
-                "$src_dir/.krew"
-                "$src_dir/.aws_cli_functions"
-                "$src_dir/.kubectl_aliases"
-                "$src_dir/.tmux.conf"
-                "$src_dir/.vimrc"
-                "$src_dir/.wget-hsts"
-                "$src_dir/.zshrc"
-            )
-            # Copy items if they don't exist in the destination
-            for item in "${items_to_copy[@]}"; do
-                if [ ! -e "$dest_dir/$(basename "$item")" ]; then
-                    cp -rf "$item" "$dest_dir" || true
-                fi
-            done
-            if [ ! -f "$dest_dir/.keep" ]; then
-                touch "$dest_dir/.keep"
-                chown -Rf 1000:1000 "$dest_dir"
-            fi
-
-          ## @param common-res.ConfigMap.items._.data.entrypoint-script.sh
-          ##
-          entrypoint-script.sh: |
-            #!/bin/bash
-            eval "$(/usr/local/bin/fixuid -q)" || true
-            # Generate default gpg key without the password
-            if [ ! -f ${HOME}/.gnupg/pubring.kbx ]; then
-                gpg --batch --passphrase '' --quick-gen-key devops default default
-            fi
-            # Run gpg command to make sure gpg agent starts in a daemon mode.
-            gpg --list-secret-keys >/dev/null 2>&1
-
-            # Initialize pass manager with default gpg id
-            if [ ! -f ${HOME}/.password-store/.gpg-id ]; then
-                pass init $(gpg --list-keys devops|awk 'NR==2{print $1;exit}')
-            fi
-            sleep infinity
-  ## PersistentVolumeClaim configuration
-  ## @default -- See below
-  ##
-  PersistentVolumeClaim:
-    ## @param common-res.PersistentVolumeClaim.enabled Specifies whether PersistentVolumeClaims should be created. Allowed values: `true` or `false`
-    ##
-    enabled: true
-    ## @skip common-res.PersistentVolumeClaim.items
-    ##
-    items:
-      _:
-        spec:
-          accessModes:
-            - ReadWriteOnce
-          resources:
-            requests:
-              storage: "{{ .Values.global.persistentDataDiskSize }}"
-          storageClassName: "{{ .Values.global.storageClassName }}"
-          volumeMode: Filesystem
+                  storage: "{{ .Values.global.persistentDataDiskSize }}"
+              storageClassName: "{{ .Values.global.storageClassName }}"
 
   ## Serviceaccount configuration
   ## @default -- See below
