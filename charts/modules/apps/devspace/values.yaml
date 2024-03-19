@@ -112,9 +112,9 @@ common-res:
               ## @param common-res.StatefulSet.items._.podSpec.spec.securityContext.fsGroupChangePolicy Specify the default gs group change policy
               ##
               fsGroupChangePolicy: OnRootMismatch
-            # Init Containers configuration
-            # @skip common-res.StatefulSet.items._.podSpec.spec.initContainers
-            #
+            ## Init Containers configuration
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.initContainers
+            ##
             initContainers:
               - name: init
                 image: '{{ .Values.global.images.devcontainer }}'
@@ -199,22 +199,7 @@ common-res:
                     ##
                     protocol: TCP
                 ## Default Volume mounts
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[0].name
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[0].mountPath
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[0].readOnly
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[1].name
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[1].mountPath
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[1].readOnly
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[2].name
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[2].mountPath
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[2].readOnly
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[3].name
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[3].mountPath
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[3].readOnly
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[4].name
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[4].mountPath
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[4].subPath
-                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts[4].readOnly
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].volumeMounts
                 ##
                 volumeMounts:
                   - name: devshm
@@ -325,16 +310,7 @@ common-res:
                       - CAP_SETGID
                       - CAP_SETPCAP
             ## Pod Volumes configuration
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[0].name
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[0].emptyDir.medium
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[1].name
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[1].emptyDir.medium
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[2].name
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[2].emptyDir
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[3].name
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[3].persistentVolumeClaim.claimName
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[4].name
-            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes[4].configMap.name
+            ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes
             volumes:
               - name: devshm
                 emptyDir:
@@ -354,7 +330,7 @@ common-res:
               #     name: '{{ include "common-gitops.names.release" . }}'
 
         ## Storage Volume Claims
-        ## @skip common-res.StatefulSet.items.storage.volumeClaimTemplates
+        ## @skip common-res.StatefulSet.items._.volumeClaimTemplates
         ##
         volumeClaimTemplates:
           - metadata:
