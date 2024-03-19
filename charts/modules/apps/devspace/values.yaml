@@ -46,6 +46,27 @@ global:
     ## @param global.env.HOME Default home directory path for the container
     ##
     HOME: "/persistent-data"
+    ## @param global.env.OPENAI_API_KEY OpenAI API Key
+    ##
+    OPENAI_API_KEY: ""
+    ## @param global.env.OPENAI_MAX_TOKENS OpenAI max tokens
+    ##
+    OPENAI_MAX_TOKENS: "1000"
+    ## @param global.env.OPENAI_MODEL OpenAI model
+    ##
+    OPENAI_MODEL: "gpt-3.5-turbo"
+    ## @param global.env.OPENAI_PROXY OpenAI proxy
+    ##
+    OPENAI_PROXY: ""
+    ## @param global.env.OPENAI_TEMPERATURE OpenAI temperature
+    ##
+    OPENAI_TEMPERATURE: "0.2"
+    ## @param global.env.USER_DEFAULT_PROMPT_MODE Default prompt mode
+    ##
+    USER_DEFAULT_PROMPT_MODE: "exec"
+    ## @param global.env.USER_PREFERENCES User preferences
+    ##
+    USER_PREFERENCES: "Never execute any commands without my confirmation!"
 
 ## @section Devspace configurations
 ##
@@ -95,7 +116,7 @@ common-res:
             # @skip common-res.StatefulSet.items._.podSpec.spec.initContainers
             #
             initContainers:
-              - name: volume-init
+              - name: init
                 image: '{{ .Values.global.images.devcontainer }}'
                 command:
                   - /bin/bash
@@ -122,6 +143,20 @@ common-res:
                     value: "{{ .Values.global.env.FIXUID }}"
                   - name: FIXGID
                     value: "{{ .Values.global.env.FIXGID }}"
+                  - name: OPENAI_API_KEY
+                    value: "{{ .Values.global.env.OPENAI_API_KEY }}"
+                  - name: OPENAI_MAX_TOKENS
+                    value: "{{ .Values.global.env.OPENAI_MAX_TOKENS }}"
+                  - name: OPENAI_MODEL
+                    value: "{{ .Values.global.env.OPENAI_MODEL }}"
+                  - name: OPENAI_PROXY
+                    value: "{{ .Values.global.env.OPENAI_PROXY }}"
+                  - name: OPENAI_TEMPERATURE
+                    value: "{{ .Values.global.env.OPENAI_TEMPERATURE }}"
+                  - name: USER_DEFAULT_PROMPT_MODE
+                    value: "{{ .Values.global.env.USER_DEFAULT_PROMPT_MODE }}"
+                  - name: USER_PREFERENCES
+                    value: "{{ .Values.global.env.USER_PREFERENCES }}"
                 volumeMounts:
                   - mountPath: "{{ .Values.global.env.HOME }}"
                     name: '{{ include "common-gitops.names.release" . }}'
@@ -211,6 +246,20 @@ common-res:
                     value: "{{ .Values.global.env.FIXGID }}"
                   - name: NAMESPACE
                     value: "{{ .Release.Namespace }}"
+                  - name: OPENAI_API_KEY
+                    value: "{{ .Values.global.env.OPENAI_API_KEY }}"
+                  - name: OPENAI_MAX_TOKENS
+                    value: "{{ .Values.global.env.OPENAI_MAX_TOKENS }}"
+                  - name: OPENAI_MODEL
+                    value: "{{ .Values.global.env.OPENAI_MODEL }}"
+                  - name: OPENAI_PROXY
+                    value: "{{ .Values.global.env.OPENAI_PROXY }}"
+                  - name: OPENAI_TEMPERATURE
+                    value: "{{ .Values.global.env.OPENAI_TEMPERATURE }}"
+                  - name: USER_DEFAULT_PROMPT_MODE
+                    value: "{{ .Values.global.env.USER_DEFAULT_PROMPT_MODE }}"
+                  - name: USER_PREFERENCES
+                    value: "{{ .Values.global.env.USER_PREFERENCES }}"
                 ## Set the resource requests / limits for the main container.
                 ##
                 resources:
