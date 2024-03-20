@@ -1,6 +1,6 @@
 apiVersion: v2
 name: chatbot-ui
-description: A Helm chart for Crossplane
+description: A Helm chart for chatbot-ui
 type: application
 appVersion: "main" # Chatbot-ui does not have gold version yet
 # Ref: https://github.com/mckaywrigley/chatbot-ui/tree/main
