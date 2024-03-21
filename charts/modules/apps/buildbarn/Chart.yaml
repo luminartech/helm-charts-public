@@ -1,0 +1,22 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "0.1.0"
+description: A Helm chart for buildbarn
+name: buildbarn
+version: "0.1.0-1"
+home: https://github.com/luminartech/helm-charts-public/modules/buildbarn
+sources:
+  - https://github.com/luminartech/helm-charts-public/modules/buildbarn
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: common-gitops
+    version: "1.1.9"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+  - name: common-res
+    version: "1.0.17"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    # repository: file://../../../helm-charts-public/charts/shared/common-res/
+# TODO: Add karpenter nodepool for worker pods and configure prometheus scraping for storage diag http server port using serviceMonitors

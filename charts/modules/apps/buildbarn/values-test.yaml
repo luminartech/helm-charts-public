@@ -1,0 +1,29 @@
+---
+global:
+  ingressClassName: "nginx-ingress-internal"
+common-res:
+  enabled: true
+  Ingress:
+    enabled: true
+    items:
+      browser:
+        annotations:
+          cert-manager.io/acme-challenge-type: dns01
+          cert-manager.io/acme-dns01-provider: route53
+          cert-manager.io/cluster-issuer: my-cluster-issuer
+          kubernetes.io/tls-acme: "true"
+      scheduler:
+        annotations:
+          cert-manager.io/acme-challenge-type: dns01
+          cert-manager.io/acme-dns01-provider: route53
+          cert-manager.io/cluster-issuer: my-cluster-issuer
+          kubernetes.io/tls-acme: "true"
+      frontend:
+        annotations:
+          cert-manager.io/acme-challenge-type: dns01
+          cert-manager.io/acme-dns01-provider: route53
+          cert-manager.io/cluster-issuer: my-cluster-issuer
+          kubernetes.io/tls-acme: "true"
+
+  HorizontalPodAutoscaler:
+    enabled: true
