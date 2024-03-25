@@ -15,3 +15,11 @@ dependencies:
   - name: kube-prometheus-stack
     version: "56.19.0"
     repository: https://prometheus-community.github.io/helm-charts
+  - name: crossplane-aws-secretsmanager
+    version: "0.41.0"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    condition: crossplane-aws-secretsmanager.enabled
+  - name: external-secrets
+    version: "0.9.13-0"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    condition: external-secrets.enabled
