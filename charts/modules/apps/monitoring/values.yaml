@@ -160,3 +160,35 @@ kube-prometheus-stack:
     fullnameOverride: node-exporter
   kube-state-metrics:
     fullnameOverride: kube-state-metrics
+
+## @skip external-secrets
+external-secrets:
+  enabled: false
+  AWSExternalSecret:
+    enabled: true
+    items:
+      grafanaadmin:
+        name: 'grafana'
+        namespace: '{{ .Release.Namespace }}'
+        source:
+          secretStoreRef:
+            name: '{{ .Values.global.secretStoreRef }}'
+          data:
+            admin-user:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/{{ .Values.global.deploymentName }}/grafanaadmin-creds'
+              awsSecretKey: 'admin-user'
+            admin-password:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/{{ .Values.global.deploymentName }}/grafanaadmin-creds'
+              awsSecretKey: 'admin-password'
+
+## @skip crossplane-aws-secretsmanager
+crossplane-aws-secretsmanager:
+  enabled: false
+  Secret:
+    items:
+      grafanaadmin:
+        apiVersion: secretsmanager.aws.upbound.io/v1beta1
+        name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafanaadmin-creds'
+        forProvider:
+          name: '{{ .Values.global.team }}-{{ .Values.global.environment }}/{{ .Values.global.deploymentName }}/grafanaadmin-creds'
+          description: "Grafana Admin creds for {{ .Values.global.team }}-{{ .Values.global.environment }} Deployment"
