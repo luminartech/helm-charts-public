@@ -61,3 +61,11 @@ kube-prometheus-stack:
         - secretName: tls-grafana.test.example.com
           hosts:
             - grafana.test.example.com
+
+## @skip external-secrets
+external-secrets:
+  enabled: true
+
+## @skip crossplane-aws-secretsmanager
+crossplane-aws-secretsmanager:
+  enabled: true
