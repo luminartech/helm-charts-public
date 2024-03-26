@@ -5,7 +5,7 @@ apiVersion: v2
 appVersion: "0.41.0"
 description: A Helm chart for managing eks configuration specs after eks cluster is deployed
 name: aws-eks-config
-version: "1.0.0"
+version: "1.0.1"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/infra/aws-ekc-config
