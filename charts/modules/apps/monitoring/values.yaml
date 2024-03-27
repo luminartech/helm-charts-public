@@ -175,10 +175,10 @@ external-secrets:
             name: '{{ .Values.global.secretStoreRef }}'
           data:
             admin-user:
-              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/{{ .Values.global.deploymentName }}/grafanaadmin-creds'
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafanaadmin-creds'
               awsSecretKey: 'admin-user'
             admin-password:
-              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}/{{ .Values.global.deploymentName }}/grafanaadmin-creds'
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafanaadmin-creds'
               awsSecretKey: 'admin-password'
 
 ## @skip crossplane-aws-secretsmanager
@@ -188,7 +188,9 @@ crossplane-aws-secretsmanager:
     items:
       grafanaadmin:
         apiVersion: secretsmanager.aws.upbound.io/v1beta1
+        annotations:
+          crossplane.io/external-name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafanaadmin-creds'
         name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafanaadmin-creds'
         forProvider:
-          name: '{{ .Values.global.team }}-{{ .Values.global.environment }}/{{ .Values.global.deploymentName }}/grafanaadmin-creds'
+          name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafanaadmin-creds'
           description: "Grafana Admin creds for {{ .Values.global.team }}-{{ .Values.global.environment }} Deployment"
