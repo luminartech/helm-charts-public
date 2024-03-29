@@ -66,6 +66,7 @@ AWSExternalSecret:
             awsSecretKey: githubAppPrivateKey
             # encode secret using command: base64 -w 0 /path/to/pem-key-file
             decodingStrategy: Base64
+            metadataPolicy: None
           pat:
             awsSecretName: prod/gitlab/runner
             awsSecretKey: test
