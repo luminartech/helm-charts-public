@@ -5,7 +5,7 @@ apiVersion: v2
 appVersion: "0.41.0"
 description: A Helm chart for managing eks configuration specs after eks cluster is deployed
 name: aws-eks-config
-version: "1.0.1"
+version: "1.0.2"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/infra/aws-ekc-config
@@ -21,6 +21,6 @@ dependencies:
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-secretsmanager.enabled
   - name: external-secrets
-    version: "0.7.1-16"
+    version: "0.9.13-2"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: external-secrets.enabled
