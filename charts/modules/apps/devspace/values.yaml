@@ -31,7 +31,7 @@ global:
   persistentDataDiskSize: 10Gi
   ## @param global.storageClassName Persistent volume claim class
   ##
-  storageClassName: gp3-persistent-125
+  storageClassName: "default"
   images:
     ## @param global.images.devcontainer Devcontainer image
     ##
@@ -39,13 +39,16 @@ global:
   env:
     ## @param global.env.FIXUID Fix UID for the persistent volume mount
     ##
-    FIXUID: "1000"
+    FIXUID: 1000
     ## @param global.env.FIXGID Fix GID for the persistent volume mount
     ##
-    FIXGID: "1000"
+    FIXGID: 1000
     ## @param global.env.HOME Default home directory path for the container
     ##
     HOME: "/persistent-data"
+    ## @param global.env.SOURCE_DIR devspace sources dir
+    ##
+    SOURCE_DIR: "sources"
     ## @param global.env.OPENAI_API_KEY OpenAI API Key
     ##
     OPENAI_API_KEY: ""
@@ -103,6 +106,14 @@ common-res:
             restartPolicy: Always
             ## Configure the Security Context for the Pod
             securityContext:
+              ## WARNING: Changing user id will not allow sudo to work properly.
+              ##          you could add new user with your custom uid and then switch to that user using sudo command
+              ## @param common-res.StatefulSet.items._.podSpec.spec.securityContext.runAsGroup Specify the default user group id
+              ##
+              runAsGroup: 1000
+              ## @param common-res.StatefulSet.items._.podSpec.spec.securityContext.runAsUser Specify the default user id
+              ##
+              runAsUser: 1000
               ## @param common-res.StatefulSet.items._.podSpec.spec.securityContext.fsGroup Specify the default fs group id
               ##
               fsGroup: 1000
@@ -120,23 +131,27 @@ common-res:
                 image: '{{ .Values.global.images.devcontainer }}'
                 command:
                   - /bin/bash
+                  # - -exc
                   - -ec
                   - |
                     dest_dir={{ .Values.global.env.HOME }}
-                    if [ ! -f "$dest_dir/.keep" ]; then
-                      touch "$dest_dir/.keep"
+                    if [ ! -f "$dest_dir/.devspace.keep" ]; then
+                      mkdir -p "$dest_dir/${SOURCE_DIR}"
+                      touch "$dest_dir/.devspace.keep"
                       chown -Rf ${FIXUID}:${FIXGID} "$dest_dir"
                     fi
                     devspace_dir=/.devspace
                     mkdir -p "${devspace_dir}"
                     chown -Rf ${FIXUID}:${FIXGID} "${devspace_dir}"
-                    sudo -u ${USER} /entrypoint.sh
+                    sudo -u ${USER} HOME="${HOME}" /bin/bash -e /entrypoint.sh
                 securityContext:
                   runAsUser: 0  # Run as root user to setup disks
                   allowPrivilegeEscalation: true  # Allow privilege escalation if necessary
                 env:  # Add environment variables here
                   - name: HOME
                     value: "{{ .Values.global.env.HOME }}"
+                  - name: SOURCE_DIR
+                    value: "{{ .Values.global.env.SOURCE_DIR }}"
                   - name: USER
                     value: "ubuntu"
                   - name: FIXUID
@@ -169,13 +184,13 @@ common-res:
             containers:
               ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].name
               ##
-              - name: container-0
+              - name: devspace
                 ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].image
                 ##
                 image: '{{ .Values.global.images.devcontainer }}'
                 ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
                 ##
-                imagePullPolicy: Always
+                imagePullPolicy: IfNotPresent
                 ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].tty Determines whether containers in a pod runs with TTY enabled.
                 ##
                 tty: true
@@ -184,7 +199,7 @@ common-res:
                 stdin: true
                 ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].command
                 ##
-                command: ["tail", "-f", "/dev/null"]
+                command: ["/bin/sh", "-ec", "sudo chown root:${FIXGID} /certs/client && tail -f /dev/null"]
                 ## Container ports configuration
                 ##
                 ports:
@@ -211,6 +226,9 @@ common-res:
                   - name: tmp
                     mountPath: /tmp
                     readOnly: false
+                  - name: certs
+                    mountPath: /certs
+                    readOnly: false
                   - name: devspace
                     mountPath: /.devspace
                     readOnly: false
@@ -223,6 +241,8 @@ common-res:
                 env:  # Add environment variables here
                   - name: HOME
                     value: "{{ .Values.global.env.HOME }}"
+                  - name: SOURCE_DIR
+                    value: "{{ .Values.global.env.SOURCE_DIR }}"
                   - name: USER
                     value: "ubuntu"
                   - name: FIXUID
@@ -245,6 +265,12 @@ common-res:
                     value: "{{ .Values.global.env.USER_DEFAULT_PROMPT_MODE }}"
                   - name: USER_PREFERENCES
                     value: "{{ .Values.global.env.USER_PREFERENCES }}"
+                  - name: DOCKER_HOST
+                    value: "tcp://localhost:2376"
+                  - name: DOCKER_TLS_VERIFY
+                    value: "1"
+                  - name: DOCKER_CERT_PATH
+                    value: "/certs/client"
                 ## Set the resource requests / limits for the main container.
                 ##
                 resources:
@@ -269,12 +295,6 @@ common-res:
                 ## Security context configuration
                 ##
                 securityContext:
-                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.runAsGroup Specify the default user group id
-                  ##
-                  runAsGroup: 1000
-                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.runAsUser Specify the default user id
-                  ##
-                  runAsUser: 1000
                   ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.privileged Privileged mode true or false. Allowed values: `true` or `false`
                   ##
                   privileged: false
@@ -294,21 +314,96 @@ common-res:
                   ## Linux pod capabilities configurations
                   ## https://man7.org/linux/man-pages/man7/capabilities.7.html
                   ##
-                  capabilities:
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.capabilities.drop Capabilities to drop
+                  # capabilities:
+                  #   ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.capabilities.drop Capabilities to drop
+                  #   ##
+                  #   drop:
+                  #     - ALL
+                  #   ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.capabilities.add Capabilities to add
+                  #   ##
+                  #   add:
+                  #     - SYS_ADMIN
+                  #     - CAP_CHOWN
+                  #     - CAP_KILL
+                  #     - CAP_MKNOD
+                  #     - CAP_PERFMON
+                  #     - CAP_SETGID
+                  #     - CAP_SETPCAP
+              ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].name
+              ##
+              - name: dind
+                ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].image
+                ##
+                image: 'docker:dind-rootless'
+                ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
+                ##
+                imagePullPolicy: IfNotPresent
+                ## Container ports configuration
+                ##
+                ports:
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].ports[0].name Name of the port
+                  ##
+                  - name: docker
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].ports[0].containerPort The port number
                     ##
-                    drop:
-                      - ALL
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].securityContext.capabilities.add Capabilities to add
+                    containerPort: 2376
+
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].ports[0].protocol Port protocol. Allowed values: "SCTP", `TCP` and `UDP`.
                     ##
-                    add:
-                      - SYS_ADMIN
-                      - CAP_CHOWN
-                      - CAP_KILL
-                      - CAP_MKNOD
-                      - CAP_PERFMON
-                      - CAP_SETGID
-                      - CAP_SETPCAP
+                    protocol: TCP
+                ## Default Volume mounts
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[1].volumeMounts
+                ##
+                volumeMounts:
+                  - name: devshm
+                    mountPath: /dev/shm
+                    readOnly: false
+                  - mountPath: "/var/lib/docker"
+                    name: '{{ include "common-gitops.names.release" . }}'
+                    subPath: docker-data
+                    readOnly: false
+                  - name: tmp
+                    mountPath: /tmp
+                    readOnly: false
+                  - name: certs
+                    mountPath: /certs
+                    readOnly: false
+                  - name: varrun
+                    mountPath: /var/run
+                    readOnly: false
+                ## Set the resource requests / limits for the main container.
+                ##
+                resources:
+                  ## Resource limits configuration
+                  ##
+                  limits:
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].resources.limits.cpu CPU limits
+                    ##
+                    cpu: "4"
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].resources.limits.memory Memory limits
+                    ##
+                    memory: 4Gi
+                  ## Resource Requests configurations
+                  ##
+                  requests:
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].resources.requests.cpu CPU requests
+                    ##
+                    cpu: "4"
+                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].resources.requests.memory Memory requests
+                    ##
+                    memory: 4Gi
+                ## Security context configuration
+                ##
+                securityContext:
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].securityContext.runAsGroup Specify the default user group id
+                  ##
+                  runAsGroup: 0
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].securityContext.runAsUser Specify the default user id
+                  ##
+                  runAsUser: 0
+                  ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].securityContext.privileged Privileged mode true or false. Allowed values: `true` or `false`
+                  ##
+                  privileged: true
             ## Pod Volumes configuration
             ## @skip common-res.StatefulSet.items._.podSpec.spec.volumes
             volumes:
@@ -320,18 +415,15 @@ common-res:
                   medium: Memory
               - name: tmp
                 emptyDir: {}
+              - name: certs
+                emptyDir: {}
               - name: devspace
                 emptyDir: {}
-              # - name: persistent-data
-              #   persistentVolumeClaim:
-              #     claimName: '{{ include "common-gitops.names.release" . }}'
-              # - name: scripts
-              #   configMap:
-              #     name: '{{ include "common-gitops.names.release" . }}'
 
         ## Storage Volume Claims
         ## @skip common-res.StatefulSet.items._.volumeClaimTemplates
         ##
+        ## We are defining template in the sts to avoid helm uninstall command and argocd from deleting it
         volumeClaimTemplates:
           - metadata:
               name: '{{ include "common-gitops.names.release" . }}'

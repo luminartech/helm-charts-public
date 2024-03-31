@@ -3,7 +3,7 @@ name: devspace
 description: A Helm chart for Devspace
 type: application
 appVersion: "6.3.12"
-version: "6.3.12-0"
+version: "6.3.12-1"
 kubeVersion: ">=1.23.0-0"
 annotations:
   category: Application
@@ -20,7 +20,9 @@ dependencies:
   - name: common-gitops
     version: "1.1.9"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    # repository: file://../../../shared/common-gitops/
   - name: common-res
     version: "1.0.17"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    # repository: file://../../../shared/common-res/
     condition: common-res.enabled
