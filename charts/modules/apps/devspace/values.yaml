@@ -329,7 +329,7 @@ common-res:
                   #     - CAP_PERFMON
                   #     - CAP_SETGID
                   #     - CAP_SETPCAP
-              ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].name
+              ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].name
               ##
               - name: dind
                 ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].image
