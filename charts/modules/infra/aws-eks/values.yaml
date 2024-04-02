@@ -64,10 +64,10 @@ global:
   infraProviderConfigRefName: crossplane-provider-aws
   ## @param global.eksVersion Default EKS Version to use
   ## https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html
-  eksVersion: "1.25"
+  eksVersion: "1.29"
   ## @param global.eksNodeVersion EKS node version
   ## https://github.com/awslabs/amazon-eks-ami/blob/master/CHANGELOG.md
-  eksNodeVersion: "1.25.11-20230816"
+  eksNodeVersion: "1.29.0-20240227"
   ## @param global.teamAdminIAMRole Grant EKS admin permissions to this IAM Role
   ##
   teamAdminIAMRole: infra-admins
@@ -432,7 +432,6 @@ crossplane-aws-kms:
                 Resource: "*"
                 Principal:
                   AWS:
-                    - arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.crossplaneIAMRole }}
                     - arn:aws:iam::{{.Values.global.awsAccountId}}:role/{{ include "common-gitops.names.release" . }}-cluster
               allowPersistentAttach:
                 Effect: Allow

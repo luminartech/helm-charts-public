@@ -35,9 +35,10 @@
 | `global.crossplaneNamespace`        | Crossplane namespace for storing the EKS cluster config                                                       | `infra-crossplane`               |
 | `global.crossplaneIAMRole`          | Crossplane IAM Role                                                                                           | `crossplane-provider-aws`        |
 | `global.infraProviderConfigRefName` | AWS Provider config name of the infra mgmt crossplane instance                                                | `crossplane-provider-aws`        |
-| `global.eksVersion`                 | Default EKS Version to use                                                                                    | `1.25`                           |
-| `global.eksNodeVersion`             | EKS node version                                                                                              | `1.25.11-20230816`               |
+| `global.eksVersion`                 | Default EKS Version to use                                                                                    | `1.29`                           |
+| `global.eksNodeVersion`             | EKS node version                                                                                              | `1.29.0-20240227`                |
 | `global.teamAdminIAMRole`           | Grant EKS admin permissions to this IAM Role                                                                  | `infra-admins`                   |
+
 
 ### Dependency: crossplane-aws-iam upstream helm chart parameters for creating EKS resources
 
@@ -45,11 +46,13 @@
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-iam.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
 
+
 ### Dependency: crossplane-aws-ec2 upstream helm chart parameters for creating EKS resources
 
 | Name                         | Description                                                | Value   |
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-ec2.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
+
 
 ### Dependency: crossplane-aws-kms upstream helm chart parameters for creating EKS resources
 
@@ -57,11 +60,13 @@
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-kms.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
 
+
 ### Dependency: crossplane-aws-eks upstream helm chart parameters for creating EKS resources
 
 | Name                         | Description                                                | Value   |
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-eks.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
+
 
 ### Dependency: external-secrets upstream helm chart parameters for creating EKS resources
 
