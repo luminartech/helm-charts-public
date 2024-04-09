@@ -585,7 +585,7 @@ crossplane-aws-eks:
           crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}:vpc-cni'
         forProvider:
           addonName: vpc-cni
-          addonVersion: v1.14.0-eksbuild.3
+          addonVersion: v1.18.0-eksbuild.1
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
       aws-ebs-csi-driver:
@@ -593,7 +593,7 @@ crossplane-aws-eks:
           crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}:aws-ebs-csi-driver'
         forProvider:
           addonName: aws-ebs-csi-driver
-          addonVersion: v1.22.0-eksbuild.2
+          addonVersion: v1.29.1-eksbuild.1
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
       kube-proxy:
