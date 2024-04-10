@@ -68,6 +68,12 @@ global:
   ## @param global.eksNodeVersion EKS node version
   ## https://github.com/awslabs/amazon-eks-ami/blob/master/CHANGELOG.md
   eksNodeVersion: "1.29.0-20240227"
+  ## @param global.addonVpcCniVersion
+  addonVpcCniVersion: "v1.18.0-eksbuild.1"
+  ## @param global.addonEbsCSiVersion
+  addonEbsCSiVersion: "v1.29.1-eksbuild.1"
+  ## @param global.addonKubeProxyVersion
+  addonKubeProxyVersion: "v1.26.13-eksbuild.2"
   ## @param global.teamAdminIAMRole Grant EKS admin permissions to this IAM Role
   ##
   teamAdminIAMRole: infra-admins
@@ -585,7 +591,9 @@ crossplane-aws-eks:
           crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}:vpc-cni'
         forProvider:
           addonName: vpc-cni
-          addonVersion: v1.18.0-eksbuild.1
+          addonVersion: '{{ .Values.global.addonVpcCniVersion }}'
+          resolveConflictsOnCreate: "OVERWRITE"
+          resolveConflictsOnUpdate: "OVERWRITE"
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
       aws-ebs-csi-driver:
@@ -593,7 +601,9 @@ crossplane-aws-eks:
           crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}:aws-ebs-csi-driver'
         forProvider:
           addonName: aws-ebs-csi-driver
-          addonVersion: v1.29.1-eksbuild.1
+          addonVersion: '{{ .Values.global.addonEbsCSiVersion }}'
+          resolveConflictsOnCreate: "OVERWRITE"
+          resolveConflictsOnUpdate: "OVERWRITE"
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
       kube-proxy:
@@ -601,7 +611,9 @@ crossplane-aws-eks:
           crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}:kube-proxy'
         forProvider:
           addonName: kube-proxy
-          addonVersion: v1.25.16-eksbuild.3
+          addonVersion: '{{ .Values.global.addonKubeProxyVersion }}'
+          resolveConflictsOnCreate: "OVERWRITE"
+          resolveConflictsOnUpdate: "OVERWRITE"
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
 
