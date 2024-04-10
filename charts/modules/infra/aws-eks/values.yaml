@@ -68,11 +68,11 @@ global:
   ## @param global.eksNodeVersion EKS node version
   ## https://github.com/awslabs/amazon-eks-ami/blob/master/CHANGELOG.md
   eksNodeVersion: "1.29.0-20240227"
-  ## @param global.addonVpcCniVersion
+  ## @param global.addonVpcCniVersion VPC CNI Addon version
   addonVpcCniVersion: "v1.18.0-eksbuild.1"
-  ## @param global.addonEbsCSiVersion
+  ## @param global.addonEbsCSiVersion EBS CSI Addon version
   addonEbsCSiVersion: "v1.29.1-eksbuild.1"
-  ## @param global.addonKubeProxyVersion
+  ## @param global.addonKubeProxyVersion Kube Proxy Addon version
   addonKubeProxyVersion: "v1.26.13-eksbuild.2"
   ## @param global.teamAdminIAMRole Grant EKS admin permissions to this IAM Role
   ##
