@@ -23,15 +23,18 @@ global:
   ## @param global.environment Application environment
   ##
   environment: 'dev'
-  ## @param global.IAMRole Default IAM role ARN for pod
+  ## @param global.IAMRoleARN Default IAM role ARN for pod
   ##
-  IAMRole: "arn:aws:iam::AWS-ACCOUNT-ID:role/IAM-ROLE-NAME"
+  IAMRoleARN: "arn:aws:iam::AWS-ACCOUNT-ID:role/IAM-ROLE-NAME"
   ## @param global.persistentDataDiskSize Persistent volume size for the pod
   ##
   persistentDataDiskSize: 10Gi
   ## @param global.storageClassName Persistent volume claim class
   ##
   storageClassName: "default"
+  ## @param global.dockerEnabled Enable docker in docker
+  ##
+  dockerEnabled: "false"
   images:
     ## @param global.images.devcontainer Devcontainer image
     ##
@@ -70,6 +73,56 @@ global:
     ## @param global.env.USER_PREFERENCES User preferences
     ##
     USER_PREFERENCES: "Never execute any commands without my confirmation!"
+  ## Resources for containers
+  resources:
+    # Init container resources
+    initContainer:
+      requests:
+        ## @param global.resources.initContainer.requests.cpu CPU requests
+        ##
+        cpu: "1"
+        ## @param global.resources.initContainer.requests.memory Memory requests
+        ##
+        memory: "512Mi"
+      limits:
+        ## @param global.resources.initContainer.limits.cpu CPU limits
+        ##
+        cpu: "1"
+        ## @param global.resources.initContainer.limits.memory Memory limits
+        ##
+        memory: "512Mi"
+    ## Devspace container resources
+    devspace:
+      requests:
+        ## @param global.resources.devspace.requests.cpu CPU requests
+        ##
+        cpu: "4"
+        ## @param global.resources.devspace.requests.memory Memory requests
+        ##
+        memory: "4Gi"
+      limits:
+        ## @param global.resources.devspace.limits.cpu CPU limits
+        ##
+        cpu: "4"
+        ## @param global.resources.devspace.limits.memory Memory limits
+        ##
+        memory: "4Gi"
+    ## Devspace container resources
+    dind:
+      requests:
+        ## @param global.resources.dind.requests.cpu CPU requests
+        ##
+        cpu: "4"
+        ## @param global.resources.dind.requests.memory Memory requests
+        ##
+        memory: "4Gi"
+      limits:
+        ## @param global.resources.dind.limits.cpu CPU limits
+        ##
+        cpu: "4"
+        ## @param global.resources.dind.limits.memory Memory limits
+        ##
+        memory: "4Gi"
 
 ## @section Devspace configurations
 ##
@@ -179,6 +232,15 @@ common-res:
                   - name: devspace
                     mountPath: /.devspace
                     readOnly: false
+                ## Set the resource requests / limits for the main container.
+                ##
+                resources:
+                  requests:
+                    cpu: "{{ .Values.global.resources.initContainer.requests.cpu }}"
+                    memory: "{{ .Values.global.resources.initContainer.requests.memory }}"
+                  limits:
+                    cpu: "{{ .Values.global.resources.initContainer.limits.cpu }}"
+                    memory: "{{ .Values.global.resources.initContainer.limits.memory }}"
             ## Containers configuration
             ##
             containers:
@@ -272,26 +334,15 @@ common-res:
                   - name: DOCKER_CERT_PATH
                     value: "/certs/client"
                 ## Set the resource requests / limits for the main container.
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].resources
                 ##
                 resources:
-                  ## Resource limits configuration
-                  ##
-                  limits:
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].resources.limits.cpu CPU limits
-                    ##
-                    cpu: "1"
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].resources.limits.memory Memory limits
-                    ##
-                    memory: 512Mi
-                  ## Resource Requests configurations
-                  ##
                   requests:
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].resources.requests.cpu CPU requests
-                    ##
-                    cpu: "1"
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[0].resources.requests.memory Memory requests
-                    ##
-                    memory: 512Mi
+                    cpu: "{{ .Values.global.resources.devspace.requests.cpu }}"
+                    memory: "{{ .Values.global.resources.devspace.requests.memory }}"
+                  limits:
+                    cpu: "{{ .Values.global.resources.devspace.limits.cpu }}"
+                    memory: "{{ .Values.global.resources.devspace.limits.memory }}"
                 ## Security context configuration
                 ##
                 securityContext:
@@ -371,27 +422,14 @@ common-res:
                   - name: varrun
                     mountPath: /var/run
                     readOnly: false
-                ## Set the resource requests / limits for the main container.
-                ##
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[1].resources
                 resources:
-                  ## Resource limits configuration
-                  ##
-                  limits:
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].resources.limits.cpu CPU limits
-                    ##
-                    cpu: "4"
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].resources.limits.memory Memory limits
-                    ##
-                    memory: 4Gi
-                  ## Resource Requests configurations
-                  ##
                   requests:
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].resources.requests.cpu CPU requests
-                    ##
-                    cpu: "4"
-                    ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].resources.requests.memory Memory requests
-                    ##
-                    memory: 4Gi
+                    cpu: "{{ .Values.global.resources.dind.requests.cpu }}"
+                    memory: "{{ .Values.global.resources.dind.requests.memory }}"
+                  limits:
+                    cpu: "{{ .Values.global.resources.dind.limits.cpu }}"
+                    memory: "{{ .Values.global.resources.dind.limits.memory }}"
                 ## Security context configuration
                 ##
                 securityContext:
