@@ -37,9 +37,9 @@
 | `global.infraProviderConfigRefName` | AWS Provider config name of the infra mgmt crossplane instance                                                | `crossplane-provider-aws`        |
 | `global.eksVersion`                 | Default EKS Version to use                                                                                    | `1.29`                           |
 | `global.eksNodeVersion`             | EKS node version                                                                                              | `1.29.0-20240227`                |
-| `global.addonVpcCniVersion`         |                                                                                                               | `v1.18.0-eksbuild.1`             |
-| `global.addonEbsCSiVersion`         |                                                                                                               | `v1.29.1-eksbuild.1`             |
-| `global.addonKubeProxyVersion`      |                                                                                                               | `v1.26.13-eksbuild.2`            |
+| `global.addonVpcCniVersion`         | VPC CNI Addon version                                                                                         | `v1.18.0-eksbuild.1`             |
+| `global.addonEbsCSiVersion`         | EBS CSI Addon version                                                                                         | `v1.29.1-eksbuild.1`             |
+| `global.addonKubeProxyVersion`      | Kube Proxy Addon version                                                                                      | `v1.26.13-eksbuild.2`            |
 | `global.teamAdminIAMRole`           | Grant EKS admin permissions to this IAM Role                                                                  | `infra-admins`                   |
 
 
