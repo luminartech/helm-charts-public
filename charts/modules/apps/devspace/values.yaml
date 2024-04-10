@@ -421,6 +421,7 @@ common-res:
                   - name: varrun
                     mountPath: /var/run
                     readOnly: false
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[1].resources
                 resources:
                   requests:
                     cpu: "{{ .Values.global.resources.dind.requests.cpu }}"
