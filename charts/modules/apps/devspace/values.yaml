@@ -23,7 +23,7 @@ global:
   ## @param global.environment Application environment
   ##
   environment: 'dev'
-  ## @param global.IAMRole Default IAM role ARN for pod
+  ## @param global.IAMRoleARN Default IAM role ARN for pod
   ##
   IAMRoleARN: "arn:aws:iam::AWS-ACCOUNT-ID:role/IAM-ROLE-NAME"
   ## @param global.persistentDataDiskSize Persistent volume size for the pod
