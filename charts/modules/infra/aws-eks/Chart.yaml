@@ -5,7 +5,7 @@ apiVersion: v2
 appVersion: "0.41.0"
 description: A Helm chart for IAC resources needed by EKS
 name: aws-eks
-version: "0.41.0-8"
+version: "0.41.0-9"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/infra/aws-eks
