@@ -334,6 +334,7 @@ common-res:
                   - name: DOCKER_CERT_PATH
                     value: "/certs/client"
                 ## Set the resource requests / limits for the main container.
+                ## @skip common-res.StatefulSet.items._.podSpec.spec.containers[0].resources
                 ##
                 resources:
                   requests:
