@@ -592,8 +592,6 @@ crossplane-aws-eks:
         forProvider:
           addonName: vpc-cni
           addonVersion: '{{ .Values.global.addonVpcCniVersion }}'
-          resolveConflictsOnCreate: "OVERWRITE"
-          resolveConflictsOnUpdate: "PRESERVE"
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
       aws-ebs-csi-driver:
@@ -602,8 +600,6 @@ crossplane-aws-eks:
         forProvider:
           addonName: aws-ebs-csi-driver
           addonVersion: '{{ .Values.global.addonEbsCSiVersion }}'
-          resolveConflictsOnCreate: "OVERWRITE"
-          resolveConflictsOnUpdate: "PRESERVE"
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
       kube-proxy:
@@ -612,8 +608,6 @@ crossplane-aws-eks:
         forProvider:
           addonName: kube-proxy
           addonVersion: '{{ .Values.global.addonKubeProxyVersion }}'
-          resolveConflictsOnCreate: "OVERWRITE"
-          resolveConflictsOnUpdate: "PRESERVE"
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
 
