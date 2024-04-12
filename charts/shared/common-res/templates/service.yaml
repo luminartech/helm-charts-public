@@ -16,14 +16,26 @@ spec:
       {{- with .type }}
   type: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
       {{- end -}}
+      {{- with .clusterIP }}
+  clusterIP: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+      {{- end -}}
       {{- with .publishNotReadyAddresses }}
   publishNotReadyAddresses: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+      {{- end -}}
+      {{- with .ipFamilies }}
+  ipFamilies: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
       {{- end -}}
       {{- with .ipFamilyPolicy }}
   ipFamilyPolicy: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
       {{- end -}}
+      {{- with .sessionAffinity }}
+  sessionAffinity: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+      {{- end -}}
       {{- with .externalTrafficPolicy }}
   externalTrafficPolicy: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
+      {{- end -}}
+      {{- with .internalTrafficPolicy }}
+  internalTrafficPolicy: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
       {{- end -}}
       {{- with .ports }}
   ports:
