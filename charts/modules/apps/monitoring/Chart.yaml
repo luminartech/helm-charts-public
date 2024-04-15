@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "0.71.2"
+appVersion: "0.72.0"
 description: A Helm chart for monitoring
 name: monitoring
-version: "56.19.0-6"
+version: "57.2.1-0"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/monitoring
@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: kube-prometheus-stack
-    version: "56.19.0"
+    version: "57.2.1"
     repository: https://prometheus-community.github.io/helm-charts
   - name: crossplane-aws-secretsmanager
     version: "0.41.0"
