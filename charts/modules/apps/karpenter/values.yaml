@@ -161,7 +161,7 @@ crossplane-aws-iam:
                 - "sqs:ReceiveMessage"
               allowPassingInstanceRole:
                 Effect: Allow
-                Resource: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}-node'
+                Resource: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}*-node'
                 Action: "iam:PassRole"
                 Condition:
                   StringEquals:
