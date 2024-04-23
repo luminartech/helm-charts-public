@@ -39,7 +39,7 @@
 | `global.eksNodeVersion`             | EKS node version                                                                                              | `1.29.0-20240227`                |
 | `global.addonVpcCniVersion`         | VPC CNI Addon version                                                                                         | `v1.18.0-eksbuild.1`             |
 | `global.addonEbsCSiVersion`         | EBS CSI Addon version                                                                                         | `v1.29.1-eksbuild.1`             |
-| `global.addonKubeProxyVersion`      | Kube Proxy Addon version                                                                                      | `v1.26.13-eksbuild.2`            |
+| `global.addonKubeProxyVersion`      | Kube Proxy Addon version                                                                                      | `v1.29.3-eksbuild.2`             |
 | `global.teamAdminIAMRole`           | Grant EKS admin permissions to this IAM Role                                                                  | `infra-admins`                   |
 
 
