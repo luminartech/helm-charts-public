@@ -73,7 +73,7 @@ global:
   ## @param global.addonEbsCSiVersion EBS CSI Addon version
   addonEbsCSiVersion: "v1.29.1-eksbuild.1"
   ## @param global.addonKubeProxyVersion Kube Proxy Addon version
-  addonKubeProxyVersion: "v1.26.13-eksbuild.2"
+  addonKubeProxyVersion: "v1.29.3-eksbuild.2"
   ## @param global.teamAdminIAMRole Grant EKS admin permissions to this IAM Role
   ##
   teamAdminIAMRole: infra-admins
