@@ -27,4 +27,4 @@ name: common-gitops
 sources:
   - https://github.com/luminartech/helm-charts-public/charts/shared/common-gitops
 type: library
-version: "1.1.9"
+version: "1.1.10"
