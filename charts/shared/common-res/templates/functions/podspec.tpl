@@ -15,133 +15,45 @@ metadata:
     {{- include "common-gitops.annotations" (dict "root" $root "name" $name "kind" $kind) | trim | nindent 2 }}
     {{- with .spec }}
 spec:
-  serviceAccountName: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .serviceAccountName) }}
-      {{- with .automountServiceAccountToken }}
-  automountServiceAccountToken: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .hostIPC }}
-  hostIPC: {{ . }}
-      {{- end -}}
-      {{- with .hostNetwork }}
-  hostNetwork: {{ . }}
-      {{- end -}}
-      {{- with .hostPID }}
-  hostPID: {{ . }}
-      {{- end -}}
-      {{- with .hostname }}
-  hostname: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .nodeName }}
-  nodeName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .preemptionPolicy }}
-  preemptionPolicy: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .priority }}
-  priority: {{ . }}
-      {{- end -}}
-      {{- with .priorityClassName }}
-  priorityClassName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .runtimeClassName }}
-  runtimeClassName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .schedulerName }}
-  schedulerName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .setHostnameAsFQDN }}
-  setHostnameAsFQDN: {{ . }}
-      {{- end -}}
-      {{- with .shareProcessNamespace }}
-  shareProcessNamespace: {{ . }}
-      {{- end -}}
-      {{- with .subdomain }}
-  subdomain: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .affinity }}
-  affinity:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .dnsConfig }}
-  dnsConfig:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .enableServiceLinks }}
-  enableServiceLinks: {{ . }}
-      {{- end -}}
-      {{- with .ephemeralContainers }}
-  ephemeralContainers:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .hostAliases }}
-  hostAliases:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with ($root.Values.global).imagePullSecrets }}
-  imagePullSecrets:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 2 }}
-      {{- end -}}
-      {{- with .ephemeralContainers }}
-  ephemeralContainers:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .nodeSelector }}
-  nodeSelector:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .overhead }}
-  overhead:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .readinessGates }}
-  readinessGates:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .tolerations }}
-  tolerations:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .topologySpreadConstraints }}
-  topologySpreadConstraints:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .volumes }}
-  volumes:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .restartPolicy }}
-  restartPolicy: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- else }}
-  restartPolicy: Never
-      {{- end -}}
-      {{- with .dnsPolicy }}
-  dnsPolicy: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- else }}
-  dnsPolicy: ClusterFirst
-      {{- end -}}
-      {{- with .schedulerName }}
-  schedulerName: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) }}
-      {{- end -}}
-      {{- with .securityContext }}
-  securityContext:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .activeDeadlineSeconds }}
-  activeDeadlineSeconds: {{ . }}
-      {{- end -}}
-      {{- with .terminationGracePeriodSeconds }}
-  terminationGracePeriodSeconds: {{ . }}
-      {{- else }}
-  terminationGracePeriodSeconds: 30
-      {{- end -}}
-      {{- with .initContainers }}
+      {{- include "common-gitops.tplvalues.render" (dict
+        "value" (omit . "initContainers" "containers")
+        "context" $root
+        "trimEmpty" "true") | nindent 2 -}}
+      {{ with .initContainers }}
   initContainers:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
-      {{- with .containers }}
+        {{- if kindIs "slice" . -}}
+          {{/* Standard list-like syntax */}}
+          {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 -}}
+        {{- else if kindIs "map" . -}}
+          {{/* Dict-like syntax */}}
+          {{- $containers := . -}}
+          {{ range $name := keys $containers | sortAlpha -}}
+            {{ $container := get $containers $name }}
+  - name: {{ $name -}}
+            {{ include "common-gitops.tplvalues.render" (dict "value" $container "context" $root) | nindent 4 -}}
+          {{ end }}
+        {{- else }}
+          {{- fail "value for initContainers is not list nor dictionary" }}
+        {{ end }}
+      {{ end }}
+      {{ with .containers }}
   containers:
-        {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
-      {{- end -}}
+        {{- if kindIs "slice" . }}
+          {{/* Standard list-like syntax */}}
+          {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 -}}
+        {{- else if kindIs "map" . -}}
+          {{/* Dict-like syntax */}}
+          {{- $containers := . -}}
+          {{- $names := keys $containers | sortAlpha -}}
+          {{ range $name := $names -}}
+            {{ $container := get $containers $name }}
+  - name: {{ $name -}}
+            {{ include "common-gitops.tplvalues.render" (dict "value" $container "context" $root) | nindent 4 -}}
+          {{ end }}
+        {{- else }}
+          {{- fail "value for containers is not list nor dictionary" }}
+        {{ end }}
+      {{ end }}
     {{- end -}}
   {{- end -}}
-{{- end }}
+{{- end -}}
