@@ -665,6 +665,10 @@ argo-cd:
         url: https://kyverno.github.io/kyverno/
         name: kyverno
         type: helm
+      k8s-ephemeral-storage-metrics:
+        url: https://jmcgrath207.github.io/k8s-ephemeral-storage-metrics/chart
+        name: k8s-ephemeral-storage-metrics
+        type: helm
   repoServer:
     replicas: 2
     resources:
