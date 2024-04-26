@@ -47,28 +47,20 @@ sequenceDiagram
 | `global.ingressClassNameInternal` | Internal facing ingress class name for argocd UI                                                                 | `nginx-ingress-internal`         |
 | `global.certIssuer`               | External Secrets secret store ref to fetch AWS secret for repo creds                                             | `dev-satishweb-com`              |
 
-
 ### ArgoCDExtension
-
-
 
 
 ### crossplane-aws-iam
 
 
-
-
 ### argo-cd
-
-
 
 
 ### common-res
 
 
-
-
 ### external-secrets
+
 
 
 
