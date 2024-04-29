@@ -96,11 +96,13 @@ Deployment:
             runAsGroup: 3000
             fsGroup: 2000
           initContainers:
-            test:
+            test-init:
               command: ['/bin/echo', 'init']
+              image: busybox
           containers:
-            test:
+            test-dict:
               command: ['/bin/echo', 'run']
+              image: busybox
     test-list:
       podSpec:
         spec:
@@ -109,11 +111,13 @@ Deployment:
             runAsGroup: 3000
             fsGroup: 2000
           initContainers:
-            - name: test
+            - name: test-init
               command: ['/bin/echo', 'init']
+              image: busybox
           containers:
-            - name: test
+            - name: test-list
               command: ['/bin/echo', 'run']
+              image: busybox
     _:
       replicas: 1
       revisionHistoryLimit: 3
@@ -171,7 +175,7 @@ Deployment:
               readinessProbe:
                 httpGet:
                   port: 3000
-                  scheme: HTTPused
+                  scheme: HTTP
                   path: "/"
                 initialDelaySeconds: 10
                 periodSeconds: 10
@@ -241,6 +245,7 @@ Job:
               command: ["sh", "-c"]
               args:
                 - sleep 500
+          restartPolicy: OnFailure
 
 CronJob:
   enabled: true
@@ -276,7 +281,6 @@ ConfigMap:
   items:
     _:
       name: test
-      namespace: test
       enabled: true
       data:
         config.yaml: |
