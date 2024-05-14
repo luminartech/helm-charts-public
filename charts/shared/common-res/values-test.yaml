@@ -85,6 +85,150 @@ ClusterRoleBinding:
     _:
       enabled: true
 
+Deployment:
+  enabled: true
+  items:
+    test-dict:
+      podSpec:
+        spec:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 3000
+            fsGroup: 2000
+          initContainers:
+            test-init:
+              command: ['/bin/echo', 'init']
+              image: busybox
+          containers:
+            test-dict:
+              command: ['/bin/echo', 'run']
+              image: busybox
+    test-list:
+      podSpec:
+        spec:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 3000
+            fsGroup: 2000
+          initContainers:
+            - name: test-init
+              command: ['/bin/echo', 'init']
+              image: busybox
+          containers:
+            - name: test-list
+              command: ['/bin/echo', 'run']
+              image: busybox
+    _:
+      replicas: 1
+      revisionHistoryLimit: 3
+      strategy:
+        type: "RollingUpdate"
+        rollingUpdate:
+          maxUnavailable: "66%"
+          maxSurge: "33%"
+      selector: {}
+      podSpec:
+        spec:
+          automountServiceAccountToken: false
+          restartPolicy: Always
+          securityContext:
+            fsGroup: 1000
+            supplementalGroups: []
+            fsGroupChangePolicy: OnRootMismatch
+          containers:
+            chabot-ui:
+              image: ghcr.io/mckaywrigley/chatbot-ui:main
+              imagePullPolicy: IfNotPresent
+              tty: false
+              stdin: false
+              ports:
+                - name: http
+                  containerPort: 3000
+
+                  protocol: TCP
+              volumeMounts:
+                - name: devshm
+                  mountPath: /dev/shm
+                  readOnly: false
+                - name: shared
+                  mountPath: /shared
+                  readOnly: false
+                - name: appdata
+                  mountPath: /home/node
+                  readOnly: false
+                - name: tmp
+                  mountPath: /tmp
+                  readOnly: false
+                - name: varrun
+                  mountPath: /var/run
+                  readOnly: false
+              livenessProbe:
+                httpGet:
+                  port: 3000
+                  scheme: HTTP
+                  path: "/"
+                initialDelaySeconds: 10
+                periodSeconds: 10
+                timeoutSeconds: 5
+                failureThreshold: 5
+                successThreshold: 1
+              readinessProbe:
+                httpGet:
+                  port: 3000
+                  scheme: HTTP
+                  path: "/"
+                initialDelaySeconds: 10
+                periodSeconds: 10
+                timeoutSeconds: 5
+                failureThreshold: 5
+                successThreshold: 2
+              startupProbe:
+                tcpSocket:
+                  port: 3000
+                initialDelaySeconds: 10
+                periodSeconds: 5
+                timeoutSeconds: 2
+                failureThreshold: 60
+                successThreshold: 1
+              resources:
+                limits:
+                  cpu: "1"
+                  memory: 512Mi
+                requests:
+                  cpu: "1"
+                  memory: 512Mi
+              securityContext:
+                runAsGroup: 1000
+                runAsUser: 1000
+                privileged: false
+                readOnlyRootFilesystem: true
+                allowPrivilegeEscalation: false
+                runAsNonRoot: true
+                seccompProfile:
+                  type: RuntimeDefault
+                capabilities:
+                  drop:
+                    - ALL
+                  add: []
+              envFrom:
+                - configMapRef:
+                    name: '{{ include "common-gitops.names.release" . }}'
+                - secretRef:
+                    name: '{{ include "common-gitops.names.release" . }}'
+          volumes:
+            - name: devshm
+              emptyDir:
+                medium: Memory
+            - name: varrun
+              emptyDir:
+                medium: Memory
+            - name: shared
+              emptyDir: {}
+            - name: tmp
+              emptyDir: {}
+            - name: appdata
+              emptyDir: {}
+
 Job:
   enabled: true
   items:
@@ -101,6 +245,7 @@ Job:
               command: ["sh", "-c"]
               args:
                 - sleep 500
+          restartPolicy: OnFailure
 
 CronJob:
   enabled: true
@@ -136,7 +281,6 @@ ConfigMap:
   items:
     _:
       name: test
-      namespace: test
       enabled: true
       data:
         config.yaml: |
