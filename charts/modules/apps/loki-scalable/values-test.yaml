@@ -25,6 +25,9 @@ promtail:
   serviceMonitor:
     enabled: false
 
+promtail-windows:
+  enabled: true
+
 crossplane-aws-iam:
   enabled: true
 

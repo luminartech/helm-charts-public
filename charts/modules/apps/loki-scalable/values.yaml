@@ -347,3 +347,7 @@ promtail:
     - name: machine-id
       mountPath: /etc/machine-id
       readOnly: true
+
+## @skip promtail-windows
+promtail-windows:
+  enabled: false
