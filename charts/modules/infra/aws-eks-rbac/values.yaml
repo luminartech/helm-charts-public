@@ -223,9 +223,15 @@ crossplane-kubernetes:
                 app.kubernetes.io/instance: kubernetes
               name: amazon-vpc-cni
               namespace: kube-system
+              # Windows support requires enable-windows-ipam set to true
             data:
-              # Windows support
-              enable-windows-ipam: 'true'
+              branch-eni-cooldown: "60"
+              enable-network-policy-controller: "false"
+              enable-windows-ipam: "true"
+              enable-windows-prefix-delegation: "false"
+              minimum-ip-target: "3"
+              warm-ip-target: "1"
+              warm-prefix-target: "0"
         providerConfigRef:
           name: '{{ include "common-gitops.names.release" . }}'
 
