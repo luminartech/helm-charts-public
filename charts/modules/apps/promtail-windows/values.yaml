@@ -1,0 +1,63 @@
+
+---
+nameOverride: null
+fullnameOverride: null
+
+image:
+  registry: docker.io
+  repository: grafana/promtail-windows
+  pullPolicy: Always
+  tag: null
+
+imagePullSecrets: []
+
+replicaCount: 1
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  windowsOptions:
+    runAsUserName: "ContainerUser"
+
+securityContext:
+  capabilities:
+    drop:
+    - ALL
+  readOnlyRootFilesystem: true
+
+service:
+  type: ClusterIP
+  port: 3101
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 768Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector:
+  kubernetes.io/os: windows
+
+tolerations:
+  - operator: Exists
+
+affinity: {}
+
+configs:
+  lokiURL: http://loki-gateway/loki/api/v1/push
+  positionsFileName: C:\promtail\positions.yaml
+  listenPort: 3101

@@ -1,0 +1,13 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "2.9.3"
+description: Helm chart to deploy Promtail on Windows nodes
+name: promtail-windows
+version: "1.0.0"
+home: "https://github.com/luminartech/helm-charts-public"
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/promtail-windows
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com

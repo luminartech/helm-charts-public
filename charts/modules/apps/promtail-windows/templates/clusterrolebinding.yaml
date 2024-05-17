@@ -1,0 +1,14 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "promtail-win.fullname" . }}
+  labels:
+    {{- include "promtail-win.labels" . | nindent 4 }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "promtail-win.fullname" . }}
+subjects:
+- kind: ServiceAccount
+  name: {{ include "promtail-win.fullname" . }}
+  namespace: {{ .Release.Namespace }}
