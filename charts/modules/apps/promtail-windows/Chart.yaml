@@ -9,5 +9,7 @@ home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/promtail-windows
 maintainers:
+  - name: Muhammed Iqbal
+    url: https://github.com/iquzart/promtail-windows/tree/main/helm/promtail-win
   - name: Luminar IPE Team
     email: ipe@luminartech.com
