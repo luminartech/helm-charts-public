@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "2.6.4"
+appVersion: "2.9.3"
 description: A Wrapper Helm chart for argo-cd
 name: argo-cd
-version: "5.25.0-5"
+version: "5.52.2-0"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/argo-cd
@@ -13,11 +13,11 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: argo-cd
-    version: "5.25.0"
+    version: "5.52.2"
     repository: https://argoproj.github.io/argo-helm
     condition: argo-cd.enabled
   - name: common-gitops
-    version: "1.1.7"
+    version: "1.1.10"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
   - name: crossplane-aws-iam
     version: "0.41.0"
@@ -28,7 +28,7 @@ dependencies:
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: external-secrets.enabled
   - name: common-res
-    version: "1.0.15"
+    version: "1.0.18"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: common-res.enabled
   - name: crossplane-aws-secretsmanager

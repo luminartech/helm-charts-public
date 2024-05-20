@@ -243,36 +243,6 @@ argo-cd:
             end
             return hs
 
-        "*.aws.crossplane.io/*":
-          health.lua: |
-            hs = {}
-            if obj.status ~= nil then
-              if obj.status.conditions ~= nil then
-                synced, ready = false, false
-                synced_message, ready_message = "", ""
-                for i, condition in ipairs(obj.status.conditions) do
-                  if condition.type == "Synced" then
-                    synced = condition.status == "True"
-                    synced_message = condition.reason
-                  end
-                  if condition.type == "Ready" then
-                    ready = condition.status == "True"
-                    ready_message = condition.reason
-                  end
-                end
-                if synced and ready then
-                  hs.status = "Healthy"
-                else
-                  hs.status = "Degraded"
-                end
-                hs.message = synced_message .. " - " .. ready_message
-                return hs
-              end
-            end
-            hs.status = "Progressing"
-            hs.message = "Waiting for provider to be installed"
-            return hs
-
         "external-secrets.io/*":
           health.lua: |
             hs = {}
@@ -431,58 +401,6 @@ argo-cd:
         hs.message = "Waiting for provider to be installed"
         return hs
 
-      # Please, keep an alphabetical order
-      resource.customizations.ignoreDifferences.ec2.aws.crossplane.io_SecurityGroup: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.ec2.aws.crossplane.io_RouteTable: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.ec2.aws.crossplane.io_NATGateway: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.ec2.aws.crossplane.io_InternetGateway: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.ec2.aws.crossplane.io_Subnet: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.ec2.aws.crossplane.io_Address: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.ec2.aws.crossplane.io_VPC: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      # resource.customizations.ignoreDifferences.ecr.aws.upbound.io_Repository: |
-      #   jsonPointers:
-      #   - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.eks.aws.crossplane.io_Addon: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.eks.aws.crossplane.io_Cluster: |
-        jsonPointers:
-        - /spec/forProvider/tags
-        - /spec/forProvider/resourcesVpcConfig/endpointPrivateAccess
-        - /spec/forProvider/resourcesVpcConfig/endpointPublicAccess
-        - /spec/forProvider/resourcesVpcConfig/publicAccessCidrs
-      resource.customizations.ignoreDifferences.eks.aws.crossplane.io_NodeGroup: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.iam.aws.crossplane.io_Policy: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.iam.aws.crossplane.io_Role: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.iam.aws.crossplane.io_OpenIDConnectProvider: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.kms.aws.crossplane.io_Key: |
-        jsonPointers:
-        - /spec/forProvider/tags
-      resource.customizations.ignoreDifferences.secretsmanager.aws.crossplane.io_Secret: |
-        jsonPointers:
-        - /spec/forProvider/tags
     serviceAccount:
       create: true
     loglevel: info
