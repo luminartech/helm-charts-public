@@ -179,6 +179,15 @@ Role:
       forProvider:
         description: "IAM Role generated using crossplane + helm chart"
         maxSessionDuration: 3600 # 1 to 12 hours
+        inlinePolicy:
+          name: supertest
+          policy:
+            Statement:
+              _:
+                Effect: "Allow"
+                Principal:
+                  Service: "ec2.amazonaws.com"
+                Action: "sts:AssumeRole"
         assumeRolePolicy:
           Statement:
             _:
