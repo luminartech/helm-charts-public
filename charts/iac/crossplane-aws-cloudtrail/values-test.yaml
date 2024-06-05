@@ -1,0 +1,22 @@
+---
+EventDataStore:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        name: '${Rand.RFC1123Subdomain}'
+        region: us-west-1
+        retentionPeriod: 7
+        terminationProtectionEnabled: false
+
+Trail:
+  enabled: true
+  items:
+    test:
+      forProvider:
+        includeGlobalServiceEvents: false
+        region: us-west-1
+        s3BucketNameSelector:
+          matchLabels:
+            testing.upbound.io/example-name: foo
+        s3KeyPrefix: prefix
