@@ -15,15 +15,10 @@
 
 ### AWS resources
 
-| Name                          | Description         | Value |
-| ----------------------------- | ------------------- | ----- |
-| `ContributorInsights`         | resource parameters | `{}`  |
-| `GlobalTable`                 | resource parameters | `{}`  |
-| `KinesisStreamingDestination` | resource parameters | `{}`  |
-| `TableItem`                   | resource parameters | `{}`  |
-| `TableReplica`                | resource parameters | `{}`  |
-| `Table`                       | resource parameters | `{}`  |
-| `Tag`                         | resource parameters | `{}`  |
+| Name             | Description         | Value |
+| ---------------- | ------------------- | ----- |
+| `EventDataStore` | resource parameters | `{}`  |
+| `Trail`          | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
