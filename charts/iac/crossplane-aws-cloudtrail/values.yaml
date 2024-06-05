@@ -1,0 +1,9 @@
+## @section AWS resources
+
+## @param EventDataStore resource parameters
+##
+EventDataStore: {}
+
+## @param Trail resource parameters
+##
+Trail: {}

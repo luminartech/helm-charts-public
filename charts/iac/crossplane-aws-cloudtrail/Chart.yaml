@@ -1,0 +1,27 @@
+annotations:
+  category: Infrastructure
+apiVersion: v2
+# App version follows crossplane AWS provider version
+appVersion: "0.41.0"
+description: A Helm chart for crossplane AWS cloudtrail resources
+# Naming pattern: crossplane-aws-<AWS_SERVICENAME>
+# Note: This chart name is used to extract the aws service name as common-gitops.names.aws.service variable
+# AWS service name must match with the actual lowercase service names used in the crossplane aws provider CRDs
+name: crossplane-aws-cloudtrail
+# Below version must match the app version for the consistency.
+# Update minor bit if new tag is needed. e.g. 0.28.0-1
+version: "0.41.0"
+home: "https://github.com/luminartech/helm-charts-public"
+sources:
+  - https://github.com/luminartech/helm-charts-public
+maintainers:
+  - name: IPE
+    email: ipe@luminartech.com
+  - name: Satish Gaikwad
+    email: satish.gaikwad@luminartech.com
+  - name: Hennadii Mykhailiuta
+    email: hennadii.mykhailiuta@luminartech.com
+dependencies:
+  - name: common-gitops
+    version: "1.1.10"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
