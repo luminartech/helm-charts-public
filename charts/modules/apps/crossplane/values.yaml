@@ -76,8 +76,6 @@ ControllerConfig:
           - --enable-external-secret-stores
           - --provider-ttl=250
           - --max-reconcile-rate=10
-          - --sync=48h
-          - --poll=48h
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -102,8 +100,6 @@ ControllerConfig:
           - --enable-external-secret-stores
           - --provider-ttl=250
           - --max-reconcile-rate=10
-          - --sync=48h
-          - --poll=48h
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -128,8 +124,6 @@ ControllerConfig:
           - --enable-external-secret-stores
           - --provider-ttl=250
           - --max-reconcile-rate=5
-          - --sync=48h
-          - --poll=48h
         podSecurityContext:
           fsGroup: 2000
         resources:
@@ -154,8 +148,6 @@ ControllerConfig:
           - --enable-external-secret-stores
           - --provider-ttl=250
           - --max-reconcile-rate=3
-          - --sync=48h
-          - --poll=48h
         podSecurityContext:
           fsGroup: 2000
         resources:
