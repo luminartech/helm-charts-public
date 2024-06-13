@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "1.106.4"
+appVersion: "2.2.5"
 description: A Helm chart for cost-analyzer (kubecost)
 name: cost-analyzer
-version: "1.106.4-1"
+version: "2.2.5-0"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/cost-analyzer
@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: cost-analyzer
-    version: "1.106.4"
+    version: "2.2.5"
     repository: https://kubecost.github.io/cost-analyzer/
     condition: cost-analyzer.enabled
   - name: crossplane-aws-iam
