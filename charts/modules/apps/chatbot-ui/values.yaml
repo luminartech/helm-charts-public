@@ -100,7 +100,7 @@ common-res:
                 image: ghcr.io/mckaywrigley/chatbot-ui:main
                 ## @param common-res.Deployment.items._.podSpec.spec.containers[0].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
                 ##
-                imagePullPolicy: IfNotPresent
+                imagePullPolicy: Always
                 ## @param common-res.Deployment.items._.podSpec.spec.containers[0].tty Determines whether containers in a pod runs with TTY enabled.
                 ##
                 tty: false
