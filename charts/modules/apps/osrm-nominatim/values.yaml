@@ -1,0 +1,375 @@
+# Default values for nominatim.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+## @param updateStrategy.type nominatim deployment strategy type
+## @param updateStrategy.rollingUpdate nominatim deployment rolling update configuration parameters
+## ref: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#strategy
+## NOTE: Set it to `Recreate` if you use a PV that cannot be mounted on multiple pods
+## e.g:
+## updateStrategy:
+##  type: RollingUpdate
+##  rollingUpdate:
+##    maxSurge: 25%
+##    maxUnavailable: 25%
+##
+updateStrategy:
+  type: Recreate
+
+image:
+  repository: mediagis/nominatim
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+## @param nameOverride String to partially override common.names.fullname template (will maintain the release name)
+##
+nameOverride: ""
+## @param fullnameOverride String to fully override common.names.fullname template
+##
+fullnameOverride: ""
+## @param namespaceOverride String to fully override common.names.namespace
+##
+namespaceOverride: ""
+## @param commonAnnotations Common annotations to add to all Nominatim resources (sub-charts are not considered). Evaluated as a template
+##
+commonAnnotations: {}
+## @param commonLabels Common labels to add to all Nominatim resources (sub-charts are not considered). Evaluated as a template
+##
+commonLabels: {}
+
+nominatimInitialize:
+  enabled: false
+  pbfUrl: https://download.geofabrik.de/europe/germany/sachsen-latest.osm.pbf
+  importWikipedia: false
+  importGB_Postcode: false
+  importUS_Postcode: false
+  importStyle: full
+  # customStyleUrl: https://raw.githubusercontent.com/david-mart/Nominatim/master/settings/import-street.style
+  threads: 16
+  freeze: false
+  wikipediaUrl: https://nominatim.org/data/wikimedia-importance.sql.gz
+  resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+#    requests:
+#      cpu: 4000m
+#      memory: 4Gi
+#    limits:
+#      cpu: 4000m
+#      memory: 4Gi
+
+nominatimReplications:
+  enabled: false
+  replicationUrl: https://download.geofabrik.de/europe/germany/sachsen-updates/
+  threads: 1
+
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  resources: {}
+#    requests:
+#      cpu: 2000m
+#      memory: 2Gi
+#    limits:
+#      cpu: 2000m
+#      memory: 2Gi
+
+
+nominatim:
+  extraEnv: []
+
+nominatimUi:
+  enabled: true
+  version: 3.2.1
+  # apacheConfiguration configures the apache webserver that serves the UI.
+  apacheConfiguration: |-
+    <VirtualHost *:80>
+      DocumentRoot /nominatim/website
+      CustomLog "|$/usr/bin/rotatelogs -n 7 /var/log/apache2/access.log 86400" combined
+      ErrorLog  "|$/usr/bin/rotatelogs -n 7 /var/log/apache2/error.log 86400"
+      LogLevel info
+
+      <Directory "/nominatim/nominatim-ui/dist">
+        DirectoryIndex search.html
+        Require all granted
+      </Directory>
+
+      Alias /ui /nominatim/nominatim-ui/dist
+
+      <Directory /nominatim/website>
+        Options FollowSymLinks MultiViews
+        DirectoryIndex search.php
+        Require all granted
+
+        RewriteEngine On
+
+          # This must correspond to the URL where nominatim can be found.
+          RewriteBase "/"
+
+          # If no endpoint is given, then use search.
+          RewriteRule ^(/|$)   "search.php"
+
+          # If format-html is explicity requested, forward to the UI.
+          RewriteCond %{QUERY_STRING} "format=html"
+          RewriteRule ^([^/]+).php ui/$1.html [R,END]
+          # Same but .php suffix is missing.
+          RewriteCond %{QUERY_STRING} "format=html"
+          RewriteRule ^([^/]+) ui/$1.html [R,END]
+
+          # If no format parameter is there then forward anything
+          # but /reverse and /lookup to the UI.
+          RewriteCond %{QUERY_STRING} "!format="
+          RewriteCond %{REQUEST_URI}  "!/lookup"
+          RewriteCond %{REQUEST_URI}  "!/reverse"
+          RewriteRule ^([^/]+).php ui/$1.html [R,END]
+          # Same but .php suffix is missing.
+          RewriteCond %{QUERY_STRING} "!format="
+          RewriteCond %{REQUEST_URI}  "!/lookup"
+          RewriteCond %{REQUEST_URI}  "!/reverse"
+          RewriteRule ^([^/]+) ui/$1.html [R,END]
+      </Directory>
+
+      AddType text/html .php
+    </VirtualHost>
+
+  configuration: |-
+    Nominatim_Config.Nominatim_API_Endpoint = '/';
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext:
+  fsGroup: 101
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  ## @param service.type Nominatim K8s service type
+  ##
+  type: ClusterIP
+
+  ## @param service.port Nominatim K8s service port
+  ##
+  port: 80
+
+  ## @param service.nodePort Nominatim K8s service node port
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+  ##
+  nodePort:
+
+  ## @param service.clusterIP Nominatim K8s service clusterIP IP
+  ## e.g:
+  ## clusterIP: None
+  ##
+  clusterIP: ""
+
+   ## @param service.loadBalancerIP Nominatim loadBalancerIP if service type is `LoadBalancer`
+  ## Set the LoadBalancer service type to internal only
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+  ##
+  loadBalancerIP: ""
+  ## @param service.externalTrafficPolicy Enable client source IP preservation
+  ## ref https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  ##
+  externalTrafficPolicy: Cluster
+  ## @param service.loadBalancerSourceRanges Addresses that are allowed when Nominatim service is LoadBalancer
+  ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
+  ## E.g.
+  ## loadBalancerSourceRanges:
+  ##   - 10.10.10.0/24
+  ##
+  loadBalancerSourceRanges: []
+  ## @param service.extraPorts Extra ports to expose (normally used with the `sidecar` value)
+  ##
+  extraPorts: []
+  ## @param service.annotations Additional custom annotations for Nominatim service
+  ##
+  annotations: {}
+  ## @param service.sessionAffinity Session Affinity for Kubernetes service, can be "None" or "ClientIP"
+  ## If "ClientIP", consecutive client requests will be directed to the same Pod
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#virtual-ips-and-service-proxies
+  ##
+  sessionAffinity: None
+  ## @param service.sessionAffinityConfig Additional settings for the sessionAffinity
+  ## sessionAffinityConfig:
+  ##   clientIP:
+  ##     timeoutSeconds: 300
+  ##
+  sessionAffinityConfig: {}
+
+ingress:
+  ## @param ingress.enabled Enable ingress record generation for nominatim
+  ##
+  enabled: false
+  ## @param ingress.certManager Add the corresponding annotations for cert-manager integration
+  ##
+  certManager: false
+  ## @param ingress.annotations Additional custom annotations for the ingress record
+  ## NOTE: If `ingress.certManager=true`, annotation `kubernetes.io/tls-acme: "true"` will automatically be added
+  ##
+  annotations: {}
+  ## @param ingress.ingressClassName IngressClass that will be used to implement the Ingress (Kubernetes 1.18+)
+  ## This is supported in Kubernetes 1.18+ and required if you have more than one IngressClass marked as the default for your cluster .
+  ## ref: https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/
+  ##
+  ingressClassName: ""
+  ## @param ingress.hostname Default host for the ingress record
+  ##
+  hostname: nominatim.local
+  ## @param ingress.tls Enable TLS configuration for the host defined at `ingress.hostname` parameter
+  ## TLS certificates will be retrieved from a TLS secret with name: `{{- printf "%s-tls" .Values.ingress.hostname }}`
+  ## You can:
+  ##   - Use the `ingress.secrets` parameter to create this TLS secret
+  ##   - Relay on cert-manager to create it by setting `ingress.certManager=true`
+  ##   - Relay on Helm to create self-signed certificates by setting `ingress.tls=true` and `ingress.certManager=false`
+  ##
+  tls: false
+  ## @param ingress.secrets Custom TLS certificates as secrets
+  ## NOTE: 'key' and 'certificate' are expected in PEM format
+  ## NOTE: 'name' should line up with a 'secretName' set further up
+  ## If it is not set and you're using cert-manager, this is unneeded, as it will create a secret for you with valid certificates
+  ## If it is not set and you're NOT using cert-manager either, self-signed certificates will be created valid for 365 days
+  ## It is also possible to create and manage the certificates outside of this helm chart
+  ## Please see README.md for more information
+  ## e.g:
+  ## secrets:
+  ##   - name: nominatim.local-tls
+  ##     key: |-
+  ##       -----BEGIN RSA PRIVATE KEY-----
+  ##       ...
+  ##       -----END RSA PRIVATE KEY-----
+  ##     certificate: |-
+  ##       -----BEGIN CERTIFICATE-----
+  ##       ...
+  ##       -----END CERTIFICATE-----
+  ##
+  secrets: [ ]
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+flatnode:
+  ## @param flatnode.enabled Enable flatnode using Persistent Volume Claims
+  ##
+  enabled: false
+  ## @param flatnode.storageClass Persistent Volume storage class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner
+  ##
+  storageClass:
+  ## @param flatnode.accessModes [array] Persistent Volume access modes
+  ##
+  accessModes:
+    - ReadWriteMany
+  ## @param flatnode.size Persistent Volume size
+  ##
+  size: 100Gi
+  ## @param persistence.existingClaim The name of an existing PVC to use for persistence
+  ##
+  existingClaim:
+
+postgresql:
+  enabled: true
+
+  auth:
+    postgresPassword: nominatim
+
+  primary:
+    persistence:
+      size: 500Gi
+
+    extendedConfiguration: |
+        shared_buffers = 2GB
+        maintenance_work_mem = 10GB
+        autovacuum_work_mem = 2GB
+        work_mem = 50MB
+        effective_cache_size = 24GB
+        synchronous_commit = off
+        max_wal_size = 1GB
+        checkpoint_timeout = 10min
+        checkpoint_completion_target = 0.9
+
+externalDatabase:
+  ## @param externalDatabase.existingSecretDsn Use an existing secret for the DSN (Data Source Name) to connect to the external PostgreSQL database
+  ###
+  existingSecretDsn:
+  ## @param externalDatabase.existingSecretDsnKey Key in the existing secret to use for the DSN
+  ##
+  existingSecretDsnKey: POSTGRESQL_DSN
+  ## @param externalDatabase.host External Database server host
+  ##
+  host: localhost
+  ## @param externalDatabase.port External Database server port
+  ##
+  port: 5432
+  ## @param externalDatabase.user External Database username
+  ##
+  user: nominatim
+  ## @param externalDatabase.password External Database user password
+  ##
+  password: ""
+
+datapvc:
+  ## @param datapvc.enabled Enable using Persistent Volume Claims for the data volume used in initJob
+  ##
+  enabled: false
+  ## @param datapvc.storageClass Persistent Volume storage class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner
+  ##
+  storageClass:
+  ## @param datapvc.accessModes [array] Persistent Volume access modes
+  ##
+  accessModes:
+    - ReadWriteOnce
+  ## @param datapvc.size Persistent Volume size
+  ##
+  size: 100Gi
+  ## @param datapvc.existingClaim The name of an existing PVC to use for persistence
+  ##
+  existingClaim:
