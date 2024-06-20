@@ -29,7 +29,6 @@ Github: https://github.com/mckaywrigley/chatbot-ui/tree/main
 | `global.secretStoreRef`         | External secrets secrets store ref                                                                          | `cluster-secret-store-aws`       |
 | `global.environment`            | Application environment                                                                                     | `dev`                            |
 
-
 ### Chatbot UI configurations
 
 | Name                                                                                                | Description                                                                                    | Value                                                                                                                          |
@@ -48,7 +47,7 @@ Github: https://github.com/mckaywrigley/chatbot-ui/tree/main
 | `common-res.Deployment.items._.podSpec.spec.securityContext.fsGroupChangePolicy`                    | Specify the default gs group change policy                                                     | `OnRootMismatch`                                                                                                               |
 | `common-res.Deployment.items._.podSpec.spec.containers[0].name`                                     |                                                                                                | `chabot-ui`                                                                                                                    |
 | `common-res.Deployment.items._.podSpec.spec.containers[0].image`                                    |                                                                                                | `ghcr.io/mckaywrigley/chatbot-ui:main`                                                                                         |
-| `common-res.Deployment.items._.podSpec.spec.containers[0].imagePullPolicy`                          | Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`                  | `IfNotPresent`                                                                                                                 |
+| `common-res.Deployment.items._.podSpec.spec.containers[0].imagePullPolicy`                          | Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`                  | `Always`                                                                                                                       |
 | `common-res.Deployment.items._.podSpec.spec.containers[0].tty`                                      | Determines whether containers in a pod runs with TTY enabled.                                  | `false`                                                                                                                        |
 | `common-res.Deployment.items._.podSpec.spec.containers[0].stdin`                                    | Determines whether containers in a pod runs with stdin enabled.                                | `false`                                                                                                                        |
 | `common-res.Deployment.items._.podSpec.spec.containers[0].ports[0].name`                            | Name of the port                                                                               | `http`                                                                                                                         |
@@ -145,7 +144,6 @@ proxy_set_header X-Forwarded-Proto https;
 | `common-res.HorizontalPodAutoscaler.items._.spec.metrics[1].resource.target.type`                   | Metric target type for the resource                                                            | `Utilization`                                                                                                                  |
 | `common-res.HorizontalPodAutoscaler.items._.spec.metrics[1].resource.target.averageUtilization`     | Average utilization value                                                                      | `80`                                                                                                                           |
 
-
 ### Dependency: external-secrets upstream helm chart parameters for generating image pull secrets and other secrets for the app
 
 | Name                                                                                       | Description                                                    | Value                                                                            |
@@ -159,7 +157,6 @@ proxy_set_header X-Forwarded-Proto https;
 | `external-secrets.AWSExternalSecret.items._.source.data.OPENAI_API_KEY.awsSecretKey`       | Data key inside the AWS Secrets manager secret                 | `OPENAI_API_KEY`                                                                 |
 | `external-secrets.AWSExternalSecret.items._.source.data.OPENAI_ORGANIZATION.awsSecretName` | AWS Secrets manager secret name                                | `{{ .Values.global.environment }}-{{ include "common-gitops.names.release" . }}` |
 | `external-secrets.AWSExternalSecret.items._.source.data.OPENAI_ORGANIZATION.awsSecretKey`  | Data key inside the AWS Secrets manager secret                 | `OPENAI_ORGANIZATION`                                                            |
-
 
 ### Dependency: crossplane-aws-secretsmanager upstream helm chart parameters for generating image pull secrets and other secrets for the app
 
