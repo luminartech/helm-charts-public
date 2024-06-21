@@ -93,7 +93,7 @@ nominatim:
     version: 3.2.1
     # apacheConfiguration configures the apache webserver that serves the UI.
     apacheConfiguration: |-
-      <VirtualHost *:80>
+      <VirtualHost *:8080>
         DocumentRoot /nominatim/website
         CustomLog "|$/usr/bin/rotatelogs -n 7 /var/log/apache2/access.log 86400" combined
         ErrorLog  "|$/usr/bin/rotatelogs -n 7 /var/log/apache2/error.log 86400"
