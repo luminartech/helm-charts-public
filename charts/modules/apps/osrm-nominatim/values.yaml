@@ -60,12 +60,12 @@ nominatim:
     # choice for the user. This also increases chances charts run on environments with little
     # resources, such as Minikube. If you do want to specify resources, uncomment the following
     # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-    requests:
-      cpu: 4000m
-      memory: 4Gi
-    limits:
-      cpu: 4000m
-      memory: 4Gi
+      requests:
+        cpu: 4000m
+        memory: 4Gi
+      limits:
+        cpu: 4000m
+        memory: 4Gi
 
   nominatimReplications:
     enabled: false
@@ -77,12 +77,12 @@ nominatim:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
     resources:
-    requests:
-      cpu: 2000m
-      memory: 2Gi
-    limits:
-      cpu: 2000m
-      memory: 2Gi
+      requests:
+        cpu: 2000m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 2Gi
 
 
   nominatim:
