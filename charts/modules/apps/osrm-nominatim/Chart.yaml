@@ -4,7 +4,7 @@ apiVersion: v2
 appVersion: "4.4"
 description: A Helm chart for OSRM Nominatim
 name: osrm-nominatim
-version: "3.12.1-7"
+version: "3.12.1-8"
 home: https://github.com/luminartech/helm-charts-public/modules/osrm-nominatim
 sources:
   - https://github.com/luminartech/helm-charts-public/modules/osrm-nominatim
