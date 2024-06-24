@@ -51,8 +51,6 @@ ingress-nginx:
         "req_id": "$req_id", "upstream_connect_time": "$upstream_connect_time", "upstream_header_time":
         "$upstream_header_time", "http_cf_ray":"$http_cf_ray", "x-original-forwarded-for":
         "$http_x_forwarded_for"}'
-    service:
-      externalTrafficPolicy: Local
     metrics:
       enabled: false
       serviceMonitor:
