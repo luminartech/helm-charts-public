@@ -29,8 +29,8 @@
 | `global.awsDeletionPolicy`      | Default crossplane deletion policy for all resources deployed by this helm chart..                          | `Orphan`                         |
 | `global.secretStoreRef`         | External Secrets secret store ref to fetch AWS secret for repo creds                                        | `cluster-secret-store-aws`       |
 
-
 ### loki
+
 
 
 
