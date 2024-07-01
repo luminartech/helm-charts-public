@@ -355,7 +355,6 @@ external-secrets:
     enabled: true
     items:
       gateway-auth:
-        # name: 'grafana-secrets'
         namespace: '{{ .Release.Namespace }}'
         source:
           secretStoreRef:
