@@ -32,6 +32,7 @@ dependencies:
     version: "0.41.0"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-secretsmanager.enabled
-  - name: common-res
-    version: "1.0.18"
+  - name: external-secrets
+    version: "0.9.13-2"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    condition: external-secrets.enabled
