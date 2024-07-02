@@ -56,6 +56,9 @@ global:
   ## @param global.teamAdminIAMRole Grant EKS admin permissions to this IAM Role
   ##
   teamAdminIAMRole: "infra-admins"
+  ## @param global.additionalAwsAuthMapRoles Extra lines to be added to mapRoles paramenter in aws-auth ConfigMap
+  ##
+  additionalAwsAuthMapRoles: ""
 
 ## @section Dependency: crossplane-aws-iam upstream helm chart parameters
 ## ref: https://github.com/luminartech/helm-charts-public/blob/main/charts/iac/crossplane-aws-iam/values.yaml
@@ -193,6 +196,7 @@ crossplane-kubernetes:
                   - system:masters
                   rolearn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.teamAdminIAMRole }}"
                   username: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.teamAdminIAMRole }}"
+                {{ .Values.global.additionalAwsAuthMapRoles }}
         providerConfigRef:
           name: '{{ include "common-gitops.names.release" . }}'
 
