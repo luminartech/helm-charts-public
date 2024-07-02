@@ -347,3 +347,31 @@ promtail:
     - name: machine-id
       mountPath: /etc/machine-id
       readOnly: true
+
+## @skip external-secrets
+external-secrets:
+  enabled: false
+  AWSExternalSecret:
+    enabled: true
+    items:
+      gateway-auth:
+        namespace: '{{ .Release.Namespace }}'
+        source:
+          secretStoreRef:
+            name: '{{ .Values.global.secretStoreRef }}'
+          data:
+            auth:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-gateway-auth'
+              awsSecretKey: 'auth'
+
+## @skip crossplane-aws-secretsmanager
+crossplane-aws-secretsmanager:
+  enabled: false
+  Secret:
+    items:
+      gateway-auth:
+        apiVersion: secretsmanager.aws.upbound.io/v1beta1
+        name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-gateway-auth'
+        forProvider:
+          name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-gateway-auth'
+          description: "Grafana secrets and tokens for {{ .Values.global.team }}-{{ .Values.global.environment }} Deployment"
