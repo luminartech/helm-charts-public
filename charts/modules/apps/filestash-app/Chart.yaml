@@ -1,0 +1,21 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "1.0.0"
+description: A Helm chart to deploy https://www.filestash.app/
+name: filestash-app
+version: "1.0.0"
+home: https://github.com/luminartech/helm-charts-public
+sources:
+  - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/filestash-app
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: common-gitops
+    version: "1.1.10"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+  - name: "common-res"
+    version: "1.0.18"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    condition: "common-res.enabled"
