@@ -1,2 +1,2 @@
 NAMESPACE?=filestash-app
-include ../../Makefile
+include ../../../../Makefile

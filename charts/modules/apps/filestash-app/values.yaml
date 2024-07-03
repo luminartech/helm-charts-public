@@ -205,7 +205,7 @@ common-res:
                       service:
                         name: '{{ include "common-gitops.names.release" . }}'
                         port:
-                          number: 3000
+                          number: 8334
           tls:
             - secretName: tls-{{ .Values.global.ingressUrl }}
               hosts:
