@@ -145,9 +145,7 @@ common-res:
                     drop:
                       - ALL
                     add: []
-                envFrom:
-                  - configMapRef:
-                      name: '{{ include "common-gitops.names.release" . }}'
+
             volumes:
               - name: devshm
                 emptyDir:
