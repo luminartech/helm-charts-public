@@ -29,11 +29,14 @@ global:
   ## @param global.storageClassName  Storage class name
   ##
   storageClassName: 'gp3'
+  ## @param global.clusterIssuer  Cluster issuer
+  ##
+  clusterIssuer: 'letsencrypt-prod'
 
 
 ## @skip common-res
 common-res:
-  enabled: true
+  enabled: false
   PersistentVolumeClaim:
     items:
       _:
@@ -183,6 +186,10 @@ common-res:
     items:
       _:
         annotations:
+          cert-manager.io/acme-challenge-type: dns01
+          cert-manager.io/acme-dns01-provider: route53
+          cert-manager.io/cluster-issuer: "{{ .Values.global.clusterIssuer }}"
+          kubernetes.io/tls-acme: "true"
           kubernetes.io/ingress.allow-http: "false"
           nginx.ingress.kubernetes.io/backend-protocol: HTTP
           nginx.ingress.kubernetes.io/preserve-trailing-slash: "false"
