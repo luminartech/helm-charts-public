@@ -196,7 +196,7 @@ crossplane-kubernetes:
                   - system:masters
                   rolearn: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.teamAdminIAMRole }}"
                   username: "arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ .Values.global.teamAdminIAMRole }}"
-                {{ .Values.global.additionalAwsAuthMapRoles }}
+                {{ .Values.global.additionalAwsAuthMapRoles | nindent 8 }}
         providerConfigRef:
           name: '{{ include "common-gitops.names.release" . }}'
 

@@ -5,7 +5,7 @@ apiVersion: v2
 appVersion: "0.41.0"
 description: A Helm chart for IAC resources needed to access EKS cluster
 name: aws-eks-rbac
-version: "0.41.0-2"
+version: "0.41.0-3"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/infra/aws-eks-rbac
