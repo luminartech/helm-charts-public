@@ -31,7 +31,7 @@ global:
   storageClassName: 'gp3'
   ## @param global.clusterIssuer  Cluster issuer
   ##
-  clusterIssuer: 'luminarinfra-com'
+  clusterIssuer: 'letsencrypt-prod'
 
 
 ## @skip common-res
