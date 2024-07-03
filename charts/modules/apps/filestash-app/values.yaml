@@ -23,16 +23,15 @@ global:
   ## @param global.ingressClassName Ingress Classname
   ##
   ingressClassName: 'nginx'
-  ## @param global.ingressHost Ingress URL
+  ## @param global.ingressUrl Ingress URL
   ##
   ingressUrl: 'demo-filestash.luminarinfra.com'
   ## @param global.storageClassName  Storage class name
   ##
   storageClassName: 'gp3'
 
-## @section Filestash UI configurations
-##
 
+## @skip common-res
 common-res:
   enabled: true
   PersistentVolumeClaim:
