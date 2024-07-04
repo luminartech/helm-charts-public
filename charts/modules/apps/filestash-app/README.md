@@ -12,4 +12,4 @@
 | `global.ingressClassName`    | Ingress Classname                                                                | `nginx`                           |
 | `global.ingressUrl`          | Ingress URL                                                                      | `demo-filestash.luminarinfra.com` |
 | `global.storageClassName`    | Storage class name                                                               | `gp3`                             |
-| `global.clusterIssuer`       | Cluster issuer                                                                   | `luminarinfra-com`                |
+| `global.clusterIssuer`       | Cluster issuer                                                                   | `letsencrypt-prod`                |
