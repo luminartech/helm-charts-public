@@ -57,8 +57,8 @@ common-res:
         strategy:
           type: "RollingUpdate"
           rollingUpdate:
-            maxUnavailable: "0"
-            maxSurge: "1"
+            maxUnavailable: 0
+            maxSurge: 1
         selector: {}
         podSpec:
           spec:
