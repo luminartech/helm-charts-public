@@ -57,8 +57,8 @@ common-res:
         strategy:
           type: "RollingUpdate"
           rollingUpdate:
-            maxUnavailable: "66%"
-            maxSurge: "33%"
+            maxUnavailable: "0"
+            maxSurge: "1"
         selector: {}
         podSpec:
           spec:
@@ -76,7 +76,7 @@ common-res:
                 stdin: false
                 ports:
                   - name: http
-                    containerPort: 80
+                    containerPort: 8334
                     protocol: TCP
                 volumeMounts:
                   - name: devshm
@@ -96,7 +96,7 @@ common-res:
                     readOnly: false
                 livenessProbe:
                   httpGet:
-                    port: 80
+                    port: 8334
                     scheme: HTTP
                     path: "/"
                   initialDelaySeconds: 10
@@ -106,7 +106,7 @@ common-res:
                   successThreshold: 1
                 readinessProbe:
                   httpGet:
-                    port: 80
+                    port: 8334
                     scheme: HTTP
                     path: "/"
                   initialDelaySeconds: 10
@@ -116,7 +116,7 @@ common-res:
                   successThreshold: 2
                 startupProbe:
                   tcpSocket:
-                    port: 80
+                    port: 8334
                   initialDelaySeconds: 10
                   periodSeconds: 5
                   timeoutSeconds: 2
@@ -132,12 +132,11 @@ common-res:
                 securityContext:
                   runAsGroup: 1000
                   runAsUser: 1000
+                  fsGroup: 1000
                   privileged: false
                   readOnlyRootFilesystem: true
                   allowPrivilegeEscalation: false
                   runAsNonRoot: true
-                  seccompProfile:
-                    type: RuntimeDefault
                   ## Linux pod capabilities configurations
                   ## https://man7.org/linux/man-pages/man7/capabilities.7.html
                   ##
