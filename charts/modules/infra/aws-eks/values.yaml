@@ -74,6 +74,8 @@ global:
   addonEbsCSiVersion: "v1.29.1-eksbuild.1"
   ## @param global.addonKubeProxyVersion Kube Proxy Addon version
   addonKubeProxyVersion: "v1.29.3-eksbuild.2"
+  ## @param global.addonS3CsiVersion AWS Mountpoint S3 CSI Addon version
+  addonS3CsiVersion: "v1.7.0-eksbuild.1"
   ## @param global.teamAdminIAMRole Grant EKS admin permissions to this IAM Role
   ##
   teamAdminIAMRole: infra-admins
@@ -608,6 +610,14 @@ crossplane-aws-eks:
         forProvider:
           addonName: kube-proxy
           addonVersion: '{{ .Values.global.addonKubeProxyVersion }}'
+          clusterNameRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+      aws-mountpoint-s3-csi-driver:
+        annotations:
+          crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}:aws-mountpoint-s3-csi-driver'
+        forProvider:
+          addonName: aws-mountpoint-s3-csi-driver
+          addonVersion: '{{ .Values.global.addonS3CsiVersion }}'
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
 
