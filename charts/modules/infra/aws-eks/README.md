@@ -40,8 +40,8 @@
 | `global.addonVpcCniVersion`         | VPC CNI Addon version                                                                                         | `v1.18.0-eksbuild.1`             |
 | `global.addonEbsCSiVersion`         | EBS CSI Addon version                                                                                         | `v1.29.1-eksbuild.1`             |
 | `global.addonKubeProxyVersion`      | Kube Proxy Addon version                                                                                      | `v1.29.3-eksbuild.2`             |
+| `global.addonS3CsiVersion`          | AWS Mountpoint S3 CSI Addon version                                                                           | `v1.7.0-eksbuild.1`              |
 | `global.teamAdminIAMRole`           | Grant EKS admin permissions to this IAM Role                                                                  | `infra-admins`                   |
-
 
 ### Dependency: crossplane-aws-iam upstream helm chart parameters for creating EKS resources
 
@@ -49,13 +49,11 @@
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-iam.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
 
-
 ### Dependency: crossplane-aws-ec2 upstream helm chart parameters for creating EKS resources
 
 | Name                         | Description                                                | Value   |
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-ec2.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
-
 
 ### Dependency: crossplane-aws-kms upstream helm chart parameters for creating EKS resources
 
@@ -63,13 +61,11 @@
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-kms.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
 
-
 ### Dependency: crossplane-aws-eks upstream helm chart parameters for creating EKS resources
 
 | Name                         | Description                                                | Value   |
 | ---------------------------- | ---------------------------------------------------------- | ------- |
 | `crossplane-aws-eks.enabled` | Toggle for enabling or disabling upstream chart templates. | `false` |
-
 
 ### Dependency: external-secrets upstream helm chart parameters for creating EKS resources
 
