@@ -46,16 +46,12 @@ aws-mountpoint-s3-csi-driver:
   ##
   enabled: false
 
-  ## @param aws-mountpoint-s3-csi-driver.node Node parameters.
+  ## @skip aws-mountpoint-s3-csi-driver.node
   ##
   node:
-    ## @param aws-mountpoint-s3-csi-driver.node.serviceAccount.annotations Annotations for the service account.
-    ##
     serviceAccount:
       annotations:
         "eks.amazonaws.com/role-arn": "arn:aws:iam::0123456789:role/aws-mountpoint-s3-csi-driver"
-    ## @param aws-mountpoint-s3-csi-driver.node.tolerateAllTaints Daemonset Tolerate all taints.
-    ##
     tolerateAllTaints: true
 
 ## @section Dependency: crossplane-aws-iam upstream helm chart parameters
