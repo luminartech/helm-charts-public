@@ -46,7 +46,7 @@ aws-mountpoint-s3-csi-driver:
   ##
   enabled: false
 
-  ## @skip aws-mountpoint-s3-csi-driver.node
+  ## @param aws-mountpoint-s3-csi-driver.node Node parameters.
   ##
   node:
     ## @param aws-mountpoint-s3-csi-driver.node.serviceAccount.annotations Annotations for the service account.
