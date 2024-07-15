@@ -1,0 +1,6 @@
+---
+aws-mountpoint-s3-csi-driver:
+  enabled: true
+
+crossplane-aws-iam:
+  enabled: true

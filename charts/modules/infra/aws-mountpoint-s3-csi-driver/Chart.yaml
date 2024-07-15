@@ -1,0 +1,28 @@
+annotations:
+  category: Application
+apiVersion: v2
+# App version follows the main source app version of upstream helm chart
+appVersion: "1.7.0"
+description: A Helm chart for Mounting S3 buckets as a filesystem using the EKS CSI driver
+name: aws-mountpoint-s3-csi-driver
+# Below version must match the app version for the consistency.
+# Update minor bit if new tag is needed. e.g. 0.7.0-1
+version: "1.7.0-0"
+home: "https://github.com/luminartech/helm-charts-public"
+sources:
+  - https://github.com/luminartech/helm-charts-public/
+maintainers:
+  - name: IPE
+    email: ipe@luminartech.com
+dependencies:
+  - name: aws-mountpoint-s3-csi-driver
+    version: "1.7.0"
+    repository: https://awslabs.github.io/mountpoint-s3-csi-driver
+    condition: aws-mountpoint-s3-csi-driver.enabled
+  - name: crossplane-aws-iam
+    version: "0.41.0"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    condition: crossplane-aws-iam.enabled
+  - name: common-gitops
+    version: "1.1.10"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
