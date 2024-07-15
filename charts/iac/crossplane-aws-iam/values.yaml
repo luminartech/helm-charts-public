@@ -45,6 +45,10 @@ Role: {}
 ##
 RolePolicyAttachment: {}
 
+## @param RolePolicy resource parameters
+##
+RolePolicy: {}
+
 ## @param SAMLProvider resource parameters
 ##
 SAMLProvider: {}
