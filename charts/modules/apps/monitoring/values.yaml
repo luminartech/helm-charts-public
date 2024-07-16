@@ -180,6 +180,20 @@ external-secrets:
             admin-password:
               awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafanaadmin-creds'
               awsSecretKey: 'admin-password'
+      grafana-secrets:
+        enabled: false
+        name: 'grafana-secrets'
+        namespace: '{{ .Release.Namespace }}'
+        source:
+          secretStoreRef:
+            name: '{{ .Values.global.secretStoreRef }}'
+          data:
+            LOKI_USERNAME:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafana-secrets'
+              awsSecretKey: 'LOKI_USERNAME'
+            LOKI_PASSWORD:
+              awsSecretName: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafana-secrets'
+              awsSecretKey: 'LOKI_PASSWORD'
 
 ## @skip crossplane-aws-secretsmanager
 crossplane-aws-secretsmanager:
@@ -192,3 +206,10 @@ crossplane-aws-secretsmanager:
         forProvider:
           name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafanaadmin-creds'
           description: "Grafana Admin creds for {{ .Values.global.team }}-{{ .Values.global.environment }} Deployment"
+      grafana-secrets:
+        enabled: false
+        apiVersion: secretsmanager.aws.upbound.io/v1beta1
+        name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafana-secrets'
+        forProvider:
+          name: '{{ .Values.global.team }}-{{ .Values.global.environment }}-{{ .Values.global.deploymentName }}-grafana-secrets'
+          description: "Grafana secrets and tokens for {{ .Values.global.team }}-{{ .Values.global.environment }} Deployment"
