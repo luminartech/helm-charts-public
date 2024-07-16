@@ -613,6 +613,7 @@ crossplane-aws-eks:
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
       aws-mountpoint-s3-csi-driver:
+        enabled: false
         annotations:
           crossplane.io/external-name: '{{ include "common-gitops.names.release" . }}:aws-mountpoint-s3-csi-driver'
         forProvider:
