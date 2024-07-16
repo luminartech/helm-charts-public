@@ -1,0 +1,351 @@
+
+## @skip crossplane-aws-s3
+crossplane-aws-s3:
+  enabled: true
+  Bucket:
+    enabled: true
+    items:
+      blocks:
+        forProvider: {}
+      ruler:
+        forProvider: {}
+
+  BucketPublicAccessBlock:
+    items:
+      blocks:
+        forProvider:
+          blockPublicAcls: true
+          blockPublicPolicy: true
+          ignorePublicAcls: true
+          restrictPublicBuckets: true
+          bucketRef:
+            name: '{{ include "common-gitops.names.release" . }}-blocks'
+      ruler:
+        forProvider:
+          blockPublicAcls: true
+          blockPublicPolicy: true
+          ignorePublicAcls: true
+          restrictPublicBuckets: true
+          bucketRef:
+            name: '{{ include "common-gitops.names.release" . }}-ruler'
+
+  BucketPolicy:
+    enabled: false
+    items:
+      blocks:
+        forProvider:
+          policy:
+            Statement:
+              allowFullAccess:
+                Effect: "Allow"
+                Principal:
+                  AWS: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}'
+                Action: "s3:*"
+                Resource:
+                  - 'arn:aws:s3:::{{ include "common-gitops.names.release" . }}-blocks'
+                  - 'arn:aws:s3:::{{ include "common-gitops.names.release" . }}-blocks/*'
+          bucketRef:
+            name: '{{ include "common-gitops.names.release" . }}-blocks'
+      ruler:
+        forProvider:
+          policy:
+            Statement:
+              allowFullAccess:
+                Effect: "Allow"
+                Principal:
+                  AWS: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}'
+                Action: "s3:*"
+                Resource:
+                  - 'arn:aws:s3:::{{ include "common-gitops.names.release" . }}-ruler'
+                  - 'arn:aws:s3:::{{ include "common-gitops.names.release" . }}-ruler/*'
+          bucketRef:
+            name: '{{ include "common-gitops.names.release" . }}-ruler'
+
+## @skip crossplane-aws-iam
+crossplane-aws-iam:
+  enabled: true
+  Policy:
+    items:
+      _:
+        forProvider:
+          description: "IAM Policy for loki to access AWS services (S3 buckets)"
+          policy:
+            Statement:
+              allowS3ListBuckets:
+                Effect: Allow
+                Action: s3:ListAllMyBuckets
+                Resource: '*'
+              allowS3ReadWriteObjects:
+                Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - arn:aws:s3:::{{ include "common-gitops.names.release" . }}-blocks
+                  - arn:aws:s3:::{{ include "common-gitops.names.release" . }}-blocks/*
+                  - arn:aws:s3:::{{ include "common-gitops.names.release" . }}-ruler
+                  - arn:aws:s3:::{{ include "common-gitops.names.release" . }}-ruler/*
+  Role:
+    items:
+      _:
+        forProvider:
+          assumeRolePolicy:
+            Statement:
+              allowAssumeRoleWebIdentity:
+                Effect: Allow
+                Action: sts:AssumeRoleWithWebIdentity
+                Principal:
+                  Federated: arn:aws:iam::{{ .Values.global.awsAccountId }}:oidc-provider/oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}
+                Condition:
+                  StringEquals:
+                    "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub": system:serviceaccount:{{ .Release.Namespace }}:{{ .Values.global.deploymentName }}
+                    "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud": sts.amazonaws.com
+              allowEC2AssumeRole:
+                Effect: Allow
+                Principal:
+                  Service: ec2.amazonaws.com
+                Action: sts:AssumeRole
+              allowspotfleetAssumeRole:
+                Effect: Allow
+                Principal:
+                  Service: spotfleet.amazonaws.com
+                Action: sts:AssumeRole
+              allowSelfAssumeRole:
+                Effect: Allow
+                Principal:
+                  AWS: "*"
+                Action: sts:AssumeRole
+                Condition:
+                  ArnLike:
+                    'aws:PrincipalArn': arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}
+  RolePolicyAttachment:
+    items:
+      _:
+        forProvider:
+          policyArnRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+          roleRef:
+            name: '{{ include "common-gitops.names.release" . }}'
+
+mimir-distributed:
+  enabled: true
+  fullnameOverride: "mimir"
+  alertmanager:
+    enabled: false
+    persistentVolume:
+      enabled: true
+    replicas: 2
+    resources:
+      limits:
+        memory: 1.4Gi
+      requests:
+        cpu: 1
+        memory: 1Gi
+    statefulSet:
+      enabled: true
+
+  compactor:
+    persistentVolume:
+      size: 20Gi
+    resources:
+      limits:
+        memory: 2.1Gi
+      requests:
+        cpu: 1
+        memory: 1.5Gi
+
+  distributor:
+    replicas: 2
+    resources:
+      limits:
+        memory: 5.7Gi
+      requests:
+        cpu: 2
+        memory: 4Gi
+
+  ingester:
+    persistentVolume:
+      size: 50Gi
+    replicas: 3
+    resources:
+      limits:
+        memory: 12Gi
+      requests:
+        cpu: 3.5
+        memory: 8Gi
+    topologySpreadConstraints: {}
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: target # support for enterprise.legacyLabels
+                  operator: In
+                  values:
+                    - ingester
+            topologyKey: 'kubernetes.io/hostname'
+
+          - labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                    - ingester
+            topologyKey: 'kubernetes.io/hostname'
+
+    zoneAwareReplication:
+      topologyKey: 'kubernetes.io/hostname'
+
+  admin-cache:
+    enabled: true
+    replicas: 2
+
+  blocks-cache:
+    enabled: true
+    replicas: 2
+
+  index-cache:
+    enabled: true
+    replicas: 3
+
+  metadata-cache:
+    enabled: true
+
+  results-cache:
+    enabled: true
+    replicas: 2
+
+  minio:
+    enabled: false
+
+  overrides_exporter:
+    replicas: 1
+    resources:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 128Mi
+
+  querier:
+    replicas: 1
+    resources:
+      limits:
+        memory: 5.6Gi
+      requests:
+        cpu: 2
+        memory: 4Gi
+
+  query_frontend:
+    replicas: 1
+    resources:
+      limits:
+        memory: 2.8Gi
+      requests:
+        cpu: 2
+        memory: 2Gi
+
+  ruler:
+    replicas: 1
+    resources:
+      limits:
+        memory: 2.8Gi
+      requests:
+        cpu: 1
+        memory: 2Gi
+
+  store_gateway:
+    persistentVolume:
+      size: 10Gi
+    replicas: 3
+    resources:
+      limits:
+        memory: 2.1Gi
+      requests:
+        cpu: 1
+        memory: 1.5Gi
+    topologySpreadConstraints: {}
+    affinity:
+      podAntiAffinity:
+        requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+                - key: target # support for enterprise.legacyLabels
+                  operator: In
+                  values:
+                    - store-gateway
+            topologyKey: 'kubernetes.io/hostname'
+
+          - labelSelector:
+              matchExpressions:
+                - key: app.kubernetes.io/component
+                  operator: In
+                  values:
+                    - store-gateway
+            topologyKey: 'kubernetes.io/hostname'
+    zoneAwareReplication:
+      topologyKey: 'kubernetes.io/hostname'
+
+  nginx:
+    replicas: 1
+    resources:
+      limits:
+        memory: 731Mi
+      requests:
+        cpu: 1
+        memory: 512Mi
+
+  # Grafana Enterprise Metrics feature related
+  admin_api:
+    replicas: 1
+    resources:
+      limits:
+        memory: 128Mi
+      requests:
+        cpu: 100m
+        memory: 64Mi
+
+  gateway:
+    replicas: 1
+    resources:
+      limits:
+        memory: 731Mi
+      requests:
+        cpu: 1
+        memory: 512Mi
+  # serviceAccount:
+  #   annotations:
+  #     eks.amazonaws.com/role-arn: 'arn:aws:iam::{{ .Values.global.awsAccountId }}:role/{{ include "common-gitops.names.release" . }}'
+  # mimir:
+  #   structuredConfig:
+  #     common:
+  #       storage:
+  #         backend: s3
+  #         s3:
+  #           endpoint: 's3.{{ .Values.global.awsRegion }}.amazonaws.com'
+  #     blocks_storage:
+  #       s3:
+  #         bucket_name: '{{ include "common-gitops.names.release" . }}-blocks'
+  #     alertmanager_storage:
+  #       s3:
+  #         bucket_name: '{{ include "common-gitops.names.release" . }}-alertmanager'
+  #     ruler_storage:
+  #       s3:
+  #         bucket_name: '{{ include "common-gitops.names.release" . }}-ruler'
+  # metaMonitoring:
+  #   serviceMonitor:
+  #     enabled: true
+  #   grafanaAgent:
+  #     enabled: true
+  #     installOperator: true
+
+  #     logs:
+  #       remote:
+  #         url: "https://example.com/loki/api/v1/push"
+  #         auth:
+  #           username: 12345
+
+  #     metrics:
+  #       remote:
+  #         url: "https://prometehus.prometheus.svc.cluster.local./api/v1/push"
+  #         headers:
+  #           X-Scope-OrgID: metamonitoring

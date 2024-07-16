@@ -1,0 +1,63 @@
+global:
+  providerConfigRef:
+    name: 'aws-000000000000'
+  awsAccountId: '000000000000'
+  awsRegion: 'us-west-2'
+  eksHash: '86743AB61E114AED86A40CA07FFB8BE4'
+  imagePullSecrets: [{name: "myteam-prod-dockerhub-creds"}]
+  secretStoreRef: "cluster-secret-store-aws"
+  team: "myteam"
+  environment: "prod"
+  eksClusterName: 'myteam-us-west-2-prod-eks-0'
+  vpcFullname: 'myteam-us-west-2-prod-vpc-0'
+  deploymentName: "mimir"
+mimir-distributed:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: 'arn:aws:iam::000000000000:role/myteam-us-west-2-prod-eks-0-mimir'
+  mimir:
+    structuredConfig:
+      common:
+        storage:
+          backend: s3
+          s3:
+            endpoint: s3.us-west-2.amazonaws.com
+            region: us-west-2
+      limits:
+        ingestion_burst_size: 2000000
+        ingestion_rate: 100000
+        max_global_series_per_user: 2500000
+        max_label_names_per_series: 200
+        compactor_blocks_retention_period: 90d
+      blocks_storage:
+        s3:
+          bucket_name: myteam-us-west-2-prod-eks-0-mimir-blocks
+      ruler_storage:
+        s3:
+          bucket_name: myteam-us-west-2-prod-eks-0-mimir-ruler
+  nginx:
+    ingress:
+      enabled: true
+      ingressClassName: "nginx-ingress-internal"
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
+        # choosing 10G to accomodate possible large container image layers upload requests
+        nginx.ingress.kubernetes.io/proxy-body-size: "10G"
+        nginx.ingress.kubernetes.io/server-snippet: |
+          proxy_ssl_verify off;
+          proxy_set_header X-Forwarded-Proto https;
+        kubernetes.io/ingress.allow-http: "false"
+        kubernetes.io/tls-acme: "true"
+        cert-manager.io/acme-challenge-type: dns01
+        cert-manager.io/acme-dns01-provider: route53
+        cert-manager.io/cluster-issuer: example-com
+      hosts:
+        - host: mimir.example.com
+          paths:
+            - path: /
+              pathType: Prefix
+      tls:
+      - secretName: tls-mimir.example.com
+        hosts:
+        - mimir.example.com
