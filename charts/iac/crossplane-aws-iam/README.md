@@ -28,6 +28,7 @@
 | `Policy`                    | resource parameters | `{}`  |
 | `Role`                      | resource parameters | `{}`  |
 | `RolePolicyAttachment`      | resource parameters | `{}`  |
+| `RolePolicy`                | resource parameters | `{}`  |
 | `SAMLProvider`              | resource parameters | `{}`  |
 | `ServerCertificate`         | resource parameters | `{}`  |
 | `ServiceLinkedRole`         | resource parameters | `{}`  |

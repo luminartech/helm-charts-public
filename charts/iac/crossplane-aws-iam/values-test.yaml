@@ -192,6 +192,30 @@ RolePolicyAttachment:
     test:
       forProvider: {}
 
+RolePolicy:
+  items:
+    test:
+      forProvider:
+        policy:
+          Statement:
+            allowS3ListBucket:
+              Effect: Allow
+              Action:
+                - s3:ListBucket
+              Resource:
+                - arn:aws:s3:::samle-bucket
+            allowS3RwAccess:
+              Effect: Allow
+              Action:
+                - s3:PutObject
+                - s3:GetObject
+                - s3:DeleteObject
+                - s3:PutObjectAcl
+              Resource:
+                - arn:aws:s3:::sample-bucket/*
+        roleRef:
+          name: sample-role
+
 SAMLProvider:
   items:
     test:
