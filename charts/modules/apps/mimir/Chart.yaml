@@ -1,0 +1,26 @@
+annotations:
+  category: Application
+apiVersion: v2
+appVersion: "5.4.0"
+description: A Helm chart for mimir distributed deployment
+name: mimir
+version: "5.4.0"
+home: https://github.com/luminartech/helm-charts-public/charts/mimir
+sources:
+  - https://github.com/luminartech/helm-charts-public/charts/mimir
+maintainers:
+  - name: Luminar IPE Team
+    email: ipe@luminartech.com
+dependencies:
+  - name: mimir-distributed
+    version: "5.4.0"
+    repository: https://grafana.github.io/helm-charts
+    condition: mimir-distributed.enabled
+  - name: crossplane-aws-iam
+    version: "0.41.0"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    condition: crossplane-aws-iam.enabled
+  - name: crossplane-aws-s3
+    version: "0.41.0"
+    repository: "oci://ghcr.io/luminartech/helm-charts-public"
+    condition: crossplane-aws-s3.enabled
