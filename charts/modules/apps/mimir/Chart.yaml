@@ -2,12 +2,12 @@ annotations:
   category: Application
 apiVersion: v2
 appVersion: "5.4.0"
-description: A Helm chart for mimir
+description: A Helm chart for mimir distributed deployment
 name: mimir
 version: "5.4.0"
-home: https://github.com/luminartech/helm-charts-private/modules/mimir
+home: https://github.com/luminartech/helm-charts-public/charts/mimir
 sources:
-  - https://github.com/luminartech/helm-charts-private/modules/mimir
+  - https://github.com/luminartech/helm-charts-public/charts/mimir
 maintainers:
   - name: Luminar IPE Team
     email: ipe@luminartech.com
