@@ -126,6 +126,7 @@ crossplane-aws-iam:
           roleRef:
             name: '{{ include "common-gitops.names.release" . }}'
 
+## @skip mimir-distributed
 mimir-distributed:
   enabled: true
   fullnameOverride: "mimir"
