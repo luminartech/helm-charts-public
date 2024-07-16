@@ -102,7 +102,7 @@ crossplane-aws-iam:
                   Federated: "arn:aws:iam::{{ .Values.global.awsAccountId }}:oidc-provider/oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}"
                 Condition:
                   StringLike:
-                    "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub": "system:serviceaccount:kube-system:s3-csi-*"
+                    "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:sub": "system:serviceaccount:{{ .Release.Namespace }}:s3-csi-*"
                     "oidc.eks.{{ .Values.global.awsRegion }}.amazonaws.com/id/{{ .Values.global.eksHash }}:aud": "sts.amazonaws.com"
 
   ## @skip crossplane-aws-iam.RolePolicyAttachment
