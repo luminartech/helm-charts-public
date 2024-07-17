@@ -1,6 +1,19 @@
 ---
 aws-mountpoint-s3-csi-driver:
   enabled: true
+  node:
+    serviceAccount:
+      create: true
+      name: s3-csi-driver-sa
+      # Specify the SA's role ARN if running in EKS. Otherwise, the the driver will be "Forbidden" from accessing s3 buckets
+      annotations:
+        "eks.amazonaws.com/role-arn": "arn:aws:iam::0123456789:role/aws-mountpoint-s3-csi-driver"
+  # Alternatively, if running in self-Hosted Kubernetes, populate the SA's IAM User Credentials in the secret object
+  # This is not recommended for production use
+  awsAccessSecret:
+    name: aws-secret
+    keyId: key_id
+    accessKey: access_key
 
 crossplane-aws-iam:
   enabled: true

@@ -38,7 +38,7 @@ global:
   deploymentName: aws-mountpoint-s3-csi-driver
 
 ## @section Dependency: aws-mountpoint-s3-csi-driver upstream helm chart parameters.
-## ref: https://github.com/awslabs/mountpoint-s3-csi-driver/blob/helm-chart-aws-mountpoint-s3-csi-driver-1.7.0/charts/aws-mountpoint-s3-csi-driver/values.yaml
+## ref: https://github.com/awslabs/mountpoint-s3-csi-driver/blob/main/charts/aws-mountpoint-s3-csi-driver/values.yaml
 ##
 
 aws-mountpoint-s3-csi-driver:
@@ -49,9 +49,6 @@ aws-mountpoint-s3-csi-driver:
   ## @skip aws-mountpoint-s3-csi-driver.node
   ##
   node:
-    serviceAccount:
-      annotations:
-        "eks.amazonaws.com/role-arn": "arn:aws:iam::0123456789:role/aws-mountpoint-s3-csi-driver"
     tolerateAllTaints: true
 
 ## @section Dependency: crossplane-aws-iam upstream helm chart parameters
