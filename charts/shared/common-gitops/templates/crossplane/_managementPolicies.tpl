@@ -14,11 +14,12 @@ managementPolicies: ["*"]
   {{- $kindObj := (index .root.Values .kind) -}}
   {{- $item := (index $kindObj.items .name) -}}
   {{- /* Take the first non-empty argument */ -}}
-managementPolicies: {{ include "common-gitops.tplvalues.render" (dict
-                     "value" (coalesce $item.managementPolicies
-                        $kindObj.managementPolicies
-                        .root.Values.managementPolicies
-                        (.root.Values.global).awsManagementPolicies
-                        (list "*"))
-                     "context" .root) }}
+managementPolicies:
+{{ include "common-gitops.tplvalues.render" (dict
+            "value" (coalesce $item.managementPolicies
+              $kindObj.managementPolicies
+              .root.Values.managementPolicies
+              (.root.Values.global).awsManagementPolicies
+              (list "*"))
+            "context" .root) }}
 {{- end -}}
