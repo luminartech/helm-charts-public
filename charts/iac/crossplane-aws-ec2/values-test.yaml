@@ -234,6 +234,7 @@ EBSVolume:
 EIP:
   items:
     test:
+      managementPolicies: ["Create", "Observe"]
       forProvider:
         instanceRef:
           name: sample-instance
