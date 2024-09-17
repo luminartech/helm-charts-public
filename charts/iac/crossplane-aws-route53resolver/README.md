@@ -15,18 +15,11 @@
 
 ### AWS resources
 
-| Name                          | Description         | Value |
-| ----------------------------- | ------------------- | ----- |
-| `DelegationSet`               | resource parameters | `{}`  |
-| `HealthCheck`                 | resource parameters | `{}`  |
-| `HostedZoneDNSSEC`            | resource parameters | `{}`  |
-| `Record`                      | resource parameters | `{}`  |
-| `ResolverConfig`              | resource parameters | `{}`  |
-| `TrafficPolicy`               | resource parameters | `{}`  |
-| `TrafficPolicyInstance`       | resource parameters | `{}`  |
-| `VPCAssociationAuthorization` | resource parameters | `{}`  |
-| `Zone`                        | resource parameters | `{}`  |
-| `ZoneAssociation`             | resource parameters | `{}`  |
+| Name              | Description         | Value |
+| ----------------- | ------------------- | ----- |
+| `Endpoint`        | resource parameters | `{}`  |
+| `Rule`            | resource parameters | `{}`  |
+| `RuleAssociation` | resource parameters | `{}`  |
 
 
 ## Configuration and installation details
