@@ -1,0 +1,14 @@
+## @section AWS resources
+
+
+## @param Endpoint resource parameters
+##
+Endpoint: {}
+
+## @param Rule resource parameters
+##
+Rule: {}
+
+## @param RuleAssociation resource parameters
+##
+RuleAssociation: {}
