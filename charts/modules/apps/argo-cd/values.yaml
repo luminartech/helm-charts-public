@@ -430,7 +430,7 @@ argo-cd:
         p, role:service-accounts, gpgkeys, get, *, allow
         g, ci-service, role:service-accounts
         g, sec-argocd-admins, role:admin
-      policy.default: role:''
+      policy.default: 'role:readonly'
       scopes: '[email,groups]'
     cm:
       create: true
