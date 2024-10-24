@@ -15,6 +15,9 @@ spec:
     {{- with .schedule }}
   schedule: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
     {{- end -}}
+    {{- with .concurrencyPolicy }}
+  concurrencyPolicy: {{ include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | quote }}
+    {{- end -}}
     {{- with .jobTemplate }}
   jobTemplate:
       {{- include "common-gitops.tplvalues.render" (dict "value" . "context" $root) | nindent 4 }}
