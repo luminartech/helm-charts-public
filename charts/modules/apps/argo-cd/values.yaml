@@ -154,6 +154,7 @@ argo-cd:
     keep: true
   controller:
     replicas: 2
+    dynamicClusterDistribution: true
     resources:
       limits:
         cpu: 1000m
@@ -436,6 +437,9 @@ argo-cd:
       create: true
       url: "https://argo-cd.dev.domain.com"
       server.rbac.log.enforce.enable: true
+    params:
+      # -- Set Sharding Algorithm to round-robin
+      controller.sharding.algorithm: round-robin
     # TODO: All of these repositories needs to be reviewed and moved as secrets
     repositories:
       helm-helm-repo:
