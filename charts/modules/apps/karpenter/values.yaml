@@ -105,26 +105,6 @@ crossplane-aws-iam:
                 Effect: Allow
                 Resource: "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
                 Action: "ec2:CreateTags"
-                Condition:
-                  StringEquals:
-                    "aws:ResourceTag/kubernetes.io/cluster/{{ .Values.global.eksClusterName }}": "owned"
-                  StringLike:
-                    "aws:ResourceTag/karpenter.sh/nodepool": "*"
-                  "ForAllValues:StringEquals":
-                    "aws:TagKeys":
-                    - "karpenter.sh/nodeclaim"
-                    - "Name"
-              allowScopedRequestTagging:
-                Effect: Allow
-                Resource: "arn:aws:ec2:{{ .Values.global.awsRegion }}:*:instance/*"
-                Action: "ec2:CreateTags"
-                Condition:
-                  StringEquals:
-                    "aws:RequestTag/Name": "*"
-                    "aws:RequestTag/Billing-Team": "*"
-                    "aws:RequestTag/karpenter.sh/managed-by": "*"
-                  StringLike:
-                    "aws:RequestTag/karpenter.sh/nodeclaim": "*"
               allowScopedDeletion:
                 Effect: Allow
                 Resource:
