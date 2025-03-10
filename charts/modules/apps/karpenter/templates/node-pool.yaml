@@ -4,7 +4,7 @@
 {{- range $name, $item := $kindObj.items -}}
   {{- if eq (include "common-gitops.utils.itemEnabled" (dict "root" $root "name" $name "kind" $kind)) "true" }}
 ---
-apiVersion: karpenter.sh/v1beta1
+apiVersion: karpenter.sh/v1
 kind: {{ $kind }}
 metadata:
   name: {{ include "common-gitops.names.itemFullname" (dict "root" $root "name" $name "override" .name) }}
