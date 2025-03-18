@@ -438,8 +438,8 @@ argo-cd:
       url: "https://argo-cd.dev.domain.com"
       server.rbac.log.enforce.enable: true
     params:
-      # -- Set Sharding Algorithm to round-robin
-      controller.sharding.algorithm: round-robin
+      # -- Set Sharding Algorithm to consistent-hashing
+      controller.sharding.algorithm: consistent-hashing
     # TODO: All of these repositories needs to be reviewed and moved as secrets
     repositories:
       helm-helm-repo:
