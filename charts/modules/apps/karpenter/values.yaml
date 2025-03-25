@@ -452,6 +452,11 @@ EC2NodeClass:
             deleteOnTermination: true
             throughput: 500
             # snapshotID: snap-0123456789
+      metadataOptions:
+        httpEndpoint: enabled
+        httpProtocolIPv6: disabled
+        httpPutResponseHopLimit: 2
+        httpTokens: required
       role: '{{ .Values.global.eksClusterName }}-karpenter-node'
       securityGroupSelectorTerms:
         - name: "eks-cluster-sg-{{ .Values.global.eksClusterName }}-*"
