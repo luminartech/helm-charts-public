@@ -1,287 +1,32 @@
-Endpoints:
-  items:
-    endpoint-name:
-      enabled: true
-      subsets:
-      - addresses:
-          - ip: 192.168.0.1
-        ports:
-          - port: 80
-            name: http
-            protocol: TCP
-
-Service:
-  items:
-    service-name:
-      enabled: true
-      spec:
-        ports:
-        - port: 80
-          name: http
-          protocol: TCP
-          targetPort: http
-        type: ClusterIP
-
-Ingress:
-  items:
-    ingress-name:
-      enabled: true
-      annotations:
-        nginx.ingress.kubernetes.io/backend-protocol: "http"
-        nginx.ingress.kubernetes.io/ssl-redirect: "true"
-        nginx.ingress.kubernetes.io/server-snippet: |
-          proxy_ssl_verify off;
-          proxy_set_header X-Forwarded-Proto https;
-        kubernetes.io/ingress.allow-http: "false"
-        kubernetes.io/tls-acme: "true"
-        cert-manager.io/acme-challenge-type: dns01
-        cert-manager.io/acme-dns01-provider: route53
-        cert-manager.io/cluster-issuer: '{{ include "common-gitops.names.release" . }}.domain.com'
-      spec:
-        ingressClassName: nginx-ingress-external
-        rules:
-          - host: '{{ include "common-gitops.names.release" . }}.domain.com'
-            http:
-              paths:
-                - path: /
-                  pathType: Prefix
-                  backend:
-                    service:
-                      name: '{{ include "common-gitops.names.release" . }}-service-name'
-                      port:
-                        number: 80
-        tls:
-          - secretName: 'tls-{{ include "common-gitops.names.release" . }}.domain.com'
-            hosts:
-              - '{{ include "common-gitops.names.release" . }}.domain.com'
-
-ServiceAccount:
-  enabled: true
-  items:
-    _:
-      enabled: true
-
-Role:
-  enabled: true
-  items:
-    _:
-      enabled: true
-
-RoleBinding:
-  enabled: true
-  items:
-    _:
-      enabled: true
-
 ClusterRole:
   enabled: true
   items:
     _:
       enabled: true
+      rules:
+        - apiGroups: ["*"]
+          resources: ["*"]
+          verbs: ["*"]
 
-ClusterRoleBinding:
+RoleBinding:
   enabled: true
   items:
-    _:
+    gitlab-statefulset:
       enabled: true
-
-Deployment:
-  enabled: true
-  items:
-    test-dict:
-      podSpec:
-        spec:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 3000
-            fsGroup: 2000
-          initContainers:
-            test-init:
-              command: ['/bin/echo', 'init']
-              image: busybox
-          containers:
-            test-dict:
-              command: ['/bin/echo', 'run']
-              image: busybox
-    test-list:
-      podSpec:
-        spec:
-          securityContext:
-            runAsUser: 1000
-            runAsGroup: 3000
-            fsGroup: 2000
-          initContainers:
-            - name: test-init
-              command: ['/bin/echo', 'init']
-              image: busybox
-          containers:
-            - name: test-list
-              command: ['/bin/echo', 'run']
-              image: busybox
-    _:
-      replicas: 1
-      revisionHistoryLimit: 3
-      strategy:
-        type: "RollingUpdate"
-        rollingUpdate:
-          maxUnavailable: "66%"
-          maxSurge: "33%"
-      selector: {}
-      podSpec:
-        spec:
-          automountServiceAccountToken: false
-          restartPolicy: Always
-          securityContext:
-            fsGroup: 1000
-            supplementalGroups: []
-            fsGroupChangePolicy: OnRootMismatch
-          containers:
-            chabot-ui:
-              image: ghcr.io/mckaywrigley/chatbot-ui:main
-              imagePullPolicy: IfNotPresent
-              tty: false
-              stdin: false
-              ports:
-                - name: http
-                  containerPort: 3000
-
-                  protocol: TCP
-              volumeMounts:
-                - name: devshm
-                  mountPath: /dev/shm
-                  readOnly: false
-                - name: shared
-                  mountPath: /shared
-                  readOnly: false
-                - name: appdata
-                  mountPath: /home/node
-                  readOnly: false
-                - name: tmp
-                  mountPath: /tmp
-                  readOnly: false
-                - name: varrun
-                  mountPath: /var/run
-                  readOnly: false
-              livenessProbe:
-                httpGet:
-                  port: 3000
-                  scheme: HTTP
-                  path: "/"
-                initialDelaySeconds: 10
-                periodSeconds: 10
-                timeoutSeconds: 5
-                failureThreshold: 5
-                successThreshold: 1
-              readinessProbe:
-                httpGet:
-                  port: 3000
-                  scheme: HTTP
-                  path: "/"
-                initialDelaySeconds: 10
-                periodSeconds: 10
-                timeoutSeconds: 5
-                failureThreshold: 5
-                successThreshold: 2
-              startupProbe:
-                tcpSocket:
-                  port: 3000
-                initialDelaySeconds: 10
-                periodSeconds: 5
-                timeoutSeconds: 2
-                failureThreshold: 60
-                successThreshold: 1
-              resources:
-                limits:
-                  cpu: "1"
-                  memory: 512Mi
-                requests:
-                  cpu: "1"
-                  memory: 512Mi
-              securityContext:
-                runAsGroup: 1000
-                runAsUser: 1000
-                privileged: false
-                readOnlyRootFilesystem: true
-                allowPrivilegeEscalation: false
-                runAsNonRoot: true
-                seccompProfile:
-                  type: RuntimeDefault
-                capabilities:
-                  drop:
-                    - ALL
-                  add: []
-              envFrom:
-                - configMapRef:
-                    name: '{{ include "common-gitops.names.release" . }}'
-                - secretRef:
-                    name: '{{ include "common-gitops.names.release" . }}'
-          volumes:
-            - name: devshm
-              emptyDir:
-                medium: Memory
-            - name: varrun
-              emptyDir:
-                medium: Memory
-            - name: shared
-              emptyDir: {}
-            - name: tmp
-              emptyDir: {}
-            - name: appdata
-              emptyDir: {}
-
-Job:
-  enabled: true
-  items:
-    _:
+      namespace: gitlab-stateful-runner
+      roleRef:
+        kind: ClusterRole
+        name: '{{ include "common-gitops.names.release" . }}'
+      subjects:
+        - kind: Group
+          name: 'team-bre'
+    gitlab-deployment:
       enabled: true
-      podSpec:
-        annotations:
-          my-annotation: value
-        spec:
-          serviceAccountName: test
-          containers:
-            - name: test
-              image: ubuntu
-              command: ["sh", "-c"]
-              args:
-                - sleep 500
-          restartPolicy: OnFailure
+      namespace: gitlab-runner
+      roleRef:
+        kind: ClusterRole
+        name: '{{ include "common-gitops.names.release" . }}'
+      subjects:
+        - kind: Group
+          name: 'team-bre'
 
-CronJob:
-  enabled: true
-  items:
-    _:
-      enabled: true
-      schedule: '* * * * *'
-      jobTemplate:
-        spec:
-          template:
-            spec:
-              containers:
-              - name: hello
-                image: 'busybox:1.28'
-                imagePullPolicy: IfNotPresent
-                command:
-                - '/bin/sh'
-                - '-c'
-                - 'date; echo Hello from the Kubernetes cluster'
-              restartPolicy: OnFailure
-
-Secret:
-  enabled: true
-  items:
-    _:
-      enabled: true
-      data:
-        '.dockerconfigjson': 'ewogICJjcmVkSGVscGVycyI6IHsKICAgICIzNDU5OTA0NTUxMTEuZGtyLmVjci51cy13ZXN0LTIuYW1hem9uYXdzLmNvbSI6ICJlY3ItbG9naW4iCiAgfQp9'
-      type: 'kubernetes.io/dockerconfigjson'
-
-ConfigMap:
-  enabled: true
-  items:
-    _:
-      name: test
-      enabled: true
-      data:
-        config.yaml: |
-          SomeConfigFile
