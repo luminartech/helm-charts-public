@@ -29,4 +29,3 @@ RoleBinding:
       subjects:
         - kind: Group
           name: 'team-bre'
-
