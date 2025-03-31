@@ -24,11 +24,6 @@
     "kubernetes",
     "pre-commit"
   ],
-  "argocd": {
-    "fileMatch": [
-      "\\.ya?ml$"
-    ]
-  },
   "crossplane": {
     "fileMatch": [
       ".*crossplane.*\\.ya?ml$"
