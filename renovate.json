@@ -1,6 +1,66 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Validate this config using: npx --yes --package renovate -- renovate-config-validator",
   "extends": [
-    "config:recommended"
+    "config:best-practices",
+    "schedule:weekly",
+    ":enablePreCommit",
+    ":separatePatchReleases"
+  ],
+  "fetchChangeLogs": "pr",
+  "prBodyNotes": [
+    "{{#if isMajor}}:warning: **MAJOR UPGRADE** - Check the release notes carefully for breaking changes{{/if}}"
+  ],
+  "prBodyTemplate": "{{#if isMajor}}## MAJOR VERSION UPGRADE\n\nPlease review the following before merging:\n- [ ] Check breaking changes in release notes\n- [ ] Look for migration guides at {{depName}} documentation\n{{#if datasource equals \"helm\"}}\n- [ ] Run helm diff to see changes between versions\n{{/if}}\n{{/if}}\n\n{{{header}}}{{{table}}}{{{notes}}}{{{changelogs}}}{{{controls}}}{{{footer}}}",
+  "enabledManagers": [
+    "argocd",
+    "crossplane",
+    "dockerfile",
+    "github-actions",
+    "gomod",
+    "helm-requirements",
+    "helm-values",
+    "helmv3",
+    "kubernetes",
+    "pre-commit"
+  ],
+  "argocd": {
+    "fileMatch": [
+      "\\.ya?ml$"
+    ]
+  },
+  "crossplane": {
+    "fileMatch": [
+      ".*crossplane.*\\.ya?ml$"
+    ]
+  },
+  "kubernetes": {
+    "fileMatch": [
+      "\\.ya?ml$"
+    ]
+  },
+  "labels": ["Renovate"],
+  "packageRules": [
+    {
+      "matchManagers": [
+        "pre-commit"
+      ],
+      "groupName": "{{manager}} deps"
+    },
+    {
+      "matchDatasources": [
+        "helm"
+      ],
+      "additionalBranchPrefix": "{{depName}}-",
+      "separateMultipleMajor": true,
+      "separateMinorPatch": true,
+      "groupName": "external Helm charts",
+      "minimumReleaseAge": "7 days"
+    },
+    {
+      "matchUpdateTypes": ["pin"],
+      "additionalBranchPrefix": "pin-",
+      "groupSlug": "{{depName}}"
+    }
   ]
 }
