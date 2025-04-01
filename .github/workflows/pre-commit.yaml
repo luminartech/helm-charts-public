@@ -12,10 +12,10 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2.5.0
+    - uses: actions/checkout@e2f20e631ae6d7dd3b768f56a5d2af784dd54791 # v2.5.0
       with:
         fetch-depth: 0
-    - uses: actions/setup-python@v4.3.0
-    - uses: pre-commit/action@v2.0.3
+    - uses: actions/setup-python@13ae5bb136fac2878aff31522b9efb785519f984 # v4.3.0
+    - uses: pre-commit/action@9b88afc9cd57fd75b655d5c71bd38146d07135fe # v2.0.3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}

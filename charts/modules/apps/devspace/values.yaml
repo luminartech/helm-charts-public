@@ -385,7 +385,7 @@ common-res:
               - name: dind
                 ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].image
                 ##
-                image: 'docker:dind-rootless'
+                image: 'docker:dind-rootless@sha256:a5090d7c11c05a862ae22fbb478c62a4e9643fa431eaf7a9a7812fef7a67a859'
                 ## @param common-res.StatefulSet.items._.podSpec.spec.containers[1].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
                 ##
                 imagePullPolicy: IfNotPresent

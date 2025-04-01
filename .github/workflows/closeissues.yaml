@@ -12,12 +12,12 @@ jobs:
     steps:
       - name: Generate token
         id: generate_token
-        uses: tibdex/github-app-token@v1
+        uses: tibdex/github-app-token@32691ba7c9e7063bd457bd8f2a5703138591fa58 # v1
         with:
           app_id: ${{ secrets.SOFTWARE_APP_ID }}
           private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
           installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
-      - uses: actions/stale@v6.0.1
+      - uses: actions/stale@5ebf00ea0e4c1561e9b43a292ed34424fb1d4578 # v6.0.1
         with:
           repo-token: ${{ steps.generate_token.outputs.token }}
           any-of-labels: 'solved'
