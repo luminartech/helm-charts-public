@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3
         with:
           ref: ${{github.event.pull_request.head.ref}}
           repository: ${{github.event.pull_request.head.repo.full_name}}
@@ -48,7 +48,7 @@ jobs:
             echo "name=NONE" >> $GITHUB_OUTPUT
           fi
       - name: Show messages
-        uses: actions/github-script@v6
+        uses: actions/github-script@d7906e4ad0b1822421a7e6a35d5ca353c962f410 # v6
         with:
           script: |
             if ("${{ steps.get-asset.outputs.result }}" != "ok" ) {
@@ -58,6 +58,6 @@ jobs:
             }
       - name: Labeling
         if: ${{ steps.get-asset.outputs.result == 'ok' }}
-        uses: fmulero/labeler@1.0.5
+        uses: fmulero/labeler@caf8e31a5b0fcdbca25ecfbcf6cc627790ad4cd1 # 1.0.5
         with:
           add-labels: "${{ steps.get-asset.outputs.name }}"
