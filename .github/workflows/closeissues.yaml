@@ -17,7 +17,7 @@ jobs:
           app_id: ${{ secrets.SOFTWARE_APP_ID }}
           private_key: ${{ secrets.SOFTWARE_APP_PRIVATE_KEY }}
           installation_id: ${{ secrets.SOFTWARE_APP_INSTALLATION_ID }}
-      - uses: actions/stale@v6.0.1
+      - uses: actions/stale@5bef64f19d7facfb25b37b414482c7164d639639 # v9.1.0
         with:
           repo-token: ${{ steps.generate_token.outputs.token }}
           any-of-labels: 'solved'
