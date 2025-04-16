@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: loki
-    version: "5.43.3"
+    version: "5.43.7"
     repository: https://grafana.github.io/helm-charts
     condition: loki.enabled
   - name: promtail
