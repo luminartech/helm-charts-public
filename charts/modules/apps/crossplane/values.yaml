@@ -83,8 +83,8 @@ ControllerConfig:
             memory: "3000Mi"
             cpu: "3000m"
           requests:
-            memory: "2000Mi"
-            cpu: "2000m"
+            memory: "800Mi"
+            cpu: "50m"
     ## @skip ControllerConfig.items.aws-l ControllerConfig with large resource allocation for provider pod
     ##
     aws-l:
@@ -107,8 +107,8 @@ ControllerConfig:
             memory: "2000Mi"
             cpu: "2000m"
           requests:
-            memory: "1500Mi"
-            cpu: "1500m"
+            memory: "600Mi"
+            cpu: "50m"
     ## @skip ControllerConfig.items.aws-m ControllerConfig with medium resource allocation for provider pod
     ##
     aws-m:
@@ -131,8 +131,8 @@ ControllerConfig:
             memory: "1500Mi"
             cpu: "1500m"
           requests:
-            memory: "1000Mi"
-            cpu: "1000m"
+            memory: "400Mi"
+            cpu: "50m"
     ## @skip ControllerConfig.items.aws-s ControllerConfig with small resource allocation for provider pod
     ##
     aws-s:
@@ -155,8 +155,8 @@ ControllerConfig:
             memory: "700Mi"
             cpu: "700m"
           requests:
-            memory: "500Mi"
-            cpu: "500m"
+            memory: "200Mi"
+            cpu: "50m"
 
 # Default aws provider config for current aws account. Crossplane IAM role will be used
 ProviderConfig:
@@ -273,7 +273,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: 'aws-l'
+          name: 'aws-m'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-ec2:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -329,7 +329,7 @@ Provider:
         argocd.argoproj.io/sync-wave: "-1"
       spec:
         controllerConfigRef:
-          name: 'aws-m'
+          name: 'aws-s'
         ignoreCrossplaneConstraints: false
         package: "xpkg.upbound.io/upbound/provider-aws-kms:{{ .Values.global.awsProviderVersion }}"
         packagePullPolicy: IfNotPresent
@@ -515,16 +515,16 @@ crossplane:
       cpu: "200m"
       memory: "512Mi"
     requests:
-      cpu: "100m"
-      memory: "256Mi"
+      cpu: "50m"
+      memory: "353Mi"
   ## @skip crossplane.resourcesRBACManager
   resourcesRBACManager:
     limits:
       cpu: "200m"
       memory: "512Mi"
     requests:
-      cpu: "100m"
-      memory: "256Mi"
+      cpu: "50m"
+      memory: "100Mi"
 
 ## @section Dependency: prometheus-service-discovery upstream helm chart parameters for creating serviceMonitors and podMonitors.
 ## ref: https://artifacthub.io/packages/helm/crossplane/crossplane
