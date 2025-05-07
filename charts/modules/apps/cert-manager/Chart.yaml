@@ -17,7 +17,7 @@ dependencies:
     repository: https://charts.jetstack.io
     condition: cert-manager.enabled
   - name: external-dns
-    version: "6.33.0"
+    version: "6.38.0"
     repository: https://charts.bitnami.com/bitnami
     condition: external-dns.enabled
   - name: crossplane-aws-iam
