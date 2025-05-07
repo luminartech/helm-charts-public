@@ -25,16 +25,18 @@
     "pre-commit"
   ],
   "crossplane": {
-    "fileMatch": [
-      ".*crossplane.*\\.ya?ml$"
+    "managerFilePatterns": [
+      "/.*crossplane.*\\.ya?ml$/"
     ]
   },
   "kubernetes": {
-    "fileMatch": [
-      "\\.ya?ml$"
+    "managerFilePatterns": [
+      "/\\.ya?ml$/"
     ]
   },
-  "labels": ["Renovate"],
+  "labels": [
+    "Renovate"
+  ],
   "packageRules": [
     {
       "matchManagers": [
@@ -53,7 +55,9 @@
       "minimumReleaseAge": "7 days"
     },
     {
-      "matchUpdateTypes": ["pin"],
+      "matchUpdateTypes": [
+        "pin"
+      ],
       "additionalBranchPrefix": "pin-",
       "groupSlug": "{{depName}}"
     }
