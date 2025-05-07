@@ -249,10 +249,10 @@ common-res:
                   requests:
                     ## @param common-res.Deployment.items._.podSpec.spec.containers[0].resources.requests.cpu CPU requests
                     ##
-                    cpu: "1"
+                    cpu: "70m"
                     ## @param common-res.Deployment.items._.podSpec.spec.containers[0].resources.requests.memory Memory requests
                     ##
-                    memory: 512Mi
+                    memory: "277Mi"
                 ## Security context configuration
                 ##
                 securityContext:

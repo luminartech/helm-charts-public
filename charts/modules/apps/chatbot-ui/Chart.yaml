@@ -4,7 +4,7 @@ description: A Helm chart for chatbot-ui
 type: application
 appVersion: "latest" # Chatbot-ui does not have gold version yet
 # Ref: https://github.com/mckaywrigley/chatbot-ui/tree/main
-version: "0.1.4"
+version: "0.1.4-1"
 kubeVersion: ">=1.16.0-0"
 annotations:
   category: Application
