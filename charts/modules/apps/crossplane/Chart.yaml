@@ -16,7 +16,7 @@ dependencies:
 - condition: crossplane-aws-iam.enabled
   name: crossplane-aws-iam
   repository: oci://ghcr.io/luminartech/helm-charts-public
-  version: 0.41.0
+  version: 0.41.1
 - name: common-gitops
   repository: oci://ghcr.io/luminartech/helm-charts-public
   version: 1.1.7
