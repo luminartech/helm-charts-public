@@ -34,6 +34,6 @@ dependencies:
     # Karpenter helm chart only creates CRDs during the first install.
     # There's a separate helm chart for managing them afterwards.
   - name: karpenter-crd
-    version: "1.3.2"
+    version: "1.3.3"
     repository: "oci://public.ecr.aws/karpenter"
     condition: karpenter-crd.enabled
