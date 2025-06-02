@@ -1,10 +1,10 @@
 annotations:
   category: Infrastructure
 apiVersion: v2
-appVersion: "1.3.2"
+appVersion: "1.5.0"
 description: A Helm chart for karpenter + related resources
 name: karpenter
-version: "1.3.2-1"
+version: "1.5.0"
 home: https://helm-repo-public.luminarinfra.com/
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/karpenter
@@ -28,12 +28,12 @@ dependencies:
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-cloudwatch.enabled
   - name: karpenter
-    version: "1.3.2"
+    version: "1.5.0"
     repository: "oci://public.ecr.aws/karpenter"
     condition: karpenter.enabled
     # Karpenter helm chart only creates CRDs during the first install.
     # There's a separate helm chart for managing them afterwards.
   - name: karpenter-crd
-    version: "1.3.2"
+    version: "1.5.0"
     repository: "oci://public.ecr.aws/karpenter"
     condition: karpenter-crd.enabled
