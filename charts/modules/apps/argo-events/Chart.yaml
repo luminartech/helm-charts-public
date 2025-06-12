@@ -13,6 +13,6 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: argo-events
-    version: "2.4.3"
+    version: "2.4.15"
     repository: https://argoproj.github.io/argo-helm
     condition: argo-events.enabled
