@@ -17,7 +17,7 @@ dependencies:
     repository: https://charts.bitnami.com/bitnami
     condition: external-dns.enabled
   - name: crossplane-aws-iam
-    version: "0.41.0"
+    version: "0.41.1"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-iam.enabled
   - name: common-gitops
