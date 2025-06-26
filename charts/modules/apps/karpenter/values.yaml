@@ -415,6 +415,8 @@ NodePool:
           # required field
           nodeClassRef:
             name: '{{ include "common-gitops.names.release" . }}'
+            group: karpenter.k8s.aws
+            kind: EC2NodeClass
           # required field
           requirements:
             - key: "karpenter.sh/capacity-type"
