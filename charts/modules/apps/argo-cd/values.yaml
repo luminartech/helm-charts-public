@@ -429,6 +429,7 @@ argo-cd:
         p, role:service-accounts, clusters, delete, *, allow
         p, role:service-accounts, repositories, get, *, allow
         p, role:service-accounts, gpgkeys, get, *, allow
+        p, role:service-accounts, logs, get, */*, allow
         g, ci-service, role:service-accounts
         g, sec-argocd-admins, role:admin
       policy.default: 'role:readonly'
@@ -436,7 +437,7 @@ argo-cd:
     cm:
       create: true
       url: "https://argo-cd.dev.domain.com"
-      server.rbac.log.enforce.enable: true
+      # server.rbac.log.enforce.enable: true
     params:
       # -- Set Sharding Algorithm to consistent-hashing
       controller.sharding.algorithm: consistent-hashing
