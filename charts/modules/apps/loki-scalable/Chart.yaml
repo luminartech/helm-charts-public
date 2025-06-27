@@ -1,10 +1,10 @@
 annotations:
   category: Application
 apiVersion: v2
-appVersion: "5.43.3"
+appVersion: "5.48.0"
 description: A wrapper Helm chart for loki scalable
 name: loki-scalable
-version: "5.43.3-3"
+version: "5.48.0"
 home: "https://github.com/luminartech/helm-charts-public"
 sources:
   - https://github.com/luminartech/helm-charts-public/tree/main/charts/modules/apps/loki-scalable
@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: loki
-    version: "5.43.7"
+    version: "5.48.0"
     repository: https://grafana.github.io/helm-charts
     condition: loki.enabled
   - name: promtail
