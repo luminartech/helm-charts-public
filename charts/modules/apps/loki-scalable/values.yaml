@@ -218,6 +218,9 @@ loki:
         active_index_directory: /var/loki/index
         shared_store: s3
         cache_location: /var/loki/boltdb-cache
+      tsdb_shipper:
+        active_index_directory: /var/loki/tsdb-index
+        cache_location: /var/loki/tsdb-cache
       aws:
         s3: 's3://us-west-2'
         sse_encryption: true
@@ -227,6 +230,13 @@ loki:
           store: boltdb-shipper
           object_store: s3
           schema: v12
+          index:
+            prefix: loki_
+            period: 24h
+        - from: 2025-07-07
+          store: tsdb
+          object_store: s3
+          schema: v13
           index:
             prefix: loki_
             period: 24h
@@ -259,8 +269,6 @@ loki:
       enabled: false
       labels:
         release: monitoring
-  compactor:
-    shared_store: s3
   test:
     enabled: false
 
