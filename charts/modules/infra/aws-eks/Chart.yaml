@@ -14,7 +14,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: crossplane-aws-iam
-    version: "0.41.0"
+    version: "0.41.1"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-iam.enabled
   - name: crossplane-aws-ec2
