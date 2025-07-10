@@ -17,7 +17,7 @@ dependencies:
     repository: https://grafana.github.io/helm-charts
     condition: loki.enabled
   - name: promtail
-    version: "6.15.5"
+    version: "6.17.0"
     repository: https://grafana.github.io/helm-charts
     condition: promtail.enabled
   - name: crossplane-aws-iam
