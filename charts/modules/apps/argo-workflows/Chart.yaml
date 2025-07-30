@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: argo-workflows
-    version: "0.40.11"
+    version: "0.45.21"
     repository: https://argoproj.github.io/argo-helm
     condition: argo-workflows.enabled
   - name: crossplane-aws-iam
