@@ -79,7 +79,7 @@ vcluster:
   enabled: false
   plugin:
     cert-manager-plugin:
-      image: ghcr.io/loft-sh/vcluster-plugins/cert-manager-plugin:0.3.0
+      image: ghcr.io/loft-sh/vcluster-plugins/cert-manager-plugin:0.3.0@sha256:090dca62a52db3fa9bbab005c72d233b6b93cfc6a25e021c9e6415a424cd500d
       imagePullPolicy: IfNotPresent
       rbac:
         role:
