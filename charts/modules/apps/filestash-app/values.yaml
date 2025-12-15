@@ -70,7 +70,7 @@ common-res:
               fsGroupChangePolicy: OnRootMismatch
             containers:
               - name: filestash-app
-                image: machines/filestash
+                image: machines/filestash@sha256:d3f02015de9b1f848351eb9ac0139eac786e94a1f592477b388d06217b57ff7d
                 imagePullPolicy: IfNotPresent
                 tty: false
                 stdin: false
