@@ -528,7 +528,7 @@ crossplane-aws-eks:
     items:
       private:
         forProvider:
-          amiType: AL2_x86_64
+          amiType: AL2023_x86_64_STANDARD
           capacityType: SPOT
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
@@ -559,7 +559,7 @@ crossplane-aws-eks:
             name: '{{ include "common-gitops.names.release" . }}'
       public:
         forProvider:
-          amiType: AL2_x86_64
+          amiType: AL2023_x86_64_STANDARD
           capacityType: SPOT
           clusterNameRef:
             name: '{{ include "common-gitops.names.release" . }}'
