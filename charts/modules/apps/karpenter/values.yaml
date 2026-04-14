@@ -427,7 +427,7 @@ NodePool:
               values: ["amd64"]
             - key: kubernetes.io/os
               operator: In
-              values:	["linux"]
+              values: ["linux"]
           # taints:
           #   - key: "class"
           #     value: "set me"
