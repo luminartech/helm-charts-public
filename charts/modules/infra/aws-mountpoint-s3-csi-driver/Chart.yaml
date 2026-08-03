@@ -24,5 +24,5 @@ dependencies:
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     condition: crossplane-aws-iam.enabled
   - name: common-gitops
-    version: "1.1.10"
+    version: "1.1.11"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"

@@ -25,5 +25,5 @@ maintainers:
     email: sameer.bagwe@luminartech.com
 dependencies:
   - name: common-gitops
-    version: "1.1.7"
+    version: "1.1.11"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
