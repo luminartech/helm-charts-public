@@ -22,7 +22,7 @@ dependencies:
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     # repository: file://../../../shared/common-gitops/
   - name: common-res
-    version: "1.0.17"
+    version: "1.0.19"
     repository: "oci://ghcr.io/luminartech/helm-charts-public"
     # repository: file://../../../shared/common-res/
     condition: common-res.enabled
