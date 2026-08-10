@@ -13,7 +13,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: argo-cd
-    version: "8.1.1"
+    version: "8.1.4"
     repository: https://argoproj.github.io/argo-helm
     condition: argo-cd.enabled
   - name: common-gitops
