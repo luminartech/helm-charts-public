@@ -49,7 +49,7 @@ argo-events:
       - version: "2.10.10"
         natsImage: nats:2.10.10
         metricsExporterImage: natsio/prometheus-nats-exporter:0.14.0
-        configReloaderImage: natsio/nats-server-config-reloader:0.14.0
+        configReloaderImage: natsio/nats-server-config-reloader:0.14.4@sha256:47430b4460a9dbc0d87a8c9ccdb4a4dc4b369483670d9a29a6a8f04c2098712f
         startCommand: /nats-server
     nats:
       versions:
