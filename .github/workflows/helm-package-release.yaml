@@ -28,7 +28,7 @@ jobs:
       - name: Helm Installation
         uses: azure/setup-helm@b9e51907a09c216f16ebe8536097933489208112 # v4
         with:
-          version: v3.10.3
+          version: v3.22.0
       - name: Get list of changed directories
         id: changed-files
         uses: tj-actions/changed-files@ed68ef82c095e0d48ec87eccea555d944a631a4c # v46.0.5
