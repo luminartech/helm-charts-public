@@ -97,7 +97,7 @@ common-res:
               - name: chabot-ui
                 ## @param common-res.Deployment.items._.podSpec.spec.containers[0].image
                 ##
-                image: sameerbagwe/chatbot-ui:latest
+                image: sameerbagwe/chatbot-ui:latest@sha256:5d2296cf8bfe6300c3474d5524bc649b2beb51926d68d8521ba0b7d4937de4bd
                 ## @param common-res.Deployment.items._.podSpec.spec.containers[0].imagePullPolicy Container image pullPolicy. Allowed values: `IfNotPresent`, `Always`, `Never`
                 ##
                 imagePullPolicy: Always
