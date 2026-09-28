@@ -16,7 +16,7 @@ maintainers:
     email: ipe@luminartech.com
 dependencies:
   - name: aws-mountpoint-s3-csi-driver
-    version: "1.7.0"
+    version: "1.15.0"
     repository: https://awslabs.github.io/mountpoint-s3-csi-driver
     condition: aws-mountpoint-s3-csi-driver.enabled
   - name: crossplane-aws-iam
