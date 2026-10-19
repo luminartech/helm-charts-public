@@ -47,15 +47,15 @@ argo-events:
     jetstream:
       versions:
       - version: "2.10.10"
-        natsImage: nats:2.10.10
-        metricsExporterImage: natsio/prometheus-nats-exporter:0.14.0
-        configReloaderImage: natsio/nats-server-config-reloader:0.14.0
+        natsImage: nats:2.10.10@sha256:2beede2be3f342faeda669c3cfa33100f2e51619e48970b0ef98a4d08144ce95
+        metricsExporterImage: natsio/prometheus-nats-exporter:0.14.0@sha256:839c59f6a23473a657f6560c2a14dca9b9ce722a017933a41d071a3c9dd3a7d7
+        configReloaderImage: natsio/nats-server-config-reloader:0.14.0@sha256:8c28b75bc416bb068761b19edf9a471bf8e35062bf619ea49c8e22af517e383e
         startCommand: /nats-server
     nats:
       versions:
       - version: 0.22.1
-        natsStreamingImage: nats-streaming:0.22.1
-        metricsExporterImage: natsio/prometheus-nats-exporter:0.9.3
+        natsStreamingImage: nats-streaming:0.22.1@sha256:3dd7b21a7fceebc956629af8ad31b7e5dfb2cc717cba4be55e6b50f7ca726932
+        metricsExporterImage: natsio/prometheus-nats-exporter:0.9.3@sha256:6c9b8005cc8b2431b8b99d981f440fe47230652f5c2c11a83bb4bc376613f00e
   controller:
     replicas: 2
     metrics:
