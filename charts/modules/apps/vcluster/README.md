@@ -26,7 +26,7 @@
 | `global.awsAccountId`           | Default aws account id for crossplane aws provider resources. Quotes are important, value must be a string. | `0123456789`                     |
 | `global.awsRegion`              | Default aws region for crossplane aws provider resources.                                                   | `us-east-2`                      |
 | `global.eksHash`                | Default EKS cluster hash for relevant crossplane resources such as IAM Role.                                | `XXXXX`                          |
-| `global.eksClusterName`         | Host EKS Cluster namee                                                                                      | `infra-aws-eks`                  |
+| `global.eksClusterName`         | Host EKS Cluster name                                                                                       | `infra-aws-eks`                  |
 | `global.githubRepoName`         | Github repo name                                                                                            | `gitops-infra-demo`              |
 | `global.githubOrg`              | Github Org name                                                                                             | `satish-labs`                    |
 | `global.githubPrNumber`         | Github PR number                                                                                            | `1`                              |

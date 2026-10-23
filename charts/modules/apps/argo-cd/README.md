@@ -37,7 +37,7 @@ sequenceDiagram
 | `global.eksHash`                  | Default EKS cluster hash for relevant crossplane resources such as IAM Role.                                     | `XXXXX`                          |
 | `global.eksClusterName`           | Default EKS cluster hash for relevant crossplane resources such as IAM Role.                                     | `infra-aws-eks`                  |
 | `global.providerConfigRef.name`   | Default crossplane provider all resources generated for crossplane.                                              | `crossplane-provider-config-aws` |
-| `global.awsDeletionPolicy`        | Default crossplane deletion policy for all resources deployed by this helm chart..                               | `Orphan`                         |
+| `global.awsDeletionPolicy`        | Default crossplane deletion policy for all resources deployed by this helm chart.                                | `Orphan`                         |
 | `global.secretStoreRef`           | External Secrets secret store ref to fetch AWS secret for repo creds                                             | `cluster-secret-store-aws`       |
 | `global.githubOrg`                | Github Org for accessing repos using github app                                                                  | `satish-labs`                    |
 | `global.environment`              | Used for identifying secret path in the AWS secrets                                                              | `dev`                            |

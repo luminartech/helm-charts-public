@@ -26,7 +26,7 @@
 | `global.awsRegion`              | Default aws region for crossplane aws provider resources.                                                   | `us-east-2`                      |
 | `global.eksHash`                | Default EKS cluster hash for relevant crossplane resources such as IAM Role.                                | `XXXXX`                          |
 | `global.providerConfigRef.name` | Default crossplane provider all resources generated for crossplane.                                         | `crossplane-provider-config-aws` |
-| `global.awsDeletionPolicy`      | Default crossplane deletion policy for all resources deployed by this helm chart..                          | `Orphan`                         |
+| `global.awsDeletionPolicy`      | Default crossplane deletion policy for all resources deployed by this helm chart.                           | `Orphan`                         |
 | `global.secretStoreRef`         | External Secrets secret store ref to fetch AWS secret for repo creds                                        | `cluster-secret-store-aws`       |
 
 ### loki

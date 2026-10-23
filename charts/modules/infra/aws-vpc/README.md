@@ -27,7 +27,7 @@
 | `global.providerConfigRef.name`          | Default crossplane provider all resources generated for crossplane.                                         | `crossplane-provider-config-aws`              |
 | `global.transitGatewayIdRefName`         | Transit gateway ID ref name for internal network routing.                                                   | `transit-gateway-id-name-known-to-crossplane` |
 | `global.transitGatewayProviderConfigRef` | Transit gateway aws provider for crossplane                                                                 | `transit-gateway-aws-provider-name`           |
-| `global.awsDeletionPolicy`               | Default crossplane deletion policy for all resources deployed by this helm chart..                          | `Orphan`                                      |
+| `global.awsDeletionPolicy`               | Default crossplane deletion policy for all resources deployed by this helm chart.                           | `Orphan`                                      |
 | `global.vpcCidr`                         | VPC CIDR. Using 10.0.0.0/16 or default CIDR provided by AWS is a bad idea.                                  | `0.0.0.0/20`                                  |
 
 

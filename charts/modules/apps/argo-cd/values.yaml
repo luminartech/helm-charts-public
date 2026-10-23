@@ -39,7 +39,7 @@ global:
   ##
   providerConfigRef:
     name: crossplane-provider-config-aws
-  ## @param global.awsDeletionPolicy Default crossplane deletion policy for all resources deployed by this helm chart..
+  ## @param global.awsDeletionPolicy Default crossplane deletion policy for all resources deployed by this helm chart.
   ## This can be overriden for each resource in its section
   awsDeletionPolicy: Orphan
   ## @param global.secretStoreRef External Secrets secret store ref to fetch AWS secret for repo creds
