@@ -36,7 +36,7 @@ global:
   ## @param global.transitGatewayProviderConfigRef Transit gateway aws provider for crossplane
   ##
   transitGatewayProviderConfigRef: transit-gateway-aws-provider-name
-  ## @param global.awsDeletionPolicy Default crossplane deletion policy for all resources deployed by this helm chart..
+  ## @param global.awsDeletionPolicy Default crossplane deletion policy for all resources deployed by this helm chart.
   ## This can be overriden for each resource in its section
   awsDeletionPolicy: Orphan
   ## @param global.vpcCidr VPC CIDR. Using 10.0.0.0/16 or default CIDR provided by AWS is a bad idea.

@@ -73,10 +73,10 @@ global:
   ## @param global.secretStoreRef External secrets cluster secret store name
   ##
   secretStoreRef: cluster-secret-store-aws
-  ## @param global.secretStoreNamespace Namespace to store the the AWS Secrets
+  ## @param global.secretStoreNamespace Namespace to store the AWS Secrets
   ##
   secretStoreNamespace: github-events-gitops-infra-demo
-  ## @param global.baseDomain Based domain for the ingress vhost
+  ## @param global.baseDomain Base domain for the ingress vhost
   ##
   baseDomain: dev.domain.com
 

@@ -38,8 +38,8 @@
 | `global.ingressClassNameExternal` | Ingress class name for events ingresses                                                                     | `nginx-ingress-external`          |
 | `global.eventSourceServicePort`   | Event Source port number to use                                                                             | `11000`                           |
 | `global.secretStoreRef`           | External secrets cluster secret store name                                                                  | `cluster-secret-store-aws`        |
-| `global.secretStoreNamespace`     | Namespace to store the the AWS Secrets                                                                      | `github-events-gitops-infra-demo` |
-| `global.baseDomain`               | Based omain for the ingress vhost                                                                           | `dev.domain.com`                  |
+| `global.secretStoreNamespace`     | Namespace to store the AWS Secrets                                                                          | `github-events-gitops-infra-demo` |
+| `global.baseDomain`               | Base domain for the ingress vhost                                                                           | `dev.domain.com`                  |
 
 
 ## Configuration and installation details

@@ -25,7 +25,7 @@
 | `global.awsAccountId`           | Default aws account id for crossplane aws provider resources. Quotes are important, value must be a string. | `0123456789`                     |
 | `global.awsRegion`              | Default aws region for crossplane aws provider resources.                                                   | `us-east-2`                      |
 | `global.providerConfigRef.name` | Default crossplane provider all resources generated for crossplane.                                         | `crossplane-provider-config-aws` |
-| `global.awsDeletionPolicy`      | Default crossplane deletion policy for all resources deployed by this helm chart..                          | `Orphan`                         |
+| `global.awsDeletionPolicy`      | Default crossplane deletion policy for all resources deployed by this helm chart.                           | `Orphan`                         |
 | `global.environment`            | Environment name for the eks cluster                                                                        | `dev`                            |
 | `global.team`                   | Team name                                                                                                   | `infra`                          |
 | `global.secretStoreRef`         | External secrets secretstoreref                                                                             | `cluster-secret-store-aws`       |

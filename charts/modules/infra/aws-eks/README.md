@@ -27,7 +27,7 @@
 | `global.awsMgmtAccountId`           | Management AWS account that runs the main mgmt cluster + argocd + crossplane.                                 | `0123456789`                     |
 | `global.awsRegion`                  | Default aws region for crossplane aws provider resources.                                                     | `us-east-2`                      |
 | `global.providerConfigRef.name`     | Default crossplane provider all resources generated for crossplane.                                           | `crossplane-provider-config-aws` |
-| `global.awsDeletionPolicy`          | Default crossplane deletion policy for all resources deployed by this helm chart..                            | `Orphan`                         |
+| `global.awsDeletionPolicy`          | Default crossplane deletion policy for all resources deployed by this helm chart.                             | `Orphan`                         |
 | `global.environment`                | Environment name for the eks cluster                                                                          | `dev`                            |
 | `global.vpcFullname`                | VPC to use for this EKS cluster                                                                               | `infra-aws-vpc`                  |
 | `global.argocdNamespace`            | Target namespace for storing EKS secrets                                                                      | `infra-argo-cd`                  |

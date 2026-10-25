@@ -33,7 +33,7 @@ global:
   ## @param global.eksHash Default EKS cluster hash for relevant crossplane resources such as IAM Role.
   ##
   eksHash: "XXXXX"
-  ## @param global.eksClusterName Host EKS Cluster namee
+  ## @param global.eksClusterName Host EKS Cluster name
   ##
   eksClusterName: infra-aws-eks
   ## @param global.githubRepoName Github repo name
