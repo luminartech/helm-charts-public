@@ -47,7 +47,7 @@ argo-events:
     jetstream:
       versions:
       - version: "2.10.10"
-        natsImage: nats:2.10.10
+        natsImage: nats:2.15.3@sha256:4b83414183aa5fb87cd164962c47eaffd214e84668dc4fa4f1d4c44a3e765ee8
         metricsExporterImage: natsio/prometheus-nats-exporter:0.14.0
         configReloaderImage: natsio/nats-server-config-reloader:0.14.0
         startCommand: /nats-server
